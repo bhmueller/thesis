@@ -1,0 +1,14 @@
+name: template-thesis-project
+
+dependencies:
+- numpy
+- pandas
+- jupyterlab
+- matplotlib
+- seaborn
+- scipy
+- pip
+- pip:
+  - grmpy==0.1.3.dev1
+  - scikit-misc
+

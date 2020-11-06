@@ -1,5 +1,13 @@
 # Reproduction repo Master thesis in Economics
 
+## Data
+
+I use data on bus engine replacement from Rust (1987).
+
+## References
+
+# Guidelines for theses at OSE research group
+
 This is a template for thesis projects at the [OpenSourceEconomics](https://github.com/OpenSourceEconomics) research group.
 
 ### Inquiry

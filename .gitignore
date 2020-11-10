@@ -1,0 +1,23 @@
+# Latex
+*.log
+*.aux
+*.bbl
+*.blg
+*.lof
+*.lot
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.bib.sav
+*.bib.bak
+*.ipynb_checkpoints
+test_*
+thesis_project_heid.egg-info
+
+# Folder
+__pycache__
+.pytest_cache/
+
+# Jupyter
+.ipynb_checkpoints

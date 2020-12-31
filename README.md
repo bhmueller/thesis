@@ -1,8 +1,6 @@
 # Reproduction repo Master thesis in Economics
 
-## Data
-
-I use data on bus engine replacement from Rust (1987).
+I conduct an inquiry on the predictive validity of Morris indices for sensitivity analysis.
 
 ## References
 

@@ -12,6 +12,34 @@ from ruspy.estimation.estimation import estimate
 #from ruspy.model_code.demand_function import get_demand
 
 
+# 
+def approx_comp_time(time_model_eval, method, n_input, n_perms, n_output, n_outer, n_inner ):
+    '''
+    Approximate time for computation in hours and minutes.
+    
+    Parameters
+    ----------
+    time_model_eval: float
+        Time in seconds per 100 model evaluations (e.g. rust_model for 100 samples: approx 35 s).
+    ...
+    
+    Returns
+    -------
+    
+    '''
+    if method == 'random':
+        n_evals = n_output + n_perms * (n_inputs -1) * n_outer * n_inner
+        time = (time_model_eval * (n_evals) / 100) / 3600
+    elif method == 'exact':
+        n_evals = n_output + np.math.factorial(n_inputs) * (n_inputs -1) * n_outer * n_inner
+        time = (time_model_eval * (n_evals) / 100) / 3600
+
+    print('', n_evals, 'model evaluations', 
+          '\n', 'approx. ', time, 'hours', 
+          '\n', 'approx.', time * 60, 'minutes'
+         )
+
+
 def get_cov_and_mean_four_and_five_parameters(num_sim,
                                               ev, 
                                               costs, 

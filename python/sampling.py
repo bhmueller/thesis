@@ -13,7 +13,7 @@ from ruspy.estimation.estimation import estimate
 
 
 # 
-def approx_comp_time(time_model_eval, method, n_input, n_perms, n_output, n_outer, n_inner ):
+def approx_comp_time(time_model_eval, method, n_inputs, n_perms, n_output, n_outer, n_inner ):
     '''
     Approximate time for computation in hours and minutes.
     

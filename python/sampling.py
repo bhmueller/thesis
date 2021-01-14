@@ -101,13 +101,13 @@ def get_cov_and_mean_four_and_five_parameters(num_sim,
     return cov_4_inputs, mean_4_inputs, cov_5_inputs, mean_5_inputs
 
 
-def get_cov_and_mean_rc_theta_32(num_sim,
-                                 ev, 
-                                 costs, 
-                                 trans_mat, 
-                                 init_dict_simulation, 
-                                 init_dict_estimation,
-                                 ):
+def simulate_cov_and_mean_rc_theta_11(num_sim,
+                                      ev, 
+                                      costs, 
+                                      trans_mat, 
+                                      init_dict_simulation, 
+                                      init_dict_estimation,
+                                     ):
     '''
     Calculate variance-covariance matrix (cov) and mean vector (mean) of simulated data
     for RC and theta_32 from Rust model.

@@ -1,108 +1,213 @@
-"""This module contains auxiliary function which we use in the example notebook."""
-import json
-
-import matplotlib.patches as mpatches
-import matplotlib.pyplot as plt
-from scipy.stats import norm
-import pandas as pd
+'''
+Sample covariance matrices and mean vectors for the parameters to be estimated by the Rust model (theta vector).
+'''
 import numpy as np
+import matplotlib.pyplot as plt
+import chaospy as cp
+from functools import partial
+from ruspy.simulation.simulation import simulate
+from ruspy.model_code.fix_point_alg import calc_fixp
+from ruspy.model_code.cost_functions import lin_cost
+from ruspy.model_code.cost_functions import calc_obs_costs
+from ruspy.estimation.estimation_transitions import create_transition_matrix
+from ruspy.estimation.estimation import estimate
+from ruspy.model_code.demand_function import get_demand
+from python.econsa_shapley import _r_condmvn
 
-from grmpy.estimate.estimate_output import calculate_mte
-from grmpy.read.read import read
 
-
-def process_data(df, output_file):
-    """This function adds squared and interaction terms to the Cainero data set."""
-
-    # Delete redundant columns\n",
-    for key_ in ['newid', 'caseid']:
-        del df[key_]
-
-    # Add squared terms
-    for key_ in ['mhgc', 'cafqt', 'avurate', 'lurate_17', 'numsibs', 'lavlocwage17']:
-        str_ = key_ + 'sq'
-        df[str_] = df[key_] ** 2
-
-    # Add interaction terms
-    for j in ['pub4', 'lwage5_17', 'lurate_17', 'tuit4c']:
-        for i in ['cafqt', 'mhgc', 'numsibs']:
-            df[j + i] = df[j] * df[i]
-
-    df.to_pickle(output_file + '.pkl')
-
+def approx_comp_time(time_model_eval, method, n_inputs, n_perms, n_output, n_outer, n_inner):
+    '''
+    Approximate time for computation in hours and minutes.
     
-def plot_est_mte(rslt, file):
-    """This function calculates the marginal treatment effect for different quartiles of the
-    unobservable V. ased on the calculation results."""
+    Parameters
+    ----------
+    time_model_eval: float
+        Time in seconds per 100 model evaluations (e.g. rust_model for 100 samples: approx 35 s).
+    ...
+    
+    Returns
+    -------
+    
+    '''
+    if method == 'random':
+        n_evals = n_output + n_perms * (n_inputs -1) * n_outer * n_inner
+        time = (time_model_eval * (n_evals) / 100) / 3600
+    elif method == 'exact':
+        n_evals = n_output + np.math.factorial(n_inputs) * (n_inputs -1) * n_outer * n_inner
+        time = (time_model_eval * (n_evals) / 100) / 3600
 
-    init_dict = read(file)
-    data_frame = pd.read_pickle(init_dict['ESTIMATION']['file'])
+    print('', n_evals, 'model evaluations', 
+          '\n', 'approx. ', time, 'hours', 
+          '\n', 'approx.', time * 60, 'minutes'
+         )
 
-    # Define the Quantiles and read in the original results
-    quantiles = [0.0001] + np.arange(0.01, 1., 0.01).tolist() + [0.9999]
-    mte_ = json.load(open('data/mte_original.json', 'r'))
-    mte_original = mte_[1]
-    mte_original_d = mte_[0]
-    mte_original_u = mte_[2]
 
-    # Calculate the MTE and confidence intervals
-    mte = calculate_mte(rslt, data_frame, quantiles)
-    mte = [i / 3 for i in mte]
-    mte_up, mte_d = calculate_cof_int(rslt, init_dict, data_frame, mte, quantiles)
+def get_cov_and_mean_four_and_five_parameters(num_sim,
+                                              ev, 
+                                              costs, 
+                                              trans_mat, 
+                                              init_dict_simulation, 
+                                              init_dict_estimation
+                                             ):
+    '''
+    Calculate variance-covariance matrix (cov) and mean vector (mean) of simulated data.
+    Get cov and mean for four (without theta_32) and all five parameters in theta.
+    
+    
+    Parameters
+    ----------------
+    num_sim: int
+        Number of simulations for the data from which cov and mean are calculated.
+    ev: 
+    costs:
+    trans_mat:
+    init_dict_simulation:
+    init_dict_estimation:
+        
+    Returns
+    ----------------
+    cov_4: nd.array
+        Variance-covariance matrix of simulated data with shape (num_sim, num_input_variables).
+    mean_4: n.array
+        Mean vector of simulated data with shape (, num_input_variables).
+    cov_5:
+    mean_5:
+    
+    '''
+    
+    parameter_estimates_4_inputs = np.zeros((num_sim, 4))
+    parameter_estimates_5_inputs = np.zeros((num_sim, 5))
+    
+    for i in np.arange(num_sim):
+        
+        init_dict_simulation['simulation']['seed'] = +i
+        
+        df = simulate(init_dict_simulation["simulation"], ev, costs, trans_mat)
+        data = df[['state', 'decision', 'usage']].copy()
+        
+        result_transitions_nfxp, result_fixp_nfxp = estimate(init_dict_estimation, data)
+            
+        # Record only two of three transition probabilities i.o.t. avoid singularity of the covariance matrix.
+        parameter_estimates_4_inputs[i, :] = np.concatenate((result_transitions_nfxp['x'][:2], result_fixp_nfxp['x']))
+        # All five inputs.
+        parameter_estimates_5_inputs[i, :] = np.concatenate((result_transitions_nfxp['x'], result_fixp_nfxp['x']))
+        
+        assert_allclose(parameter_estimates_5_inputs[i, :2].sum(), 1.0, rtol=0.02)
+            
+    cov_4_inputs = np.cov(parameter_estimates_4_inputs.T)
+    mean_4_inputs = np.mean(parameter_estimates_4_inputs, axis=0)
+    
+    cov_5_inputs = np.cov(parameter_estimates_5_inputs.T)
+    mean_5_inputs = np.mean(parameter_estimates_5_inputs, axis=0)
+            
+    return cov_4_inputs, mean_4_inputs, cov_5_inputs, mean_5_inputs
 
-    # Plot both curves
-    ax = plt.figure(figsize=(17.5, 10)).add_subplot(111)
 
-    ax.set_ylabel(r"$B^{MTE}$", fontsize=24)
-    ax.set_xlabel("$u_D$", fontsize=24)
-    ax.tick_params(axis='both', which='major', labelsize=18)
-    ax.plot(quantiles, mte, label='grmpy $B^{MTE}$', color='blue', linewidth=4)
-    ax.plot(quantiles, mte_up, color='blue', linestyle=':', linewidth=3)
-    ax.plot(quantiles, mte_d, color='blue', linestyle=':', linewidth=3)
-    ax.plot(quantiles, mte_original, label='original$B^{MTE}$', color='orange', linewidth=4)
-    ax.plot(quantiles, mte_original_d, color='orange', linestyle=':',linewidth=3)
-    ax.plot(quantiles, mte_original_u, color='orange', linestyle=':', linewidth=3)
-    ax.set_ylim([-0.41, 0.51])
-    ax.set_xlim([-0.005, 1.005])
+def simulate_cov_and_mean_rc_theta_11(num_sim,
+                                      ev, 
+                                      costs, 
+                                      trans_mat, 
+                                      init_dict_simulation, 
+                                      init_dict_estimation,
+                                     ):
+    '''
+    Calculate variance-covariance matrix (cov) and mean vector (mean) of simulated data
+    for RC and theta_32 from Rust model.
+    
+    
+    Parameters
+    ----------------
+    num_sim: int
+        Number of simulations for the data from which cov and mean are calculated.
+    ev: 
+    costs:
+    trans_mat:
+    init_dict_simulation:
+    init_dict_estimation:
+        
+    Returns
+    ----------------
+    cov: nd.array
+        Variance-covariance matrix of simulated data with shape (num_sim, num_input_variables).
+    mean: n.array
+        Mean vector of simulated data with shape (, num_input_variables).
+    
+    '''
+    
+    parameter_estimates = np.zeros((num_sim, 2))
+    
+    for i in np.arange(num_sim):
+        
+        init_dict_simulation['simulation']['seed'] = +i
+        
+        df = simulate(init_dict_simulation["simulation"], ev, costs, trans_mat)
+        data = df[['state', 'decision', 'usage']].copy()
+        
+        result_transitions_nfxp, result_fixp_nfxp = estimate(init_dict_estimation, data)
+            
+        parameter_estimates[i, :] = result_fixp_nfxp['x']
+        
+            
+    cov = np.cov(parameter_estimates.T)
+    mean = np.mean(parameter_estimates, axis=0)
+            
+    return cov, mean
 
-    blue_patch = mpatches.Patch(color='blue', label='original $B^{MTE}$')
-    orange_patch = mpatches.Patch(color='orange', label='grmpy $B^{MTE}$')
-    plt.legend(handles=[blue_patch, orange_patch],prop={'size': 16})
-    plt.show()
 
-    return mte
+# Functions for the Rust model.
+def rust_model(x, method, n_perms, n_inputs, n_output, n_outer, n_inner, trans_probs, init_dict_estimation, demand_dict):
+    if method == 'exact':
+        n_evaluations = n_output + np.math.factorial(n_inputs) * (n_inputs -1) * n_outer * n_inner
+    elif method == 'random':
+        n_evaluations = n_output + n_perms * (n_inputs -1) * n_outer * n_inner
+    #else: raiseerror
+    
+    # Adapt function to work with changed number of trans_probs as well.
+    n_trans_probs = len(trans_probs)
+    
+    demand_inputs = np.zeros((n_evaluations, n_trans_probs +2))
+    demand_inputs[:, :n_trans_probs] = trans_probs
+    demand_inputs[:, n_trans_probs:] = x[:, :]
+    
+    demand_output = np.zeros((n_evaluations, 1))
+    
+    # Second, try with list comprehension (do not need to define demand_output first).
+    #demand_output = [get_demand(init_dict_estimation, demand_dict, demand_inputs[sample, :]).iloc[0]['demand'] 
+    #                for sample in np.arange(n_evaluations)]
+    
+    # First try with for loop.
+    #for sample in np.arange(n_evaluations):
+    #    demand_params = demand_inputs[sample, :]
+    #    demand_output[sample] = get_demand(init_dict_estimation, demand_dict, demand_params).iloc[0]['demand']
+    
+    get_demand_partial = partial(get_demand, init_dict=init_dict_estimation, demand_dict=demand_dict)
+    def _get_demand_mapping(x):
+        return get_demand_partial(demand_params=x).iloc[0]['demand']
+    
+    demand_output = np.array(list(map(_get_demand_mapping, demand_inputs)))
+    
+    return demand_output
 
-def calculate_cof_int(rslt, init_dict, data_frame, mte, quantiles):
-    """This function calculates the confidence interval of the marginal treatment effect."""
 
-    # Import parameters and inverse hessian matrix
-    hess_inv = rslt['AUX']['hess_inv'] / data_frame.shape[0]
-    params = rslt['AUX']['x_internal']
+def x_all(n, mean, cov):
+    distribution = cp.MvNormal(mean, cov)
+    return distribution.sample(n)
 
-    # Distribute parameters
-    dist_cov = hess_inv[-4:, -4:]
-    param_cov = hess_inv[:46, :46]
-    dist_gradients = np.array([params[-4], params[-3], params[-2], params[-1]])
-
-    # Process data
-    covariates = init_dict['TREATED']['order']
-    x = np.mean(data_frame[covariates]).tolist()
-    x_neg = [-i for i in x]
-    x += x_neg
-    x = np.array(x)
-
-    # Create auxiliary parameters
-    part1 = np.dot(x, np.dot(param_cov, x))
-    part2 = np.dot(dist_gradients, np.dot(dist_cov, dist_gradients))
-    # Prepare two lists for storing the values
-    mte_up = []
-    mte_d = []
-
-    # Combine all auxiliary parameters and calculate the confidence intervals
-    for counter, i in enumerate(quantiles):
-        value = part2 * (norm.ppf(i)) ** 2
-        aux = np.sqrt(part1 + value) / 4
-        mte_up += [mte[counter] + norm.ppf(0.95) * aux]
-        mte_d += [mte[counter] - norm.ppf(0.95) * aux]
-
-    return mte_up, mte_d
+def x_cond(n, subset_j, subsetj_conditional, xjc, mean, cov):
+    if subsetj_conditional is None:
+        cov_int = np.array(cov)
+        cov_int = cov_int.take(subset_j, axis=1)
+        cov_int = cov_int[subset_j]
+        distribution = cp.MvNormal(mean[subset_j], cov_int)
+        return distribution.sample(n)
+    else:
+        return _r_condmvn(
+            n,
+            mean=mean,
+            cov=cov,
+            dependent_ind=subset_j,
+            given_ind=subsetj_conditional,
+            x_given=xjc,
+        )
+    
+    

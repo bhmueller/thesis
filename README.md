@@ -1,3 +1,5 @@
+![Continuous Integration](https://github.com/bhmueller/thesis/workflows/Continuous%20Integration/badge.svg)
+
 # Reproduction repo Master thesis in Economics
 
 I conduct an inquiry on the predictive validity of Morris indices for sensitivity analysis.

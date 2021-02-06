@@ -12,7 +12,7 @@
 *.bib.sav
 *.bib.bak
 *.ipynb_checkpoints
-test_*
+#test_*
 thesis_project_heid.egg-info
 
 # Folder

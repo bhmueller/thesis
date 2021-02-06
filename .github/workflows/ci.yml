@@ -11,13 +11,13 @@ jobs:
     - uses: actions/checkout@v2
     - uses: goanpeca/setup-miniconda@v1.0.2
       with:
-           activate-environment: template-thesis-project
+           activate-environment: thesis-benedikt
            environment-file: environment.yml
            python-version: 3.6
-           auto-activate-base: false
+           auto-activate-base: true
     - name: execute notebook
       shell: bash -l {0}
       run: |
         export PATH="$PATH:/usr/share/miniconda/bin"
         source .envrc
-        jupyter nbconvert --execute --ExecutePreprocessor.timeout=120 student_project.ipynb
+        jupyter nbconvert --execute --ExecutePreprocessor.timeout=120 thesis_project.ipynb

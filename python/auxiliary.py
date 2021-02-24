@@ -128,11 +128,11 @@ def rust_model(x, method, n_perms, n_inputs, n_output, n_outer, n_inner, trans_p
     return demand_output
 
 
-def x_all(n, mean, cov):
+def x_all_raw(n, mean, cov):
     distribution = cp.MvNormal(mean, cov)
     return distribution.sample(n)
 
-def x_cond(n, subset_j, subsetj_conditional, xjc, mean, cov):
+def x_cond_raw(n, subset_j, subsetj_conditional, xjc, mean, cov):
     if subsetj_conditional is None:
         cov_int = np.array(cov)
         cov_int = cov_int.take(subset_j, axis=1)

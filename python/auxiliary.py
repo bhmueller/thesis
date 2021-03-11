@@ -94,7 +94,7 @@ def simulate_cov_and_mean_rc_theta_11(num_sim,
 
 
 # Functions for the Rust model.
-def rust_model(x, method, n_perms, n_inputs, n_output, n_outer, n_inner, trans_probs, init_dict_estimation, demand_dict):
+def rust_model_shapley(x, method, n_perms, n_inputs, n_output, n_outer, n_inner, trans_probs, init_dict_estimation, demand_dict):
     if method == 'exact':
         n_evaluations = n_output + np.math.factorial(n_inputs) * (n_inputs -1) * n_outer * n_inner
     elif method == 'random':

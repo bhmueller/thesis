@@ -12,7 +12,7 @@ from ruspy.model_code.cost_functions import calc_obs_costs
 from ruspy.estimation.estimation_transitions import create_transition_matrix
 from ruspy.estimation.estimation import estimate
 from ruspy.model_code.demand_function import get_demand
-from python.econsa_shapley import _r_condmvn
+from econsa.shapley import _r_condmvn
 
 
 def approx_comp_time(time_model_eval, method, n_inputs, n_perms, n_output, n_outer, n_inner):

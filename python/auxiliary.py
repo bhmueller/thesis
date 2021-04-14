@@ -15,6 +15,30 @@ from ruspy.model_code.demand_function import get_demand
 from econsa.shapley import _r_condmvn
 
 
+def compute_confidence_intervals(param_estimate, variance, critical_value):
+    '''Compute confidence intervals (ci). Note assumptions about the distributions apply.
+    
+    Parameters
+    ----------
+    param_estimate: float
+        Parameter estimate for which ci should be computed
+    variance: float
+        Variance of parameter estimate.
+    critical_value: float
+        Critical value of the t distribution, e.g. for the 95-percent-ci it's 1.96.
+
+    Returns
+    -------
+    confidence_interval_dict: dict
+        Lower (upper) bound of the ci can be accessed by the key 'lower_bound' ('upper_bound').
+    
+    '''
+    confidence_interval_dict = {}
+    confidence_interval_dict['lower_bound'] = param_estimate - critical_value * np.sqrt(variance)
+    confidence_interval_dict['upper_bound'] = param_estimate + critical_value * np.sqrt(variance)
+    return confidence_interval_dict
+
+
 def approx_comp_time(time_model_eval, method, n_inputs, n_perms, n_output, n_outer, n_inner):
     '''
     Approximate time for computation in hours and minutes.

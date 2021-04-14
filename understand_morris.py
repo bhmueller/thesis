@@ -22,25 +22,38 @@ def eoq_model_ndarray(x, r=0.1):
     s = x[:, 2]
     return np.sqrt((24 * m * s) / (r * c))
 
-def eoq_model_df(x, r=0.1):
-    """EOQ Model that handles pandas DataFrames."""
+def eoq_model_morris(x, r=0.1):
+    """EOQ Model that handles data as presented by elementary_effects."""
     m = x['value'][0]
     c = x['value'][1]
     s = x['value'][2]
+    m_below_zero = 0
+    if m < 0:
+        m = 0
+        print('m < 0')
+    elif c < 0:
+        raise ValueError
+    elif s < 0:
+        s = 0
+        print('s < 0')
+    else:
+        pass
+
     return np.sqrt((24 * m * s) / (r * c))
+    # if (24 * m * s) / (r * c) <= 0:
+    #     return 0
+    # elif (24 * m * s) / (r * c) > 0:
+    #     return np.sqrt((24 * m * s) / (r * c))
+    # else:
+    #     raise ValueError
 
 # def model_func(params):
 #     return 5
 
 func = eoq_model_df
 
-
 params = pd.DataFrame(data=[5.345, 0.0135, 2.15], columns=['value'])
 cov = pd.DataFrame(data=np.diag([1, 0.000001, 0.01]))
-
-cov
-
-params
 
 eoq_model_ndarray(np.array([[5, 3, 2]]))
 

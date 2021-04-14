@@ -22,5 +22,7 @@ dependencies:
 # - delayed
 - pip
 - pip:
-  - flake8
+    - flake8
+    - black
+    - pre-commit
 

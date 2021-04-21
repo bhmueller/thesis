@@ -203,18 +203,26 @@ def simulate_cov_and_mean_rc_theta_11(
 
     """
 
-    parameter_estimates = np.zeros((num_sim, 2))
+    def get_params(current_seed):
 
-    for i in np.arange(num_sim):
-
-        init_dict_simulation["simulation"]["seed"] = +i
+        init_dict_simulation["simulation"]["seed"] = current_seed
 
         df = simulate(init_dict_simulation["simulation"], ev, costs, trans_mat)
         data = df[["state", "decision", "usage"]].copy()
 
-        result_transitions_nfxp, result_fixp_nfxp = estimate(init_dict_estimation, data)
+        _, result_fixp_nfxp = estimate(init_dict_estimation, data)
 
-        parameter_estimates[i, :] = result_fixp_nfxp["x"]
+        return result_fixp_nfxp["x"]
+
+    # seed_array = np.random.choice(np.arange(num_sim), num_sim, replace=False)
+
+    parameter_estimates = np.asarray(
+        list(
+            map(
+                get_params, np.random.choice(np.arange(num_sim), num_sim, replace=False)
+            )
+        )
+    )
 
     cov = np.cov(parameter_estimates.T)
     mean = np.mean(parameter_estimates, axis=0)

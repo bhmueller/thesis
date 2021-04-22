@@ -8,7 +8,7 @@ normal variables. To not get confused, we use the following naming conventions:
 -x refers to multivariate normal variables.
 
 """
-from multiprocessing import Pool
+# from multiprocessing import Pool
 from joblib import Parallel, delayed
 
 import chaospy as cp
@@ -316,10 +316,10 @@ def _evaluate_model(func, params, sample, n_cores):
             par["value"] = sample[d, p]
             inputs.append(par)
 
-    p = Pool(processes=n_cores)
-    evals_flat = p.map(func, inputs)
+    # p = Pool(processes=n_cores)
+    # evals_flat = p.map(func, inputs)
 
-    # evals_flat = Parallel(n_jobs=n_cores)(delayed(func)(inp) for inp in inputs)
+    evals_flat = Parallel(n_jobs=n_cores)(delayed(func)(inp) for inp in inputs)
 
     evals = np.array(evals_flat).reshape(n_draws, n_params)
 

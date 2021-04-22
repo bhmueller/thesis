@@ -216,13 +216,15 @@ def simulate_cov_and_mean_rc_theta_11(
 
     # seed_array = np.random.choice(np.arange(num_sim), num_sim, replace=False)
 
-    parameter_estimates = np.asarray(
-        list(
-            map(
-                get_params, np.random.choice(np.arange(num_sim), num_sim, replace=False)
-            )
-        )
-    )
+    # parameter_estimates = np.asarray(
+    #     list(
+    #         map(
+    #             get_params, np.random.choice(np.arange(num_sim), num_sim, replace=False)
+    #         )
+    #     )
+    # )
+
+    parameter_estimates = np.asarray(list(map(get_params, np.arange(num_sim))))
 
     cov = np.cov(parameter_estimates.T)
     mean = np.mean(parameter_estimates, axis=0)

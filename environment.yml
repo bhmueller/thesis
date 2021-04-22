@@ -15,13 +15,12 @@ dependencies:
 - jupyterlab
 - matplotlib
 - seaborn
-# - scipy
 - ruspy
-# - econsa
 - chaospy
-# - delayed
 - pip
 - pip:
+    - git+git://github.com/OpenSourceEconomics/econsa.git
+    # - pip install git+git://github.com/OpenSourceEconomics/econsa.git
     - flake8
     - black
     - pre-commit

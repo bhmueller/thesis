@@ -19,8 +19,8 @@ dependencies:
 - chaospy
 - pip
 - pip:
-    - git+git://github.com/OpenSourceEconomics/econsa.git
-    # - pip install git+git://github.com/OpenSourceEconomics/econsa.git
+    # - git+git://github.com/OpenSourceEconomics/econsa.git
+    - install -e C:\Users\admin\Masterarbeit\econsa
     - flake8
     - black
     - pre-commit

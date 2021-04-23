@@ -8,7 +8,7 @@ normal variables. To not get confused, we use the following naming conventions:
 -x refers to multivariate normal variables.
 
 """
-# from multiprocessing import Pool
+from multiprocessing import Pool
 from joblib import Parallel, delayed
 
 import chaospy as cp
@@ -18,7 +18,9 @@ import pandas as pd
 from scipy.stats import norm
 
 
-def elementary_effects(func, params, cov, n_draws, sampling_scheme="sobol", n_cores=1):
+def elementary_effects(
+    func, params, cov, n_draws, sampling_scheme="sobol", n_cores=1, parallel="joblib"
+):
     """Calculate Morris Indices of a model described by func.
 
     The distribution of the parameters is assumed to be multivariate normal, with
@@ -41,6 +43,14 @@ def elementary_effects(func, params, cov, n_draws, sampling_scheme="sobol", n_co
         Number of draws
     sampling_scheme : str
         One of ["sobol", "random"]. Default: "sobol"
+    n_cores : int
+        Default: 1. Number of cpu cores one want to use for parallelizing the model
+        evaluation step. Depends on function argument ``parallel``.
+    parallel : str
+        One of ["joblib", "multiprocessing"]. Default: "joblib". Determines whether
+        Multiprocessing or Joblib is used for parallelism. If "joblib" is combined with
+        ``n_cores=1``, no parallel computing code is used at all. See documentation of
+        Joblib.
 
     Returns
     -------
@@ -66,11 +76,11 @@ def elementary_effects(func, params, cov, n_draws, sampling_scheme="sobol", n_co
 
     dep_samples_corr_x, _ = _dependent_draws(z_a, z_b, mean_np, cov_np, "corr")
 
-    evals_ind = _evaluate_model(func, params, dep_samples_ind_x, n_cores)
+    evals_ind = _evaluate_model(func, params, dep_samples_ind_x, n_cores, parallel)
 
-    evals_base_ind = _evaluate_model(func, params, a_sample_ind_x, n_cores)
+    evals_base_ind = _evaluate_model(func, params, a_sample_ind_x, n_cores, parallel)
 
-    evals_corr = _evaluate_model(func, params, dep_samples_corr_x, n_cores)
+    evals_corr = _evaluate_model(func, params, dep_samples_corr_x, n_cores, parallel)
 
     evals_base_corr = _shift_sample(evals_base_ind, -1)
 
@@ -292,7 +302,7 @@ def _shift_cov(cov, k):
     return cov[new_order][:, new_order]
 
 
-def _evaluate_model(func, params, sample, n_cores):
+def _evaluate_model(func, params, sample, n_cores, parallel):
     """Do all model evaluations needed for the EE indices.
 
     Args:
@@ -316,10 +326,13 @@ def _evaluate_model(func, params, sample, n_cores):
             par["value"] = sample[d, p]
             inputs.append(par)
 
-    # p = Pool(processes=n_cores)
-    # evals_flat = p.map(func, inputs)
-
-    evals_flat = Parallel(n_jobs=n_cores)(delayed(func)(inp) for inp in inputs)
+    if parallel == "multiprocessing":
+        p = Pool(processes=n_cores)
+        evals_flat = p.map(func, inputs)
+    elif parallel == "joblib":
+        evals_flat = Parallel(n_jobs=n_cores)(delayed(func)(inp) for inp in inputs)
+    else:
+        raise ValueError
 
     evals = np.array(evals_flat).reshape(n_draws, n_params)
 

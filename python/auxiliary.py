@@ -99,7 +99,7 @@ def setup_rust_model_001():
     return model_setup
 
 
-def compute_confidence_intervals(param_estimate, variance, critical_value):
+def compute_confidence_intervals(param_estimate, std_error, critical_value):
     """Compute confidence intervals (ci). Note assumptions about the distributions
     apply.
 
@@ -120,11 +120,11 @@ def compute_confidence_intervals(param_estimate, variance, critical_value):
 
     """
     confidence_interval_dict = {}
-    confidence_interval_dict["lower_bound"] = param_estimate - critical_value * np.sqrt(
-        variance
+    confidence_interval_dict["lower_bound"] = (
+        param_estimate - critical_value * std_error
     )
-    confidence_interval_dict["upper_bound"] = param_estimate + critical_value * np.sqrt(
-        variance
+    confidence_interval_dict["upper_bound"] = (
+        param_estimate + critical_value * std_error
     )
     return confidence_interval_dict
 

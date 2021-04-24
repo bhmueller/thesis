@@ -99,7 +99,7 @@ def setup_rust_model_001():
     return model_setup
 
 
-def compute_confidence_intervals(param_estimate, std_error, critical_value):
+def compute_confidence_intervals(param_estimate, std_dev, critical_value):
     """Compute confidence intervals (ci). Note assumptions about the distributions
     apply.
 
@@ -120,12 +120,8 @@ def compute_confidence_intervals(param_estimate, std_error, critical_value):
 
     """
     confidence_interval_dict = {}
-    confidence_interval_dict["lower_bound"] = (
-        param_estimate - critical_value * std_error
-    )
-    confidence_interval_dict["upper_bound"] = (
-        param_estimate + critical_value * std_error
-    )
+    confidence_interval_dict["lower_bound"] = param_estimate - critical_value * std_dev
+    confidence_interval_dict["upper_bound"] = param_estimate + critical_value * std_dev
     return confidence_interval_dict
 
 
@@ -280,6 +276,7 @@ def rust_model_shapley(
     def _get_demand_mapping(x):
         return get_demand_partial(demand_params=x).iloc[0]["demand"]
 
+    # Here could use Joblib.
     demand_output = np.array(list(map(_get_demand_mapping, demand_inputs)))
 
     return demand_output

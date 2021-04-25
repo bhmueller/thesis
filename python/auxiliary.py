@@ -1,7 +1,9 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import chaospy as cp
 from functools import partial
+from joblib import Parallel, delayed
 from ruspy.simulation.simulation import simulate
 from ruspy.model_code.fix_point_alg import calc_fixp
 from ruspy.model_code.cost_functions import lin_cost
@@ -247,7 +249,8 @@ def rust_model_shapley(
         )
     elif method == "random":
         n_evaluations = n_output + n_perms * (n_inputs - 1) * n_outer * n_inner
-    # else: raiseerror
+    else:
+        raise ValueError
 
     # Adapt function to work with changed number of trans_probs as well.
     n_trans_probs = len(trans_probs)
@@ -258,17 +261,6 @@ def rust_model_shapley(
 
     demand_output = np.zeros((n_evaluations, 1))
 
-    # Second, try with list comprehension (do not need to define demand_output first).
-    # demand_output = [get_demand(init_dict_estimation, demand_dict, demand_inputs[
-    # sample, :]).iloc[0]['demand']
-    #                for sample in np.arange(n_evaluations)]
-
-    # First try with for loop.
-    # for sample in np.arange(n_evaluations):
-    #    demand_params = demand_inputs[sample, :]
-    #    demand_output[sample] = get_demand(init_dict_estimation, demand_dict,
-    # demand_params).iloc[0]['demand']
-
     get_demand_partial = partial(
         get_demand, init_dict=init_dict_estimation, demand_dict=demand_dict
     )
@@ -276,8 +268,11 @@ def rust_model_shapley(
     def _get_demand_mapping(x):
         return get_demand_partial(demand_params=x).iloc[0]["demand"]
 
-    # Here could use Joblib.
-    demand_output = np.array(list(map(_get_demand_mapping, demand_inputs)))
+    n_cores = os.cpu_count()
+    demand_output = Parallel(n_jobs=n_cores)(
+        delayed(_get_demand_mapping)(inp) for inp in demand_inputs
+    )
+    # demand_output = np.array(list(map(_get_demand_mapping, demand_inputs)))
 
     return demand_output
 

@@ -153,18 +153,21 @@ def approx_comp_time(
         )
         time = (time_model_eval * (n_evals) / 100) / 3600
 
+    # print(
+    #     "",
+    #     n_evals,
+    #     "model evaluations",
+    #     "\n",
+    #     "approx. ",
+    #     time,
+    #     "hours",
+    #     "\n",
+    #     "approx.",
+    #     time * 60,
+    #     "minutes",
+    # )
     print(
-        "",
-        n_evals,
-        "model evaluations",
-        "\n",
-        "approx. ",
-        time,
-        "hours",
-        "\n",
-        "approx.",
-        time * 60,
-        "minutes",
+        f"{n_evals} model evaulations. \n Approx. {time} hours. \n Approx. {time * 60} minutes"
     )
 
 

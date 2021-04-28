@@ -11,6 +11,8 @@
 *.toc
 *.bib.sav
 *.bib.bak
+*.fdb_latexmk
+*.fls
 *.ipynb_checkpoints
 #test_*
 thesis_project_heid.egg-info

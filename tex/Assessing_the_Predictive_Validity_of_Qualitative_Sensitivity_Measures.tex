@@ -1,14 +1,32 @@
 \documentclass[a4paper,12pt]{article}
 
+\usepackage[a4paper, left=3cm, right=2cm, top=2cm, bottom=2cm]{geometry}
 \usepackage[english]{babel} % language package.
+\usepackage[utf8]{inputenc}
 \usepackage{microtype} % avoid Overfull \hbox warning.
+\usepackage{graphicx}
+%\usepackage{amsmath} % serious mathematical typesetting.
+\usepackage{amsfonts, amsthm, amssymb, amsmath}
 \usepackage{hyperref}
 \usepackage{cleveref} % load cleveref after hyperref.
+\usepackage{setspace} % Adapt line spacing.
+\onehalfspacing % 1.5 line spacing.
+
+% Custom commands.
+\newtheorem{definition}{Definition}
 
 \begin{document}
 
 \input{titlepage}
 
 \input{introduction}
+
+\input{shapley_values}
+
+\input{rust_model}
+
+\input{computation_shapley_effects}
+
+\input{conclusion}
 
 \end{document}

@@ -1,5 +1,7 @@
 # Latex
 *.pdf
+*.run.xml
+*.bcf
 *.log
 *.aux
 *.bbl

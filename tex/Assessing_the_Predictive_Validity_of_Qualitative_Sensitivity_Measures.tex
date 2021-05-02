@@ -2,17 +2,27 @@
 
 \usepackage[a4paper, left=3cm, right=2cm, top=2cm, bottom=2cm]{geometry}
 \usepackage[english]{babel} % language package.
-% \usepackage[utf8]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage{microtype} % avoid Overfull \hbox warning.
 \usepackage{graphicx}
+\usepackage{booktabs} % needed for tables from pandas, using .to_latex.
 \usepackage{amsfonts, amsthm, amssymb, amsmath} % serious mathematical typesetting.
-\usepackage{hyperref}
+\usepackage[onehalfspacing]{setspace} % Adapt line spacing.
+\usepackage[backend=biber,
+natbib=true, % command \citep originates from natbib.
+style=authoryear, % reference style.
+% maxbibnames=10, % in bibliography use et al. if more than maxbibnames authors exist.
+firstinits = true,
+maxcitenames=2,
+uniquename=false]{biblatex}
+% \setlength\bibitemsep{\baselineskip} % increase space between entries in bibliography.
+\addbibresource{bibliography.bib}
+\usepackage[hidelinks]{hyperref} % hidelinks removes coloured boxes.
+\usepackage{bookmark} % needed to run LaTeX only once for hyperref to create the references (call after calling hyperref).
 \usepackage{cleveref} % load cleveref after hyperref.
-\usepackage{setspace} % Adapt line spacing.
-\onehalfspacing % 1.5 line spacing.
 
-% \widowpenalty=10000 % page break (no single line hanging).
-% \clubpenalty=10000 % page break (no single line hanging).
+\widowpenalty=10000 % page break (no single line hanging).
+\clubpenalty=10000 % page break (no single line hanging).
 
 % Custom commands.
 \newtheorem{definition}{Definition}
@@ -30,5 +40,10 @@
 \input{computation_shapley_effects}
 
 \input{conclusion}
+
+\newpage
+\thispagestyle{plain} % suppress header.
+\addcontentsline{toc}{section}{References}
+\printbibliography[title={References}]
 
 \end{document}

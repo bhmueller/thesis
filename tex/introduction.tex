@@ -6,11 +6,15 @@ Due to the advancements in computational tractability one is less coerced to imp
 
 [Example with Rust model and why no analytical solution exists.]
 
-Consider the following model
-$$Y = f(X),$$
-where $Y$ is the response variable that depends on the values of some independent variables $X$. Let $X$ denote the vector $X = (X_1, …, X_k)’ \epsilon \in R^k$, where $k$ is the number of independent variables. Let x be the vector of certain values assigned to $X$, i.e. one realisation of $X$. Let $f(\cdot)$ denote a function that describes in which way $Y$ depends on $X$. This function may be some complex function (e.g. computer code) or a model that can be solved by numerical methods only. Thus, $f$ is generally not available in closed form and, hence, the relationship between $Y$ and $X$ is considered a black box.
+\noindent Consider the following model
 
-In the remainder of this work, I name $Y$ the (model) output and the vector $X$ the (model) inputs. In this work I will consider $X$ as being stochastic, that is, the $X_i$, $i = 1, …, k$, follow a joint cumulative distribution function $G(X)$. Thus, although $f$ is assumed to be a deterministic function of $X$, the output $Y$ is also stochastic due to the uncertainty in $X$ \citep{SNS16}.
+\begin{equation*}
+Y = f(X),
+\end{equation*}
+
+where $Y$ is the response variable that depends on the values of some independent variables $X$. Let $X$ denote the vector $X = (X_1, \dots, X_k)' \in \mathbb{R}^k$, where $k$ is the number of independent variables. Let $x$ be the vector of specific values assigned to $X$, i.e. one realisation of $X$. Let $f(\cdot)$ denote a function that describes in which way $Y$ depends on $X$. This function may be some complex function (e.g. computer code) or a model that can be solved by numerical methods only. Thus, $f$ is generally not available in closed form and, hence, the relationship between $Y$ and $X$ is considered a black box.
+
+In the remainder of this work, I name $Y$ the (model) output and the vector $X$ the (model) inputs. In this work I will consider $X$ as being stochastic, that is, the $X_i$, $i = 1,\dots, k$, follow a joint cumulative distribution function $G(X)$. Thus, although $f$ is assumed to be a deterministic function of $X$, the output $Y$ is also stochastic due to the uncertainty in $X$ \citep{SNS16}.
 
 In order to understand the model behaviour, sa is a way of learning about the input-output relationship of the model at hand \citep{BP16}. One can generally structure sa into local and global methods of sa \citep{BP16}. Local methods conduct sa around a certain point, or base case, $x_0$, in a deterministic framework, i.e. no probability distribution is assigned to $X$ \citep{BP16}. In contrast, when performing global sa, we find ourselves in a stochastic context, which requires knowledge of the distribution of $X$, be it joint or marginal with or without dependence between the inputs \citep{ST02}.
 

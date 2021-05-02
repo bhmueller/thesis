@@ -45,16 +45,19 @@ How the state $(x, \varepsilon)$ changes over time, depends on the choice $i_t$ 
 The discount factor is denoted $\beta \in (0,1) $. Given state $ (x_t,\ \varepsilon_t) $, the agent maximises, choosing a sequence of decisions
 
 \begin{equation}
-\max_{\{i_t,\ i_{t+1},\ i_{t+2},\ ...\}}\ E[\sum_{\tau=1}^\infty\ \beta^{\tau-t}\ u(x_{\tau},\ i_{\tau},\ \varepsilon_{\tau};\ \theta_1,\ RC)]
+\max_{\{i_t,\ i_{t+1},\ i_{t+2},\ ...\}} E \left[\sum_{\tau=1}^\infty\ \beta^{\tau-t}\ u(x_{\tau},\ i_{\tau},\ \varepsilon_{\tau};\ \theta_1,\ RC) \right].
 \end{equation}
 
 By $p$ being Markovian, the optimal decision is time-invariant. Thus, drop time indices. The decision problem is now defined by the solution to the Bellman equation
 
 \begin{equation}
-V(x,\ \varepsilon)=\max_i \{v(x,\ i;\ \theta_1,\ RC)+\varepsilon(i)+\beta\ \int_{x^{\prime}}\ \int_{\varepsilon^{\prime}}\}
+\begin{split}
+V(x,\ \varepsilon)=\max_i \left\{ v(x,\ i;\ \theta_1,\ RC)+\varepsilon(i) + \\
+& \beta\ \int_{x^{\prime}}\ \int_{\varepsilon^{\prime}} V(x',\ \varepsilon')p(x',\ \varepsilon' \mid x,\ \varepsilon,\ i;\ \theta_2, \theta_3)dx' d \varepsilon' \right\}.
+\end{split}
 \end{equation}
 
-The above problem is simplified by imposing some further assumptions to ease the estimation process. The model is solved by use of the so called NFXP \citep{R87}. The parameters to be estimated are combined in a vector $\theta=(\theta_3, RC, \theta_{11}) $. The estimation procedure via Maximum Likelihood is conducted by first estimating the transition probabilities $\theta_3$. In a second step, the parameters $RC$ and $\theta_{11}$ are estimated. I do not go into further details of how this model is solved. For details see \citet{R87}.
+The above problem is simplified by imposing some further assumptions to ease the estimation process. The model is solved by use of the so called NFXP \citep{R87}. The parameters to be estimated are combined in a vector $\theta=(\theta_3,\ RC,\ \theta_{11}) $. The estimation procedure via Maximum Likelihood is conducted by first estimating the transition probabilities $\theta_3$. In a second step, the parameters $RC$ and $\theta_{11}$ are estimated. I do not go into further details of how this model is solved. For details see \citet{R87}.
 
 \subsection{Distribution of the Input Variables}
 
@@ -62,9 +65,11 @@ The Maximum Likelihood estimator is asymptotically normally distributed \citep{R
 
 First, I set the true parameters in $\theta$. I chose to consider three transition probabilities, i.e. the mileage state $x$ can increase from the current period to the next by two grids at most. I set
 
-$$\theta_3 = (\theta_{30},\ \theta_{31},\ \theta_{32})=(0.,\ 0.,\ 0.),$$
-$$RC = 10.07780762,$$
-$$\theta_{11} = 2.29417622.$$
+\begin{align*}
+\theta_3 &= (\theta_{30},\ \theta_{31},\ \theta_{32})=(0.39189182,\ 0.59529371,\ 0.01281447),\\
+RC &= 10.07780762,\\
+\theta_{11} &= 2.29417622.
+\end{align*}
 
 \noindent Note that $RC$ is scaled by 0.001 for estimation purposes. I consider a total of 50 buses for 120 periods (months, i.e. in total ten years).
 

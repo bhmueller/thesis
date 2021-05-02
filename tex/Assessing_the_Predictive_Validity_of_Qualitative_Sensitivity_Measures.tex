@@ -2,20 +2,22 @@
 
 \usepackage[a4paper, left=3cm, right=2cm, top=2cm, bottom=2cm]{geometry}
 \usepackage[english]{babel} % language package.
-\usepackage[utf8]{inputenc}
+\usepackage[utf8]{inputenc} % special characters, e.g. ü.
+% \usepackage[T1]{fontenc} % font encoding.
 \usepackage{microtype} % avoid Overfull \hbox warning.
-\usepackage{graphicx}
+\usepackage{float, graphicx}
 \usepackage{booktabs} % needed for tables from pandas, using .to_latex.
+\usepackage[table]{xcolor} % grey table rows.
 \usepackage{amsfonts, amsthm, amssymb, amsmath} % serious mathematical typesetting.
 \usepackage[onehalfspacing]{setspace} % Adapt line spacing.
 \usepackage[backend=biber,
 natbib=true, % command \citep originates from natbib.
 style=authoryear, % reference style.
-% maxbibnames=10, % in bibliography use et al. if more than maxbibnames authors exist.
+% maxbibnames=10,
 firstinits = true,
 maxcitenames=2,
 uniquename=false]{biblatex}
-% \setlength\bibitemsep{\baselineskip} % increase space between entries in bibliography.
+\setlength\bibitemsep{\baselineskip} % increase space between entries in bibliography.
 \addbibresource{bibliography.bib}
 \usepackage[hidelinks]{hyperref} % hidelinks removes coloured boxes.
 \usepackage{bookmark} % needed to run LaTeX only once for hyperref to create the references (call after calling hyperref).
@@ -30,6 +32,18 @@ uniquename=false]{biblatex}
 \begin{document}
 
 \input{titlepage}
+\newpage
+
+% \tableofcontents
+% \newpage
+
+\setcounter{page}{1}
+\pagenumbering{Roman}
+
+% Main body.
+
+\setcounter{page}{1}
+\pagenumbering{arabic}
 
 \input{introduction}
 
@@ -42,7 +56,7 @@ uniquename=false]{biblatex}
 \input{conclusion}
 
 \newpage
-\thispagestyle{plain} % suppress header.
+% \thispagestyle{plain} % suppress header.
 \addcontentsline{toc}{section}{References}
 \printbibliography[title={References}]
 

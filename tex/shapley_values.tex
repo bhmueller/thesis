@@ -11,7 +11,6 @@ Consider a game with $k$ players, where $K$ denotes the set of all players, the 
 \begin{definition}
 
 Given a coalition worth function $val$, the marginal contribution of player $i$ joining coalition $J$ is $mar(J,\ i)=val(J \cup \{i\}) - val(J)$. The Shapley value is then defined by
-
 \begin{equation}
 \begin{split}
 \phi_{i} (val)& = \sum_{J \mid i \notin J} \frac{\vert J \vert ! (k - \vert J \vert - 1) ! }{ k !} (val(J \cup \{i\}) - val(J)) \\
@@ -49,7 +48,6 @@ Factors Mapping (FM): If one cares about the input importance in certain regions
 SA does address more fundamental objectives of mathematical modelling and the analysis of systems that can be achieved directly from the above settings and are summarised in \citet{R21}. By sa, one can achieve or conduct a. scientific discovery, i.e. identification of causal relationships, b. dimensionality reduction, i.e. determination of the least important inputs, which is achieved by FF, c. data worth assessment, which relates to FP, and d. decision support \citep{R21}.
 
 In global sa, where, as one may recall, inputs are probabilistic in nature, one distinguishes six classes of sa methods \citep{BP16}. The sensitivity indices discussed and applied in this work belong to the area of variance-based sensitivity measures. Variance-based sensitivity measures are obtained by determining the expected reduction in output variance due to knowing input i with certainty \citep{BP16}. These methods are based on the classical formula for the law of total variance
-
 \begin{equation}
 V[Y]= V[E[Y \mid X_J]] + E[V[Y \mid X_J]]
 \end{equation}
@@ -59,16 +57,13 @@ V[Y]= V[E[Y \mid X_J]] + E[V[Y \mid X_J]]
 A variance-based sensitivity measure determines much output variance is attributable to each input $i$ \citep{BP16}. Variance-based global sa is not applicable to decision variables, since global sa attaches a distribution to input variables, implying that inputs are uncertain \citep{SNS16}. Recall that due to this uncertainty in the inputs $X_K$ the output $Y$ is uncertain as well. $V[Y]$ measures this uncertainty in the output, where $V[Y]$ is taken according to the joint distribution of $G_K$. In the variance of the model output, there are three parts of variances; the one caused by every input in isolation, the one that is caused by interaction effects among inputs, and one that is due to input dependence.
 
 \citet{S93} introduced often used variance-based sensitivity indices that attribute the variance reduction to each subset $J \subset K$ using an ANOVA decomposition. To ensure uniqueness of the ANOVA decomposition employed by \citet{S53}, one needs to assume independence of model inputs \citep{GM17}. Sobol' indices were introduced as a subset importance measure \citep{SNS16}. For the purposes of sa we let the subsets be the single inputs, i.e. the subsets under considerations are singletons. The Sobol' indices are then defined as
+\begin{align}
+S_i &= V[Y]^{-1} V[E[Y \mid X_i]]\\
+S_i^T &= V[Y]^{-1}(V[Y] - V[E[Y \mid {X_{- i}}]])
+\label[equation]{total_sobol}
+\end{align}
 
-\begin{equation}
-S_i = V[Y]^{-1} V[E[Y \mid X_i]]
-\end{equation}
-
-\begin{equation} \label[equation]{total_sobol}
-S_i^T = V[Y]^{-1}(V[Y] - V[E[Y \mid {X_{- i}}]])
-\end{equation}
-
-where $X_{- i}$ is the subset of input variables without input $i$. What follows does apply to models with independent inputs only. The sensitivity measure $S_i$ is called the first-order sensitivity index. $S_i$ represents the share of output variance reduced by the isolated effect of input $i$, excluding contributions in variance reduction by interactions between input $i$ and the remaining $(K-1)$ inputs. The subtrahend in the nominator of \cref{total_sobol} can be seen as the expected variance reduction when $X_i$ is fixed at a certain value, i.e. if we know $X_i$ with certainty \citep{SNS16}. $S_i^T$ is called the total sensitivity index. $S_i^T$ complements $S_i$ in the sense that it measures the total effect of $X_i$ in the output variance, including interaction effects \citep{SNS16}. It can be considered the expected remaining output variance, when all values of the inputs are known, except for the value attached to $X_i$ \citep{SNS16}. By normalising both measures by $V[Y]$, it is clear that the value s of $S_i$ and $S_i^T$ are in the interval $[0, 1]$, since the numerators in equations xy and yz are always smaller than the total variance \citep{GM17}. For the relationship between $S_i$ and $S_i^T$ the weak inequality $S_i\ \le\ S_i^T$ holds true, while equality only holds when there are no interaction effects between $X_i$ and $X_{- i}$. Note that the terms indices and effects are used interchangeably.
+\noindent where $X_{- i}$ is the subset of input variables without input $i$. What follows does apply to models with independent inputs only. The sensitivity measure $S_i$ is called the first-order sensitivity index. $S_i$ represents the share of output variance reduced by the isolated effect of input $i$, excluding contributions in variance reduction by interactions between input $i$ and the remaining $(K-1)$ inputs. The subtrahend in the nominator of \cref{total_sobol} can be seen as the expected variance reduction when $X_i$ is fixed at a certain value, i.e. if we know $X_i$ with certainty \citep{SNS16}. $S_i^T$ is called the total sensitivity index. $S_i^T$ complements $S_i$ in the sense that it measures the total effect of $X_i$ in the output variance, including interaction effects \citep{SNS16}. It can be considered the expected remaining output variance, when all values of the inputs are known, except for the value attached to $X_i$ \citep{SNS16}. By normalising both measures by $V[Y]$, it is clear that the value s of $S_i$ and $S_i^T$ are in the interval $[0, 1]$, since the numerators in equations xy and yz are always smaller than the total variance \citep{GM17}. For the relationship between $S_i$ and $S_i^T$ the weak inequality $S_i\ \le\ S_i^T$ holds true, while equality only holds when there are no interaction effects between $X_i$ and $X_{- i}$. Note that the terms indices and effects are used interchangeably.
 
 Under input independence, the Sobol' indices have a clear interpretation. If $S_i$ is large, then the corresponding input $X_i$ is an influential input with respect to the output variance reduction \citep{GM17}. In contrast, a small first-order effect $S_i$ does not imply that $X_i$ is an uninfluential input, if strong interaction effects are present \citep{GM17}. As $S_i^T$ measures the total variance contribution by $X_i$, one can infer from a small $S_i^T$ that $X_i$ is indeed not uninfluential \citep{GM17}. If so, $X_i$ could be fixed at a certain value without causing changes in the model output variance \citep{GM17}.
 
@@ -81,30 +76,21 @@ Recall that the statements about the model structure and input importance do not
 In the context of sa, \citet{SNS16} named Shapley values Shapley effects, which were first suggested as a variance-based sensitivity measure by \citet{O14}. According to \citet{PRB20} the Shapley effect is becoming more and more popular in sa.
 
 When applied as a sensitivity measure, the interpretation of the Shapley value changes. $X_i$ is now interpreted as a model input instead of a player in a game. A coalition is now a subset of model inputs. \citet{O14} defines the function $\widetilde{val}$ as a function that assigns the explanatory power of this subset of inputs to this subset. That is, the function $\widetilde{val}$ assigns the conditional variance to a subset of inputs, $\widetilde{val}(J)=V[Y]^{-1}V[E[Y \mid X_J]]$ and $\widetilde{val}$ measures the reduction in $V[Y]$ due to the inputs in $J$ \citep{SNS16}. \citep{SNS16} show that the following alternative formulation of the value function results into the same Shapley effect.
-
 \begin{equation}
 val(J)=E[V[Y \mid X_{- J}]]
 \end{equation}
 
-$val(J)$ can be interpreted as the remaining variance of $Y$, given the values of the inputs in $- J$ are known. Both formulations satisfy the following two requirements
-
-\begin{equation}
-val(\emptyset) = 0
-\end{equation}
-
-\begin{equation}
+\noindent $val(J)$ can be interpreted as the remaining variance of $Y$, given the values of the inputs in $- J$ are known. Both formulations satisfy the following two requirements
+\begin{align}
+val(\emptyset) = 0\\
 val(K)=V[Y].
-\end{equation}
+\end{align}
 
-In words, the value of the empty input subset should be zero and the value of the set of all inputs should equal the entire output variance. In this work I consider the value functions normalised by $val(K)=V[Y] $ to get Shapley effects normalised to the interval $ [0,\ 1] $. The most appealing properties of Shapley effects are that they satisfy the following two conditions (compare to axioms 1 and 4).
-
-\begin{equation}
-\sum_{i=1}^{k}\phi_i = 1
-\end{equation}
-
-\begin{equation}
+\noindent In words, the value of the empty input subset should be zero and the value of the set of all inputs should equal the entire output variance. In this work I consider the value functions normalised by $val(K)=V[Y] $ to get Shapley effects normalised to the interval $ [0,\ 1] $. The most appealing properties of Shapley effects are that they satisfy the following two conditions (compare to axioms 1 and 4).
+\begin{align}
+\sum_{i=1}^{k}\phi_i = 1\\
 \phi_i \geq 0,\ \forall \ i=1, ..., k.
-\end{equation}
+\end{align}
 
 \noindent So, the Shapley effects calculated for a model sum up to one and each Shapley effect is weakly larger than zero. Hence, the Shapley effects are input importance measures in terms of the expected output variance reduction induced by $X_i$. The non-negativity condition ensures that Shapley effects are always clearly interpretable. Note that due to the uncertainty in the computation process there exists the possibility of Shapley effects turning out to be below zero. By increasing sample sizes, this phenomenon should be mitigated.
 

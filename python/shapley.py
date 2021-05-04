@@ -10,6 +10,7 @@ import chaospy as cp
 import numpy as np
 import pandas as pd
 
+from joblib import Parallel, delayed
 from econsa.sampling import cond_mvn
 
 
@@ -23,6 +24,7 @@ def get_shapley(
     n_output,
     n_outer,
     n_inner,
+    n_jobs=1,
 ):
     """Shapley value function.
 
@@ -86,6 +88,9 @@ def get_shapley(
     n_inner : scalar
             The inner Monte Carlo sample size to estimate the cost function for
             `c(J) = Var[Y|X]`.
+    n_jobs : int
+            Default: 1. Number of cpu cores one wants to use for parallelizing the model
+            evaluation step. Depends on function argument ``parallel``.
 
     Returns
     -------
@@ -155,7 +160,8 @@ def get_shapley(
                 ]
 
     # calculate model output
-    output = model(model_inputs)
+    output = Parallel(n_jobs=n_jobs)(delayed(model)(inp) for inp in model_inputs)
+    # output = model(model_inputs)
 
     # Initialize Shapley, main and total Sobol effects for all players
     shapley_effects = np.zeros(n_inputs)

@@ -53,9 +53,9 @@ def setup_rust_model_001():
         "plot": {"gridsize": gridsize},
     }
 
-    # Calcualte objects necessary for the simulation process. See documentation for
+    # Calculate objects necessary for the simulation process. See documentation for
     # details.
-    # Discretization of the state space.
+    # Discretisation of the state space.
     # Originally 200. 90 (with a size of 5,000 miles each) and 175 (with a size of
     # 2,571) bins were used by Rust (1987).
     num_states = 175
@@ -236,47 +236,47 @@ def simulate_cov_and_mean_rc_theta_11(
 # Functions for the Rust model.
 def rust_model_shapley(
     x,
-    method,
-    n_perms,
-    n_inputs,
-    n_output,
-    n_outer,
-    n_inner,
     trans_probs,
     init_dict_estimation,
     demand_dict,
 ):
-    if method == "exact":
-        n_evaluations = (
-            n_output + np.math.factorial(n_inputs) * (n_inputs - 1) * n_outer * n_inner
-        )
-    elif method == "random":
-        n_evaluations = n_output + n_perms * (n_inputs - 1) * n_outer * n_inner
-    else:
-        raise ValueError
+    # if method == "exact":
+    #     n_evaluations = (
+    #         n_output + np.math.factorial(n_inputs) * (n_inputs - 1) * n_outer * n_inner
+    #     )
+    # elif method == "random":
+    #     n_evaluations = n_output + n_perms * (n_inputs - 1) * n_outer * n_inner
+    # else:
+    #     raise ValueError
 
     # Adapt function to work with changed number of trans_probs as well.
     n_trans_probs = len(trans_probs)
 
-    demand_inputs = np.zeros((n_evaluations, n_trans_probs + 2))
-    demand_inputs[:, :n_trans_probs] = trans_probs
-    demand_inputs[:, n_trans_probs:] = x[:, :]
+    # demand_inputs = np.zeros((n_evaluations, n_trans_probs + 2))
+    # demand_inputs[:, :n_trans_probs] = trans_probs
+    # demand_inputs[:, n_trans_probs:] = x[:, :]
+    demand_inputs = np.zeros(n_trans_probs + 2)
+    demand_inputs[:n_trans_probs] = trans_probs
 
-    demand_output = np.zeros((n_evaluations, 1))
+    # demand_output = np.zeros((n_evaluations, 1))
 
-    get_demand_partial = partial(
-        get_demand, init_dict=init_dict_estimation, demand_dict=demand_dict
-    )
+    # get_demand_partial = partial(
+    #     get_demand, init_dict=init_dict_estimation, demand_dict=demand_dict
+    # )
 
-    def _get_demand_mapping(x):
-        return get_demand_partial(demand_params=x).iloc[0]["demand"]
+    # def _get_demand_mapping(x):
+    #     return get_demand_partial(demand_params=x).iloc[0]["demand"]
 
-    n_cores = os.cpu_count()
-    demand_output = Parallel(n_jobs=n_cores)(
-        delayed(_get_demand_mapping)(inp) for inp in demand_inputs
-    )
+    # n_cores = os.cpu_count()
+    # demand_output = Parallel(n_jobs=n_cores)(
+    #     delayed(_get_demand_mapping)(inp) for inp in demand_inputs
+    # )
     # demand_output = np.array(list(map(_get_demand_mapping, demand_inputs)))
-
+    demand_inputs[n_trans_probs] = x[:][0]
+    demand_inputs[n_trans_probs + 1] = x[:][1]
+    demand_output = get_demand(init_dict_estimation, demand_dict, demand_inputs).iloc[
+        0
+    ]["demand"]
     return demand_output
 
 

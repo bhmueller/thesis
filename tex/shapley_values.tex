@@ -1,6 +1,6 @@
 \section{From Shapley Values to Shapley Effects}
 
-This section introduces Shapley effects for sa.
+This section introduces Shapley effects for sa. Shapley effects will serve as a benchmark for evaluating the performance of Morris indices.
 
 \subsection{Shapley Values in Economics}
 
@@ -33,7 +33,7 @@ In words, one considers every coalition of players and evaluates by how much the
 
 Pareto efficiency assures that nothing of the profit gained by the team is wasted. Normalised by the total profit, the Shapley value gives the share attained by each individual in the game. Symmetry results into all players who contributed the same to the common product, receiving the same payoff, reflecting the meritocratic principle. The null-player axiom ensures that players that do not contribute to the team effort at all, do not receive any share in the profits. Especially axioms 1 and 4 are desirable in the context of the Shapley value as a variance-based sm.
 
-\subsection{Variance-based sa} \label{var_based_sa}
+\subsection{Variance-based Sensitivity Analysis} \label{var_based_sa}
 
 There are several purposes for which one can apply sa methods in general. Note, that in sa one refers to input variables by the term factors \citep{R21}. In their textbook, \citet{STC04} summarise the following four possible objectives of sa.
 
@@ -71,7 +71,7 @@ Evaluating $S_i$ and $S_i^T$ one can also learn something about the structure of
 
 Recall that the statements about the model structure and input importance do not hold if inputs are dependent. In the case of dependence, one cannot simply apply the ANOVA decomposition since it is no longer unique \citep{O14}. In the Rust model, there are two input variables, $RC$ and $\theta_{11}$. As one can see in \cref{model_setup}, there exists significant dependence between the inputs. Thus, Sobol' indices should not be used. Another variance-based sensitivity measure are the now popular Shapley effects, which can be used also in the context of dependence. They are derived in the following section.
 
-\subsection{Shapley Effects for sa}
+\subsection{Shapley Effects for Sensitivity Analysis}
 
 In the context of sa, \citet{SNS16} named Shapley values Shapley effects, which were first suggested as a variance-based sensitivity measure by \citet{O14}. According to \citet{PRB20} the Shapley effect is becoming more and more popular in sa.
 

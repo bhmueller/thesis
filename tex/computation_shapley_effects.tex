@@ -27,7 +27,7 @@ Algorithm 1 implements three MC simulations. There are $N_V$ MC samples of model
 
 \subsection{Computational Setup}
 
-\citet{SNS16} recommend setting $m=\vert \Pi(K) \vert$, if computationally feasible. In order to reduce variance of the estimates of Shapley effects, \citet{SNS16} recommend choosing $N_I=3$, while setting $N_O$ as large as possible, given the constraints on the computational budget. Since the Rust model has two inputs only, the number of inputs is very small. Thus, I set $m=2!=2$, $N_I=3$, $N_V=100$ and $N_O=10$. Thus, the computational cost of my choice of MC runs imply that 160 model evaluations are needed to estimate Shapley effects. On my machine (Windows 10, i5 processor), one estimation run takes approximately 55 seconds. I run the estimation by using the implementation of the package \textit{econsa}, a Python package for sa \citep{OSE21}.
+\citet{SNS16} recommend setting $m=\vert \Pi(K) \vert$, if computationally feasible. In order to reduce variance of the estimates of Shapley effects, \citet{SNS16} recommend choosing $N_I=3$, while setting $N_O$ as large as possible, given the constraints on the computational budget. Since the Rust model has two inputs only, the number of permutations to be consiedered is two and thus, very small. Hence, I set $m=2!=2$, $N_I=3$, $N_V=100$ and $N_O=10$. Thus, the computational cost of my choice of MC runs imply that 160 model evaluations are needed to estimate the Shapley effects. On my machine (Windows 10, i5 processor), one estimation run takes approximately 55 seconds. I run the estimation by using the implementation of the package \textit{econsa}, a Python package for sa \citep{OSE21}.
 
 \subsection{Results}
 

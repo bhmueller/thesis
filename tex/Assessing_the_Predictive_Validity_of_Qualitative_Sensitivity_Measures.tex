@@ -10,12 +10,13 @@
 \usepackage[table]{xcolor} % grey table rows.
 \usepackage{amsfonts, amsthm, amssymb, amsmath} % serious mathematical typesetting.
 \usepackage[onehalfspacing]{setspace} % Adapt line spacing.
+\DeclareRobustCommand{\tbs}{\textbackslash} % used to display econsa\dev in bibliography.
 \usepackage[backend=biber,
 natbib=true, % command \citep originates from natbib.
 style=authoryear, % reference style.
-% maxbibnames=10,
-firstinits = true,
+giveninits=true,
 maxcitenames=2,
+bibencoding=utf8,
 uniquename=false]{biblatex}
 \setlength\bibitemsep{\baselineskip} % increase space between entries in bibliography.
 \addbibresource{bibliography.bib}
@@ -47,11 +48,13 @@ uniquename=false]{biblatex}
 
 \input{introduction}
 
-\input{shapley_values}
-
 \input{rust_model}
 
-\input{computation_shapley_effects}
+\input{shapley_effects}
+
+\input{morris_method}
+
+\input{comparison}
 
 \input{conclusion}
 

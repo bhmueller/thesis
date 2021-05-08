@@ -44,7 +44,7 @@ def elementary_effects(
     sampling_scheme : str
         One of ["sobol", "random"]. Default: "sobol"
     n_cores : int
-        Default: 1. Number of cpu cores one want to use for parallelizing the model
+        Default: 1. Number of cpu cores one wants to use for parallelizing the model
         evaluation step. Depends on function argument ``parallel``.
     parallel : str
         One of ["joblib", "multiprocessing"]. Default: "joblib". Determines whether

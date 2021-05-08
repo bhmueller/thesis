@@ -52,7 +52,7 @@ V(x,\ \varepsilon)=\max_i \{ v(x,\ i;\ \theta_1,\ RC)+\varepsilon(i) + \\
 
 The above problem is simplified by imposing some further assumptions to ease the estimation process. The model is solved by use of the so called NFXP \citep{R87}. The parameters to be estimated are combined in a vector $\theta=(\theta_3,\ RC,\ \theta_{11}) $. The estimation procedure via Maximum Likelihood is conducted by first estimating the transition probabilities $\theta_3$. In a second step, the parameters $RC$ and $\theta_{11}$ are estimated. I do not go into further details of how this model is solved. For details see \citet{R87}.
 
-\subsection{Distribution of the Input Variables}
+\subsection{Distribution of the Input Variables} \label{model_setup}
 
 The Maximum Likelihood estimator is asymptotically normally distributed \citep{R73}. Thus, I estimate the variance-covariance matrix and the mean vector of $\theta_{11}$ and $RC$ by an MC simulation. Note that this general setup is used in \cref{comp_shap} as well. For solving the model, I use the simulation and estimation capabilities of the Python \textit{ruspy} package \citep{OSE19}. I chose \textit{scipy\_L-BFGS-B} as the solver for the NFXP algorithm \citep{SP20}. I proceed as follows.
 

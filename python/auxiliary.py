@@ -11,7 +11,46 @@ from ruspy.model_code.cost_functions import calc_obs_costs
 from ruspy.estimation.estimation_transitions import create_transition_matrix
 from ruspy.estimation.estimation import estimate
 from ruspy.model_code.demand_function import get_demand
-from econsa.shapley import _r_condmvn
+
+# from econsa.shapley import _r_condmvn
+from shapley import get_shapley
+from shapley import _r_condmvn
+
+
+def shapley_replicate(
+    init_dict_simulation,
+    model,
+    x_all_partial,
+    x_cond_partial,
+    n_perms,
+    n_inputs,
+    n_output,
+    n_outer,
+    n_inner,
+    n_cores,
+    current_seed,
+):
+    init_dict_simulation["simulation"]["seed"] = current_seed
+
+    # model = partial(rust_model_shapley, trans_probs=trans_probs, init_dict_
+    # estimation=init_dict_estimation, demand_dict=demand_dict)
+
+    # x_all_partial = partial(x_all_raw, mean=params, cov=cov)
+    # x_cond_partial = partial(x_cond_raw, mean=params, cov=cov)
+
+    exact_shapley = get_shapley(
+        model,
+        x_all_partial,
+        x_cond_partial,
+        n_perms,
+        n_inputs,
+        n_output,
+        n_outer,
+        n_inner,
+        n_cores,
+    )
+    exact_shapley.rename(index={"X1": "$RC$", "X2": "$\theta_{11}$"}, inplace=True)
+    return exact_shapley
 
 
 def setup_rust_model_001():
@@ -127,9 +166,7 @@ def compute_confidence_intervals(param_estimate, std_dev, critical_value):
     return confidence_interval_dict
 
 
-def approx_comp_time(
-    time_model_eval, method, n_inputs, n_perms, n_output, n_outer, n_inner
-):
+def approx_comp_time(time_model_eval, n_inputs, n_perms, n_output, n_outer, n_inner):
     """
     Approximate time for computation in hours and minutes.
 
@@ -144,14 +181,11 @@ def approx_comp_time(
     -------
 
     """
-    if method == "random":
-        n_evals = n_output + n_perms * (n_inputs - 1) * n_outer * n_inner
-        time = (time_model_eval * (n_evals) / 100) / 3600
-    elif method == "exact":
-        n_evals = (
-            n_output + np.math.factorial(n_inputs) * (n_inputs - 1) * n_outer * n_inner
-        )
-        time = (time_model_eval * (n_evals) / 100) / 3600
+
+    n_evals = (
+        n_output + np.math.factorial(n_inputs) * (n_inputs - 1) * n_outer * n_inner
+    )
+    time = (time_model_eval * (n_evals) / 100) / 3600
 
     # print(
     #     "",

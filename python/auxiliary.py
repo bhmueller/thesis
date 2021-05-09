@@ -131,7 +131,7 @@ def compute_confidence_intervals(param_estimate, std_dev, critical_value):
     return confidence_interval_dict
 
 
-def approx_comp_time(time_model_eval, n_inputs, n_perms, n_output, n_outer, n_inner):
+def approx_comp_time(time_model_eval, n_inputs, n_perms, n_variance, n_outer, n_inner):
     """
     Approximate time for computation in hours and minutes.
 
@@ -148,7 +148,7 @@ def approx_comp_time(time_model_eval, n_inputs, n_perms, n_output, n_outer, n_in
     """
 
     n_evals = (
-        n_output + np.math.factorial(n_inputs) * (n_inputs - 1) * n_outer * n_inner
+        n_variance + np.math.factorial(n_inputs) * (n_inputs - 1) * n_outer * n_inner
     )
     time = (time_model_eval * (n_evals) / 100) / 3600
 
@@ -180,7 +180,7 @@ def simulate_cov_and_mean_rc_theta_11(
 ):
     """
     Calculate variance-covariance matrix (cov) and mean vector (mean) of simulated data
-    for RC and theta_32 from Rust model.
+    for RC and theta_11 from Rust model.
 
 
     Parameters
@@ -258,43 +258,20 @@ def rust_model_shapley(
     init_dict_estimation,
     demand_dict,
 ):
-    # if method == "exact":
-    #     n_evaluations = (
-    #         n_output + np.math.factorial(n_inputs) * (n_inputs - 1) * n_outer * n_inner
-    #     )
-    # elif method == "random":
-    #     n_evaluations = n_output + n_perms * (n_inputs - 1) * n_outer * n_inner
-    # else:
-    #     raise ValueError
 
     # Adapt function to work with changed number of trans_probs as well.
     n_trans_probs = len(trans_probs)
 
-    # demand_inputs = np.zeros((n_evaluations, n_trans_probs + 2))
-    # demand_inputs[:, :n_trans_probs] = trans_probs
-    # demand_inputs[:, n_trans_probs:] = x[:, :]
     demand_inputs = np.zeros(n_trans_probs + 2)
     demand_inputs[:n_trans_probs] = trans_probs
 
-    # demand_output = np.zeros((n_evaluations, 1))
-
-    # get_demand_partial = partial(
-    #     get_demand, init_dict=init_dict_estimation, demand_dict=demand_dict
-    # )
-
-    # def _get_demand_mapping(x):
-    #     return get_demand_partial(demand_params=x).iloc[0]["demand"]
-
-    # n_cores = os.cpu_count()
-    # demand_output = Parallel(n_jobs=n_cores)(
-    #     delayed(_get_demand_mapping)(inp) for inp in demand_inputs
-    # )
-    # demand_output = np.array(list(map(_get_demand_mapping, demand_inputs)))
     demand_inputs[n_trans_probs] = x[:][0]
     demand_inputs[n_trans_probs + 1] = x[:][1]
+
     demand_output = get_demand(init_dict_estimation, demand_dict, demand_inputs).iloc[
         0
     ]["demand"]
+
     return demand_output
 
 
@@ -414,19 +391,19 @@ def descriptives_and_data_shapley_effects(shapley_effects, n_replicates):
 
 
 def shapley_replicate(
-    init_dict_simulation,
+    # init_dict_simulation,
     model,
     x_all_partial,
     x_cond_partial,
     n_perms,
     n_inputs,
-    n_output,
+    n_variance,
     n_outer,
     n_inner,
     n_cores,
     current_seed,
 ):
-    init_dict_simulation["simulation"]["seed"] = current_seed
+    # init_dict_simulation["simulation"]["seed"] = current_seed
 
     # model = partial(rust_model_shapley, trans_probs=trans_probs, init_dict_
     # estimation=init_dict_estimation, demand_dict=demand_dict)
@@ -434,13 +411,15 @@ def shapley_replicate(
     # x_all_partial = partial(x_all_raw, mean=params, cov=cov)
     # x_cond_partial = partial(x_cond_raw, mean=params, cov=cov)
 
+    np.random.seed(current_seed)
+
     exact_shapley = get_shapley(
         model,
         x_all_partial,
         x_cond_partial,
         n_perms,
         n_inputs,
-        n_output,
+        n_variance,
         n_outer,
         n_inner,
         n_cores,

@@ -1,6 +1,6 @@
 """Capabilities for computation of Shapley effects.
 
-This module contains functions to estimate shapley effects for models with
+This module contains functions to estimate Shapley effects for models with
 dependent inputs.
 
 """
@@ -25,6 +25,7 @@ def get_shapley(
     n_inner,
     n_jobs=1,
     seed=123,
+    # output_variance=None,
 ):
     """Shapley value function.
 
@@ -32,6 +33,10 @@ def get_shapley(
     models with both dependent and independent inputs. We allow for two ways
     to calculate Shapley effects: by examining all permutations of the given
     inputs or alternatively, by randomly sampling permutations of inputs.
+
+    This function is an implementation of algorithm 1 from Song, E., Nelson, B., &
+    Staum, J. (2016). Shapley Effects for Global Sensitivity Analysis: Theory and
+    Computation. SIAM/ASA J. Uncertain. Quantification, 4, 1060-1083.
 
     The function is a translation of the exact (``shapleyPermEx_`` )and random
     permutation functions (``shapleyPermRand_``) found in R's ``sensitivity`` package,
@@ -47,12 +52,6 @@ def get_shapley(
 
     Parameters
     ----------
-    method : string
-        Specifies which method you want to use to estimate shapley effects,
-        the ``exact`` or ``random`` permutations method. When the number of
-        inputs is small, it is better to use the ``exact`` method, and
-        ``random`` otherwise.
-
     model : string
         The model/function you will calculate the shapley effects on.
 
@@ -94,6 +93,10 @@ def get_shapley(
     seed : int
         Default: 123. Seed for randomly selecting permutations, if n_perms specified
         by an integer < factorial of n_inputs.
+
+    output_variance : int
+        Default: None. The total (unconditional) output variance can be provided to
+        ease the computational burden.
 
     Returns
     -------

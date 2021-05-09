@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import chaospy as cp
 from functools import partial
@@ -13,44 +14,8 @@ from ruspy.estimation.estimation import estimate
 from ruspy.model_code.demand_function import get_demand
 
 # from econsa.shapley import _r_condmvn
-from shapley import get_shapley
-from shapley import _r_condmvn
-
-
-def shapley_replicate(
-    init_dict_simulation,
-    model,
-    x_all_partial,
-    x_cond_partial,
-    n_perms,
-    n_inputs,
-    n_output,
-    n_outer,
-    n_inner,
-    n_cores,
-    current_seed,
-):
-    init_dict_simulation["simulation"]["seed"] = current_seed
-
-    # model = partial(rust_model_shapley, trans_probs=trans_probs, init_dict_
-    # estimation=init_dict_estimation, demand_dict=demand_dict)
-
-    # x_all_partial = partial(x_all_raw, mean=params, cov=cov)
-    # x_cond_partial = partial(x_cond_raw, mean=params, cov=cov)
-
-    exact_shapley = get_shapley(
-        model,
-        x_all_partial,
-        x_cond_partial,
-        n_perms,
-        n_inputs,
-        n_output,
-        n_outer,
-        n_inner,
-        n_cores,
-    )
-    exact_shapley.rename(index={"X1": "$RC$", "X2": "$\theta_{11}$"}, inplace=True)
-    return exact_shapley
+from python.shapley import get_shapley
+from python.shapley import _r_condmvn
 
 
 def setup_rust_model_001():
@@ -267,6 +232,25 @@ def simulate_cov_and_mean_rc_theta_11(
     return cov, mean
 
 
+# Handle one sample at a time. Also: check that values in df are accessed in the right way.
+def rust_model_morris(x, trans_probs, init_dict_estimation, demand_dict):
+
+    # Allow fct. to be adapted to more or fewer transition steps.
+    n_trans_probs = len(trans_probs)
+
+    demand_inputs = np.zeros(n_trans_probs + 2)
+
+    demand_inputs[:n_trans_probs] = trans_probs
+    demand_inputs[n_trans_probs] = x["value"][0]
+    demand_inputs[n_trans_probs + 1] = x["value"][1]
+
+    demand_output = get_demand(init_dict_estimation, demand_dict, demand_inputs).iloc[
+        0
+    ]["demand"]
+
+    return demand_output
+
+
 # Functions for the Rust model.
 def rust_model_shapley(
     x,
@@ -335,3 +319,131 @@ def x_cond_raw(n, subset_j, subsetj_conditional, xjc, mean, cov):
             given_ind=subsetj_conditional,
             x_given=xjc,
         )
+
+
+def descriptives_and_data_shapley_effects(shapley_effects, n_replicates):
+    """
+    Parameters
+    -----------
+
+    shapley_effects : dict
+        A dictionary containing the output tables for a number of n_replicates Shapley
+        effects computed by using econsa's get_shapley.
+
+    Returns
+    ----------
+
+    descriptives_shapley_effects : pd.DataFrame
+        DataFrame containing the descriptives of the n_replicates Shapley effects:
+        mean, standard error, and CIs.
+
+    data_box_plots : pd.DataFrame
+        DataFrame containing the data for making the boxplots.
+
+    """
+    # Get data frame suitable for plotting.
+    rc_shapley_effects = [
+        shapley_effects[i]["Shapley effects"]["$RC$"] for i in np.arange(n_replicates)
+    ]
+    theta_shapley_effects = [
+        shapley_effects[i]["Shapley effects"]["$\theta_{11}$"]
+        for i in np.arange(n_replicates)
+    ]
+
+    rc_shapley_effects_df = pd.DataFrame(data=rc_shapley_effects)
+    rc_shapley_effects_df["input_variable"] = "rc"
+
+    theta_shapley_effects_df = pd.DataFrame(data=theta_shapley_effects)
+    theta_shapley_effects_df["input_variable"] = "theta"
+
+    data = pd.concat(
+        [rc_shapley_effects_df, theta_shapley_effects_df], ignore_index=True
+    )
+    data.rename(columns={0: "shapley_effect"}, inplace=True)
+
+    # For calculation of variance use Bessel's correction (by specifying ddof=1 in np.var()).
+    variance_rc_shapley_effects = np.var(rc_shapley_effects, ddof=1)
+    mean_rc_shapley_effects = np.mean(rc_shapley_effects)
+
+    variance_theta_shapley_effects = np.var(theta_shapley_effects, ddof=1)
+    mean_theta_shapley_effects = np.mean(theta_shapley_effects)
+
+    # Calc. std. errors. (std. dev. / sqrt(n)).
+    se_rc_shapley_effects = np.sqrt(variance_rc_shapley_effects) / np.sqrt(n_replicates)
+
+    se_theta_shapley_effects = np.sqrt(variance_theta_shapley_effects) / np.sqrt(
+        n_replicates
+    )
+
+    # Critical value of the 95-percent confidence interval.
+    crit_value = 1.96
+
+    ci_rc = compute_confidence_intervals(
+        mean_rc_shapley_effects, se_rc_shapley_effects, crit_value
+    )
+
+    ci_theta = compute_confidence_intervals(
+        mean_theta_shapley_effects, se_theta_shapley_effects, crit_value
+    )
+
+    descriptives_data = np.array(
+        [
+            [
+                mean_rc_shapley_effects,
+                se_rc_shapley_effects,
+                ci_rc["lower_bound"],
+                ci_rc["upper_bound"],
+            ],
+            [
+                mean_theta_shapley_effects,
+                se_theta_shapley_effects,
+                ci_theta["lower_bound"],
+                ci_theta["upper_bound"],
+            ],
+        ]
+    )
+
+    descriptives_shapley_effects = pd.DataFrame(
+        descriptives_data,
+        columns=["Mean", "Std. errors", "CI lower bound", "CI upper bound"],
+        index=["$RC$", "$\theta_{11}$"],
+    )
+    descriptives_shapley_effects.index.name = "Shapley Effect"
+
+    return descriptives_shapley_effects, data
+
+
+def shapley_replicate(
+    init_dict_simulation,
+    model,
+    x_all_partial,
+    x_cond_partial,
+    n_perms,
+    n_inputs,
+    n_output,
+    n_outer,
+    n_inner,
+    n_cores,
+    current_seed,
+):
+    init_dict_simulation["simulation"]["seed"] = current_seed
+
+    # model = partial(rust_model_shapley, trans_probs=trans_probs, init_dict_
+    # estimation=init_dict_estimation, demand_dict=demand_dict)
+
+    # x_all_partial = partial(x_all_raw, mean=params, cov=cov)
+    # x_cond_partial = partial(x_cond_raw, mean=params, cov=cov)
+
+    exact_shapley = get_shapley(
+        model,
+        x_all_partial,
+        x_cond_partial,
+        n_perms,
+        n_inputs,
+        n_output,
+        n_outer,
+        n_inner,
+        n_cores,
+    )
+    exact_shapley.rename(index={"X1": "$RC$", "X2": "$\theta_{11}$"}, inplace=True)
+    return exact_shapley

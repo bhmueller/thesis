@@ -24,8 +24,8 @@ def get_shapley(
     n_outer,
     n_inner,
     n_jobs=1,
+    output_variance=None,
     seed=123,
-    # output_variance=None,
 ):
     """Shapley value function.
 
@@ -90,13 +90,14 @@ def get_shapley(
         Default: 1. Number of cpu cores one wants to use for parallelizing the model
         evaluation step using Joblib.
 
+    output_variance : float
+        Default: None. The total (unconditional) output variance can be provided to
+        ease the computational burden.
+
     seed : int
         Default: 123. Seed for randomly selecting permutations, if n_perms specified
         by an integer < factorial of n_inputs.
 
-    output_variance : int
-        Default: None. The total (unconditional) output variance can be provided to
-        ease the computational burden.
 
     Returns
     -------
@@ -162,11 +163,22 @@ def get_shapley(
 
     n_perms = np.int(permutations.shape[0])
 
+    if output_variance is not None:
+        n_variance = 0
+
+    else:
+        pass
+
     # Initiate empty input array for sampling.
     model_inputs = np.zeros(
         (n_variance + n_perms * (n_inputs - 1) * n_outer * n_inner, n_inputs),
     )
-    model_inputs[:n_variance, :] = x_all(n_variance).T
+
+    if output_variance is None:
+        model_inputs[:n_variance, :] = x_all(n_variance).T
+
+    else:
+        pass
 
     for p in range(n_perms):
 
@@ -220,7 +232,11 @@ def get_shapley(
     # Estimate the total variance of model output.
     model_output = output[:n_variance]
     output = output[n_variance:]
-    output_variance = np.var(model_output)
+
+    if output_variance is None:
+        output_variance = np.var(model_output)
+    else:
+        pass
 
     # Estimate Shapley, main and total Sobol' effects.
     conditional_variance = np.zeros(n_outer)

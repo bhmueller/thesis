@@ -27,13 +27,33 @@ Secondly, similar to the Sobol' indices, the person conducting sa has to take tw
 
 Thirdly, there exists no clear interpretation of the absolute values of the sensitivity indices. They only provide a ranking of inputs and give a hint of which inputs are the least influential ones \citep{GM17}.
 
-The advantages are that they are easily computed, with a much lower computational burden than the Shapley effects as presented in \cref{comp_shap}. Recall that Shapley effects as computed by use of the algorithm in \citet{SNS16} came at a cost of $N_V+m \cdot N_I \cdot N_O \cdot (k-1)$ model evaluations. Even the more efficient approach by \citet{PRB20} needed $2^k$ model runs.
+On the advantages, Morris indices are easily computed, with a much lower computational burden than the Shapley effects as presented in \cref{comp_shap}. Recall that Shapley effects as computed by use of the algorithm in \citet{SNS16} came at a cost of $N_V+m \cdot N_I \cdot N_O \cdot (k-1)$ model evaluations. Even the more efficient approach by \citet{PRB20} needed $2^k$ model runs.
+
+[Can learn sth. about model: whether there are interaction and/or non lin. effects. Why? See Morris (1991)? ]
+
+[Especially useful if assump.s about Latin hypercube not justifiable Morris 1991 p. 173]
 
 \citet{BP16} group the Morris method to the family of local sm. However, while the elementary effects themselves consider only local changes, the actual measures for input importance, $\mu_i^\ast$ and $\sigma_i$, average over these $N$ elementary effects. Thus, they take $N$ local changes per input $i$ into account \citep{M91}. Indeed, \citet{CCS11} make a case for the Morris method to be seen a global sm. \citet{BP16} acknowledge that screening methods like the Morris sm stand apart from other local sm.
 
 \subsection{Algorithm for Extended Morris Method}
 
+Analogously to the first-order and total Sobol' indices under dependence, \citet{GM17} developed the following elementary effects for dependent inputs.
+\begin{align}
+EE_i^{ind} = \frac{f(\bar{x_i}',\ x_{-i}) - f(x_i,\ x_{-i})}{\Delta},\\
+EE_i^{full} = \frac{f(x_i',\ \bar{x_{-i}}) - f(x_i,\ x_{-i})}{\Delta},
+\end{align}
+
+\noindent where
+\begin{itemize}
+\item $EE_i^{ind}$ denotes \textit{independent} elementary effects for input $i$, effects that exclude the contributions attributable to the dependence between input $X_i$ and $X_j$ for $i \neq j$, and
+\item $EE_i^{full}$ denotes \textit{full} elementary effects for input $i$, that include the effects due to correlation with other inputs.
+\end{itemize}
+
 \subsubsection{Sampling Design and Transformation}
+
+\textbf{Radial Design}
+
+\textbf{Inverse Nataf Transformation}
 
 \subsubsection{Computation}
 

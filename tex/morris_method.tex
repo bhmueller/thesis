@@ -1,10 +1,14 @@
 \section{Qualitative Sensitivity Measures: the Morris Method}
 
+This section introduces the Morris method for input screening.
+
 \subsection{Input Screening}
+
+In this section the applications of input screening is investigated.
 
 % \input{../figures/covariance_matrix.tex}
 
-\subsection{Morris Method for Independent Inputs}
+\subsection{Morris Method for Independent Inputs} \label{classic_morris}
 
 The Morris method was introduced by \citet{M91} to identify the "important" input variables of a model, especially in cases where there are many inputs and/or the evaluation of a model is time-consuming.
 
@@ -15,8 +19,8 @@ EE_i = \frac{f(x_{\Delta_i}) - f(x)}{\Delta}.
 
 The above elementary effect is computed $N$ times, each for a varying $\Delta$ \citep{GM17}. The actual sm resulting from the Morris method are the mean, denoted by $\mu_i$, and the standard deviation, denoted by $\sigma_i$, taken from all $N$ different elementary effects per input $i$.
 \begin{align}
-\mu_i^\ast& = \frac{1}{N} \sum_{r=1}^N \vert EE_{i,\ r} \vert,\\
-\sigma_i& = \sqrt{\frac{1}{N-1} \sum_{r=1}^N (EE_{i,\ r} - \mu_i)^2},
+\mu_i^\ast& = \frac{1}{N} \sum_{r=1}^N \vert EE_{i,\ r} \vert, \label{mu}\\
+\sigma_i& = \sqrt{\frac{1}{N-1} \sum_{r=1}^N (EE_{i,\ r} - \mu_i)^2}, \label{sigma}
 \end{align}
 
 \noindent with $EE_{i,\ r}$ denoting the $r$-th elementary effect of input $i$, $r = 1,\ \dots, N$, and $\vert \cdot \vert$ the absolute value. Note that in \citet{M91} the absolute value was absent and elementary effects could potentially cancel each other out \citep{CCS07}. Therefore, \citet{CCS07} proposed the version presented above, thus making the screening method more robust. A total of $2 \cdot k \cdot N$ model evaluations is needed to compute the full set of sm using the Morris method.
@@ -55,13 +59,17 @@ EE_i^{full} = \frac{f(x_i',\ \bar{x_{-i}}) - f(x_i,\ x_{-i})}{\Delta},
 \item $EE_i^{full}$ denotes \textit{full} elementary effects for input $i$, that include the effects due to correlation with other inputs.
 \end{itemize}
 
-The computation of the extended Morris indices requires the generation of dependent samples. Following \citet{GM17}, the computation involves the following steps:
+As in the case of the classic Morris method, the sm for input $i$ is derived by considering $N$ random samples yielding $2 \cdot N$ elementary effects, once for the independent and once for the full elementary effects. \citet{GM17} compute the corresponding sm as shown in \cref{mu} and \cref{sigma}. Since two sets of elementary effects are computed, they end up with a set of four sm, $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$.
+
+Interpretation-wise, $X_i$ is an unimportant input if all sm are essentially zero. A $(\mu^{\ast ind}_i$ strongly larger than zero and $\sigma_i^{ind})$ is close to zero, input $X_i$ is an important input by itself. When all sm except $\mu^{\ast full}_i$ are close to zero, $X_i$'s contribution is due to the dependence with other important inputs. Strong interaction effects are present if either or both of the two $\sigma$'s is larger than zero.
+
+The computation of the extended Morris indices requires the generation of dependent samples. According to \citet{GM17}, the computation involves the following steps:
 
 \begin{enumerate}
     \item Create independent, uniformly distributed samples.
     \item Transform these uniformly distributed samples into dependent samples of a target distribution.
     \item Use the above methods for the computation of the extended elementary effects.
-    \item As in the case of the classic Morris method, average over all $N$ elementary effects per input $i$ and compute their standard deviation.
+    \item As in the case of the classic Morris method, average over all $N$ elementary effects per input $i$ and compute their standard deviation. Do so for the \textit{independent} and \textit{full} elementary effects.
 \end{enumerate}
 
 \noindent The remainder of this section discusses each step of the computation procedure in turn.
@@ -72,6 +80,21 @@ In what follows I stick to the version of the algorithm as implemented in the \t
 
 
 \noindent \textbf{Radial Design.} lalla
+
+% \begin{tabular}{ll}
+%     \toprule
+%     Point &      Samples \\
+%     \midrule
+%     $p_{1, r}$ & $a_{1, r},\ a_{2, r},\ a_{3, r},\ \dots,\ a_{k, r}$ \\
+%     $p_{2, r}$ & $b_{1, r},\ a_{2, r},\ a_{3, r},\ \dots,\ a_{k, r}$ \\
+%     $p_{3, r}$ & $a_{1, r},\ b_{2, r},\ a_{3, r},\ \dots,\ a_{k, r}$ \\
+%     $\vdots$ & $\vdots$ \\
+%     $p_{i, r}$ & $a_{1, r},\ \dots,\ a_{i-2, r},\ b_{i-1, r},\ a_{i, r},\ \dots,\ a_{k, r}$ \\
+%     $p_{i+1, r}$ & $a_{1, r},\ \dots,\ a_{i-2, r},\ a_{i-1, r},\ b_{i, r},\ \dots,\ a_{k, r}$ \\
+%     $\vdots$ & $\vdots$ \\
+%     $p_{k+1, r}$ & $a_{1, r},\ a_{2, r},\ a_{3, r},\ \dots,\ b_{k, r}$ \\
+%     \bottomrule
+% \end{tabular}
 
 
 \noindent \textbf{Inverse Nataf Transformation.} lalla

@@ -18,6 +18,26 @@ from python.shapley import get_shapley
 from python.shapley import _r_condmvn
 
 
+def n_o(c_s, n_v):
+    """
+    Number of outer samples given N_I = 3 as recommended by SNS16.
+
+    Parameters
+    ----------
+    c_s : int
+        Total number of model evaluations.
+
+    n_v : int
+        Number of samples desired for computing total output variance.
+
+    Returns
+    -------
+    n_o : float
+        Number of outer samples.
+    """
+    return (c_s - n_v) / 6
+
+
 def setup_rust_model_001():
     """To minimise errors, set up everything needed for implementing the Rust model in
     one dictionary.

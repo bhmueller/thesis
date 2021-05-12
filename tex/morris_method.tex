@@ -2,9 +2,11 @@
 
 \subsection{Input Screening}
 
+% \input{../figures/covariance_matrix.tex}
+
 \subsection{Morris Method for Independent Inputs}
 
-The Morris method was introduced by \citet{M91}.
+The Morris method was introduced by \citet{M91} to identify the "important" input variables of a model, especially in cases where there are many inputs and/or the evaluation of a model is time-consuming.
 
 Consider the same setup as employed in the preceding sections. Let $x = \{x_1,\ \dots,\ x_k\}$ denote a sample of values assigned to the $X_i$'s. $f(x)$ is then the model output obtained for the values in $x$. Now consider a second sample $x_{\Delta_i} = \{x_1,\ \dots,\ x_{i-1},\ x_i + \Delta,\ x_{i+1},\ \dots,\ x_k\}$ that is identical to $x$ up to input $x_i$ which is varied by $\Delta$. Then, one elementary effect for input $i$ is derived by
 \begin{equation}
@@ -27,17 +29,21 @@ Secondly, similar to the Sobol' indices, the person conducting sa has to take tw
 
 Thirdly, there exists no clear interpretation of the absolute values of the sensitivity indices. They only provide a ranking of inputs and give a hint of which inputs are the least influential ones \citep{GM17}.
 
-On the advantages, Morris indices are easily computed, with a much lower computational burden than the Shapley effects as presented in \cref{comp_shap}. Recall that Shapley effects as computed by use of the algorithm in \citet{SNS16} came at a cost of $N_V+m \cdot N_I \cdot N_O \cdot (k-1)$ model evaluations. Even the more efficient approach by \citet{PRB20} needed $2^k$ model runs.
+On the advantages, Morris indices are easily computed, with a much lower computational burden than the Shapley effects as presented in \cref{comp_shap}. Recall that Shapley effects as computed by use of the algorithm in \citet{SNS16} came at a cost of $N_V+m \cdot N_I \cdot N_O \cdot (k-1)$ model evaluations. Even the more efficient approach by \citet{PRB20} needed $2^k$ model runs. See \cref{comparison} for a discussion of the respective computational costs.
 
-[Can learn sth. about model: whether there are interaction and/or non lin. effects. Why? See Morris (1991)? ]
+Considering the interpretation of Morris indices, $\mu_i^\ast$ and $\sigma_i$, it is apparent that not only an input ranking is feasible but we can also learn something about the underlying model structure, i.e. whether interaction or non-linear effects are present.
 
-[Especially useful if assump.s about Latin hypercube not justifiable Morris 1991 p. 173]
+\citet{M91} points out that his method does not rely on simplifying assumptions, e.g. monotonicity of the model or input sparsity. He argues that if those assumptions hold, one could apply other, more effective and economical procedures, e.g. based on Latin hypercube designs. However, the Morris method does not rely on such assumptions and will work well if these assumptions are justifiable or not \citep{M91}.
 
 \citet{BP16} group the Morris method to the family of local sm. However, while the elementary effects themselves consider only local changes, the actual measures for input importance, $\mu_i^\ast$ and $\sigma_i$, average over these $N$ elementary effects. Thus, they take $N$ local changes per input $i$ into account \citep{M91}. Indeed, \citet{CCS11} make a case for the Morris method to be seen a global sm. \citet{BP16} acknowledge that screening methods like the Morris sm stand apart from other local sm.
 
 \subsection{Algorithm for Extended Morris Method}
 
-Analogously to the first-order and total Sobol' indices under dependence, \citet{GM17} developed the following elementary effects for dependent inputs.
+In this section I introduce the extended Morris method for dependent samples as proposed by \citet{GM17}.
+
+To grasp the computation procedure of the extended elementary effects, some more notation is needed. Following \citet{GM17}, let $X' = \{X_1',\ X_2',\ \dots,\ X_k'\}$ be $k$ dependent random inputs, following the joint pdf $g(X)$. Thus, $X'$ is just a set of inputs independently drawn from the set $X$. Input subsets denoted by $\bar{X}$ are conditionally drawn inputs. Hence, let $\bar{X_{-i}'}$ follow the conditional pdf $g(\bar{X_{-i}'} \mid X_{-i})$. That is $\bar{X_{-i}'}$ is drawn conditionally on the inputs in the first set $X_{-i}$. The input denoted by $\bar{X_{-i}}$ is conditionally drawn following the pdf $g(\bar{X_{-i}} \mid X_i')$. % Hence, $\bar{X_{-i}'}$ and $\bar{X_{-i}}$ differ by [].
+
+Analogously to the independent and full Sobol' indices \citep{MTA15}, \citet{GM17} developed the following elementary effects for dependent inputs.
 \begin{align}
 EE_i^{ind} = \frac{f(\bar{x_i}',\ x_{-i}) - f(x_i,\ x_{-i})}{\Delta},\\
 EE_i^{full} = \frac{f(x_i',\ \bar{x_{-i}}) - f(x_i,\ x_{-i})}{\Delta},
@@ -49,11 +55,26 @@ EE_i^{full} = \frac{f(x_i',\ \bar{x_{-i}}) - f(x_i,\ x_{-i})}{\Delta},
 \item $EE_i^{full}$ denotes \textit{full} elementary effects for input $i$, that include the effects due to correlation with other inputs.
 \end{itemize}
 
+The computation of the extended Morris indices requires the generation of dependent samples. Following \citet{GM17}, the computation involves the following steps:
+
+\begin{enumerate}
+    \item Create independent, uniformly distributed samples.
+    \item Transform these uniformly distributed samples into dependent samples of a target distribution.
+    \item Use the above methods for the computation of the extended elementary effects.
+    \item As in the case of the classic Morris method, average over all $N$ elementary effects per input $i$ and compute their standard deviation.
+\end{enumerate}
+
+\noindent The remainder of this section discusses each step of the computation procedure in turn.
+
 \subsubsection{Sampling Design and Transformation}
 
-\textbf{Radial Design}
+In what follows I stick to the version of the algorithm as implemented in the \textit{econsa} Python-package \citep{OSE21}. There, the radial design is used for obtaining independent samples. To derive
 
-\textbf{Inverse Nataf Transformation}
+
+\noindent \textbf{Radial Design.} lalla
+
+
+\noindent \textbf{Inverse Nataf Transformation.} lalla
 
 \subsubsection{Computation}
 

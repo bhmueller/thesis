@@ -13,6 +13,7 @@ dependencies:
 - numba
 - pandas
 - jupyterlab==3.0.15
+- jupyter
 - matplotlib
 - seaborn
 - ruspy

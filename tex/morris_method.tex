@@ -61,7 +61,7 @@ EE_i^{full} = \frac{f(x_i',\ \bar{x_{-i}}) - f(x_i,\ x_{-i})}{\Delta},
 
 As in the case of the classic Morris method, the sm for input $i$ is derived by considering $N$ random samples yielding $2 \cdot N$ elementary effects, once for the independent and once for the full elementary effects. \citet{GM17} compute the corresponding sm as shown in \cref{mu} and \cref{sigma}. Since two sets of elementary effects are computed, they end up with a set of four sm, $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$.
 
-Interpretation-wise, $X_i$ is an unimportant input if all sm are essentially zero. A $(\mu^{\ast ind}_i$ strongly larger than zero and $\sigma_i^{ind})$ is close to zero, input $X_i$ is an important input by itself. When all sm except $\mu^{\ast full}_i$ are close to zero, $X_i$'s contribution is due to the dependence with other important inputs. Strong interaction effects are present if either or both of the two $\sigma$'s is larger than zero.
+Interpretation-wise, $X_i$ is an unimportant input if all sm are essentially zero. A $\mu^{\ast ind}_i$ strongly larger than zero and $\sigma_i^{ind}$ is close to zero, input $X_i$ is an important input by itself. When all sm except $\mu^{\ast full}_i$ are close to zero, $X_i$'s contribution is due to the dependence with other important inputs. Strong interaction effects are present if either or both of the two $\sigma$'s is larger than zero \citep{GM17}.
 
 The computation of the extended Morris indices requires the generation of dependent samples. According to \citet{GM17}, the computation involves the following steps:
 
@@ -100,3 +100,4 @@ In what follows I stick to the version of the algorithm as implemented in the \t
 % \subsubsection{Computation}
 
 \subsection{Morris Indices for the Rust Model}
+

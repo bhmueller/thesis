@@ -72,14 +72,13 @@ The computation of the extended Morris indices requires the generation of depend
     \item As in the case of the classic Morris method, average over all $N$ elementary effects per input $i$ and compute their standard deviation. Do so for the \textit{independent} and \textit{full} elementary effects.
 \end{enumerate}
 
-\noindent The remainder of this section discusses each step of the computation procedure in turn.
+In what follows I stick to the version of the algorithm as implemented in the \textit{econsa} Python-package \citep{OSE21}. There, the radial design is used for obtaining independent samples. To derive dependent samples, the inverse Nataf transformation is applied. The total computational cost amounts to $3kN$ model runs.
 
-\subsubsection{Sampling Design and Transformation}
+% \noindent The remainder of this section discusses each step of the computation procedure in turn.
 
-In what follows I stick to the version of the algorithm as implemented in the \textit{econsa} Python-package \citep{OSE21}. There, the radial design is used for obtaining independent samples. To derive
+% \subsubsection{Sampling Design and Transformation}
 
-
-\noindent \textbf{Radial Design.} lalla
+% \noindent \textbf{Radial Design.} lalla
 
 % \begin{tabular}{ll}
 %     \toprule
@@ -96,9 +95,8 @@ In what follows I stick to the version of the algorithm as implemented in the \t
 %     \bottomrule
 % \end{tabular}
 
+% \noindent \textbf{Inverse Nataf Transformation.} lalla
 
-\noindent \textbf{Inverse Nataf Transformation.} lalla
-
-\subsubsection{Computation}
+% \subsubsection{Computation}
 
 \subsection{Morris Indices for the Rust Model}

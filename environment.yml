@@ -20,7 +20,7 @@ dependencies:
 - chaospy
 - pip
 - pip:
-    # - git+git://github.com/OpenSourceEconomics/econsa.git
+    - git+git://github.com/OpenSourceEconomics/econsa.git
     # Use shapley.py & morris.py in dir python; not econsa itself until PR through.
     # - install -e C:\Users\admin\Masterarbeit\econsa
     - flake8

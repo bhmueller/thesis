@@ -20,4 +20,4 @@ jobs:
       run: |
         export PATH="$PATH:/usr/share/miniconda/bin"
         source .envrc
-        jupyter nbconvert --to html --ExecutePreprocessor.kernel_name=thesis-benedikt --execute thesis_project.ipynb
+        jupyter nbconvert --to html --ExecutePreprocessor.kernel_name=python3 --execute thesis_project.ipynb

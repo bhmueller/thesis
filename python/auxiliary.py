@@ -16,6 +16,7 @@ from ruspy.model_code.demand_function import get_demand
 # from econsa.shapley import _r_condmvn
 from python.shapley import get_shapley
 from python.shapley import _r_condmvn
+from python.morris import elementary_effects
 
 
 def n_o(c_s, n_v):
@@ -446,3 +447,21 @@ def shapley_replicate(
     )
     exact_shapley.rename(index={"X1": "$RC$", "X2": "$\theta_{11}$"}, inplace=True)
     return exact_shapley
+
+
+def morris_convergence(func, params, cov, sampling_scheme, n_cores, parallel, n_draws):
+    """Change order of function arguments to allow for partial and map to work.
+    Avoid:
+    TypeError: elementary_effects() got multiple values for argument func"""
+
+    ee = elementary_effects(
+        func=func,
+        params=params,
+        cov=cov,
+        n_draws=n_draws,
+        sampling_scheme=sampling_scheme,
+        n_cores=n_cores,
+        parallel=parallel,
+    )
+
+    return ee

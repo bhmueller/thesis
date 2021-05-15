@@ -465,3 +465,22 @@ def morris_convergence(func, params, cov, sampling_scheme, n_cores, parallel, n_
     )
 
     return ee
+
+
+def morris_replicate(
+    func, params, cov, n_draws, sampling_scheme, n_cores, parallel, current_seed
+):
+
+    np.random.seed(current_seed)
+
+    ee = elementary_effects(
+        func=func,
+        params=params,
+        cov=cov,
+        n_draws=n_draws,
+        sampling_scheme=sampling_scheme,
+        n_cores=n_cores,
+        parallel=parallel,
+    )
+
+    return ee

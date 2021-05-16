@@ -484,3 +484,101 @@ def morris_replicate(
     )
 
     return ee
+
+
+def get_dataframes_morris_boxplots(morris_indices_replicates):
+    # Extract data: independent.
+    # mu independent.
+    mu_ind_rc = [
+        morris_indices_replicates[i]["mu_ind"][0]
+        for i in np.arange(len(morris_indices_replicates))
+    ]
+    mu_ind_theta = [
+        morris_indices_replicates[i]["mu_ind"][1]
+        for i in np.arange(len(morris_indices_replicates))
+    ]
+
+    # sigma independent.
+    sigma_ind_rc = [
+        morris_indices_replicates[i]["sigma_ind"][0]
+        for i in np.arange(len(morris_indices_replicates))
+    ]
+    sigma_ind_theta = [
+        morris_indices_replicates[i]["sigma_ind"][1]
+        for i in np.arange(len(morris_indices_replicates))
+    ]
+
+    # Extract data: full.
+    # mu full.
+    mu_full_rc = [
+        morris_indices_replicates[i]["mu_corr"][0]
+        for i in np.arange(len(morris_indices_replicates))
+    ]
+    mu_full_theta = [
+        morris_indices_replicates[i]["mu_corr"][1]
+        for i in np.arange(len(morris_indices_replicates))
+    ]
+
+    # sigma full.
+    sigma_full_rc = [
+        morris_indices_replicates[i]["sigma_corr"][0]
+        for i in np.arange(len(morris_indices_replicates))
+    ]
+    sigma_full_theta = [
+        morris_indices_replicates[i]["sigma_corr"][1]
+        for i in np.arange(len(morris_indices_replicates))
+    ]
+
+    # Create dataframes.
+
+    names = [r"$RC$", r"$\theta_{11}$"]
+
+    # mu indep.
+    mu_ind_rc_df = pd.DataFrame(data=mu_ind_rc, columns=["morris_index"])
+    mu_ind_rc_df["input_variable"] = names[0]
+
+    mu_ind_theta_df = pd.DataFrame(data=mu_ind_theta, columns=["morris_index"])
+    mu_ind_theta_df["input_variable"] = names[1]
+
+    data_boxplots_morris_independent_mu = pd.concat(
+        [mu_ind_rc_df, mu_ind_theta_df], ignore_index=True
+    )
+
+    # sigma indep.
+    sigma_ind_rc_df = pd.DataFrame(data=sigma_ind_rc, columns=["morris_index"])
+    sigma_ind_rc_df["input_variable"] = names[0]
+
+    sigma_ind_theta_df = pd.DataFrame(data=sigma_ind_theta, columns=["morris_index"])
+    sigma_ind_theta_df["input_variable"] = names[1]
+
+    data_boxplots_morris_independent_sigma = pd.concat(
+        [sigma_ind_rc_df, sigma_ind_theta_df], ignore_index=True
+    )
+
+    # mu full
+    mu_full_rc_df = pd.DataFrame(data=mu_full_rc, columns=["morris_index"])
+    mu_full_rc_df["input_variable"] = names[0]
+
+    mu_full_theta_df = pd.DataFrame(data=mu_full_theta, columns=["morris_index"])
+    mu_full_theta_df["input_variable"] = names[1]
+
+    data_boxplots_morris_full_mu = pd.concat(
+        [mu_full_rc_df, mu_full_theta_df], ignore_index=True
+    )
+
+    # sigma full.
+    sigma_full_rc_df = pd.DataFrame(data=sigma_full_rc, columns=["morris_index"])
+    sigma_full_rc_df["input_variable"] = names[0]
+
+    sigma_full_theta_df = pd.DataFrame(data=sigma_full_theta, columns=["morris_index"])
+    sigma_full_theta_df["input_variable"] = names[1]
+
+    data_boxplots_morris_full_sigma = pd.concat(
+        [sigma_full_rc_df, sigma_full_theta_df], ignore_index=True
+    )
+    return (
+        data_boxplots_morris_independent_mu,
+        data_boxplots_morris_independent_sigma,
+        data_boxplots_morris_full_mu,
+        data_boxplots_morris_full_sigma,
+    )

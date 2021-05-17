@@ -349,10 +349,10 @@ def descriptives_and_data_shapley_effects(shapley_effects, n_replicates):
     ]
 
     rc_shapley_effects_df = pd.DataFrame(data=rc_shapley_effects)
-    rc_shapley_effects_df["input_variable"] = "rc"
+    rc_shapley_effects_df["input_variable"] = r"$RC$"
 
     theta_shapley_effects_df = pd.DataFrame(data=theta_shapley_effects)
-    theta_shapley_effects_df["input_variable"] = "theta"
+    theta_shapley_effects_df["input_variable"] = r"$\theta_{11}$"
 
     data = pd.concat(
         [rc_shapley_effects_df, theta_shapley_effects_df], ignore_index=True

@@ -63,13 +63,46 @@ RC &= 10.07780762,\\
 \theta_{11} &= 2.29417622.
 \end{align*}
 
-\noindent Note that $RC$ is scaled by 0.001 for estimation purposes. I consider a total of 50 buses for 120 periods (months, i.e. in total ten years).
+\noindent Note that $RC$ is scaled by $0.001$ for estimation purposes. I consider a total of 50 buses for 120 periods (months, i.e. in total ten years).
 
-Second, I simulate numsim data sets from the above true parameters and estimate $\hat{\theta}, \hat{\theta}$ being the vector of estimated structural parameters.
-Third, from the numsim parameter estimates of $\widehat{RC}$ and ${\hat{\theta}}_{11}$, I calculate the sample variance-covariance matrix and the mean vector. Table xy depicts the calculated variance-covariance matrix for $\widehat{RC}$ and ${\hat{\theta}}_{11}$. Table xy shows that $\widehat{RC}$ and ${\hat{\theta}}_{11}$ correlate, hinting that inputs in the Rust model are indeed dependent.
-[Follow this further! Test for dependence?]
+\begin{table}
+\centering
+\caption{Variance-Covariance Matrix of the Input Variables}
+\label{cov}
+\begin{threeparttable}
+\centering
+\input{../figures/covariance_matrix.tex}
+\begin{tablenotes}
+\small
+\item \textit{Notes:} Estimated variance-covariance matrix based on $10,000$ samples.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{figure}[t]
+	\caption{Correlation Between the Input Variables}
+    % \floatfoot{A note}
+    \label{correlation}
+	\vspace*{-4mm}
+	\centering
+	\includegraphics[scale=0.9]{../figures/correlation_rc_theta.png}
+\end{figure}
+
+
+Second, I simulate $10,000$ data sets from the above true parameters and estimate $\hat{\theta}, \hat{\theta}$ being the vector of estimated structural parameters.
+
+Third, from the $10,000$ parameter estimates of $\widehat{RC}$ and ${\hat{\theta}}_{11}$, I calculate the sample variance-covariance matrix and the mean vector. \Cref{cov} shows the estimated variance-covariance matrix for $\widehat{RC}$ and ${\hat{\theta}}_{11}$. \Cref{cov} and \cref{correlation} show that $\widehat{RC}$ and ${\hat{\theta}}_{11}$ correlate, hinting that inputs in the Rust model are indeed dependent.
 
 \subsection{Derivation of Implied Annual Demand}
+
+\begin{figure}[t]
+	\caption{Uncertainty Propagation}
+    % \floatfoot{A note}
+    \label{uncertainty}
+	\vspace*{-4mm}
+	\centering
+	\includegraphics[scale=0.9]{../figures/uncertainty_propagation_100000.png}
+\end{figure}
 
 \citet{R87} shows how one can derive further quantities from the parameter estimates. \citet{R87} derives the implied annual demand (henceforth, demand) for bus-engine replacements. \citet{R87} computes the demand for bus engines by
 \begin{equation}
@@ -86,6 +119,6 @@ Note, that $\pi$ is a function of $\theta$. Assuming further that the processes 
 d(RC)=12 \cdot M \cdot \int_0^{\infty} \pi(dx,\ 1).
 \end{equation}
 
-To show how the uncertainty in the inputs $(RC, \theta_{11})$ propagate to the output, demand, see figure xy. I again use \textit{ruspy} for the computation of the demand at $RC^{demand}$. I compute demand for numsimdemand simulated data sets. The output is normally distributed as can be seen in figure xy with mean xx and variance xx.
+To show how the uncertainty in the inputs $(RC, \theta_{11})$ propagate to the output, demand, see figure xy. I again use \textit{ruspy} for the computation of the demand at $RC^{demand}$. I compute demand for $100,000$ simulated data sets. The output is normally distributed as can be seen in figure xy with mean xx and variance xx.
 
 Now, that the model, i.e. how the output depends on the inputs, has been clarified, one is ready to consider the computation of Shapley effects.

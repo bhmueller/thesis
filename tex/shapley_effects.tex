@@ -133,7 +133,30 @@ Algorithm 1 implements three MC simulations. There are $N_V$ MC samples of model
 
 \subsection{Shapley Effects for the Rust Model}
 
+\begin{figure}[t]
+	\caption{Shapley Effects for the Rust Model - $100$ Replicates}
+    % \floatfoot{A note}
+    \label{boxplot_shapley}
+	\vspace*{-4mm}
+	\centering
+	\includegraphics[scale=0.9]{../figures/boxplot_shapley_effects_100.png}
+\end{figure}
+
 \citet{SNS16} recommend setting $m=\vert \Pi(K) \vert$, if computationally feasible. In order to reduce variance of the estimates of Shapley effects, \citet{SNS16} recommend choosing $N_I=3$, while setting $N_O$ as large as possible, given the constraints on the computational budget. Since the Rust model has two inputs only, the number of permutations to be consiedered is two and thus, very small. Hence, I set $m=2!=2$, $N_I=3$, $N_V=100$ and $N_O=10$. Thus, the computational cost of my choice of MC runs imply that 160 model evaluations are needed to estimate the Shapley effects. On my machine (Windows 10, i5 processor), one estimation run takes approximately 55 seconds. I run the estimation by using the implementation of the package \textit{econsa}, a Python package for sa \citep{OSE21}.
 
 I estimate 200 Shapley effects for the inputs of the Rust model, $RC$ and $\theta$ by the setup as described in the preceding section. The distribution of the 200 replicates is visualised by the boxplots in figure xy. For further details on the estimated replicates, see table xy. The mean of $\phi_{RC}$ is 0.415624. For $\phi_{\theta_{11}}$ the mean value is 0.584376. The variance of the Shapley effects is 0.00135.
 Both, the boxplots, and the mean values show that $\theta_{11}$ is the more important input in terms of contributions to output variance. The confidence intervals at the 95-percent level, are quite large, but they do not overlap, indicating that the implied input importance ranking is robust. The lower value of $\phi_{RC}$ shows that $RC$ has less an impact on the output variance than $\theta_{11}$. Since both $\phi_i$ are far from zero, it is not recommended to fix any one of them, since both influence the output variance significantly.
+
+\begin{table}[t]
+	\centering
+	\caption{Descriptive Statistics Shapley Effects - $100$ Replicates}
+	\label{descriptives}
+	\begin{threeparttable}
+	\centering
+	\input{../figures/descriptives_shapley_replicates_100.tex}
+	\begin{tablenotes}
+	\small
+	\item \textit{Notes:} Descriptive statistics for 100 replicates of the Shapley effects.
+	\end{tablenotes}
+	\end{threeparttable}
+\end{table}

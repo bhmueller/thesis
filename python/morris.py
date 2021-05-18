@@ -19,7 +19,14 @@ from scipy.stats import norm
 
 
 def elementary_effects(
-    func, params, cov, n_draws, sampling_scheme="sobol", n_cores=1, parallel="joblib"
+    func,
+    params,
+    cov,
+    n_draws,
+    sampling_scheme="sobol",
+    n_cores=1,
+    parallel="joblib",
+    seed=1,
 ):
     """Calculate Morris Indices of a model described by func.
 
@@ -60,7 +67,7 @@ def elementary_effects(
         Standard deviation of independent part of elementary effects
 
     """
-    u_a, u_b = _get_uniform_base_draws(n_draws, len(params), sampling_scheme)
+    u_a, u_b = _get_uniform_base_draws(n_draws, len(params), sampling_scheme, seed)
     z_a = _uniform_to_standard_normal(u_a)
     z_b = _uniform_to_standard_normal(u_b)
     mean_np = params["value"].to_numpy()
@@ -126,7 +133,7 @@ def elementary_effects(
     return res
 
 
-def _get_uniform_base_draws(n_draws, n_params, sampling_scheme):
+def _get_uniform_base_draws(n_draws, n_params, sampling_scheme, seed):
     """Get uniform random draws.
 
     Questions:
@@ -144,7 +151,11 @@ def _get_uniform_base_draws(n_draws, n_params, sampling_scheme):
 
     """
     if sampling_scheme == "sobol":
-        u = cp.generate_samples(order=n_draws, domain=2 * n_params, rule="S").reshape(
+        # u = cp.generate_samples(order=n_draws, domain=2 * n_params, rule="S").reshape(
+        #     n_draws,
+        #     -1,
+        # )
+        u = cp.create_sobol_samples(order=n_draws, dim=2 * n_params, seed=seed).reshape(
             n_draws,
             -1,
         )

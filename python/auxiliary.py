@@ -503,7 +503,7 @@ def morris_replicate(
     func, params, cov, n_draws, sampling_scheme, n_cores, parallel, current_seed
 ):
 
-    np.random.seed(current_seed)
+    # np.random.seed(current_seed)
 
     ee = elementary_effects(
         func=func,
@@ -513,6 +513,7 @@ def morris_replicate(
         sampling_scheme=sampling_scheme,
         n_cores=n_cores,
         parallel=parallel,
+        seed=current_seed,
     )
 
     return ee

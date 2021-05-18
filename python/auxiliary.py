@@ -411,6 +411,38 @@ def descriptives_and_data_shapley_effects(shapley_effects, n_replicates):
     return descriptives_shapley_effects, data
 
 
+def shapley_convergence_n_outer(
+    model,
+    x_all_partial,
+    x_cond_partial,
+    n_perms,
+    n_inputs,
+    n_variance,
+    n_inner,
+    n_cores,
+    output_variance,
+    n_outer,
+):
+    """Change order of function arguments to allow for partial and map to work."""
+
+    exact_shapley = get_shapley(
+        model,
+        x_all_partial,
+        x_cond_partial,
+        n_perms,
+        n_inputs,
+        n_variance,
+        n_outer,
+        n_inner,
+        n_cores,
+        output_variance,
+    )
+
+    exact_shapley.rename(index={"X1": "$RC$", "X2": "$\theta_{11}$"}, inplace=True)
+
+    return exact_shapley
+
+
 def shapley_replicate(
     # init_dict_simulation,
     model,

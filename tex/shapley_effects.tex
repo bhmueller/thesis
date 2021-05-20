@@ -73,6 +73,30 @@ Recall that the statements about the model structure and input importance do not
 
 \subsection{Shapley Effects for Sensitivity Analysis}
 
+\begin{figure}[t]
+	\caption{Convergence of Shapley Effects for the Rust Model}
+    % \floatfoot{A note}
+    \label{shapley_convergence}
+	\vspace*{-4mm}
+	\centering
+	\includegraphics[scale=0.9]{../figures/convergence_shapley_effects_8.png}
+\end{figure}
+
+\begin{table}[t]
+	\centering
+	\caption{Relative Difference Shapley Effects}
+	\label{rel_diff_shapley}
+	\begin{threeparttable}
+	\centering
+	% \hline
+	\input{../figures/shapley_convergence_relative_difference_8.tex}
+	\begin{tablenotes}
+	\small
+	\item \textit{Notes:} The percentage difference between Shapley effects for different values of $N_O$ while keeping $N_V$ fixed at $12,500$ and $N_I$ at $3$.
+	\end{tablenotes}
+	\end{threeparttable}
+\end{table}
+
 In the context of sa, \citet{SNS16} named Shapley values Shapley effects, which were first suggested as a variance-based sensitivity measure by \citet{O14}. According to \citet{PRB20} the Shapley effect is becoming more and more popular in sa.
 
 When applied as a sensitivity measure, the interpretation of the Shapley value changes. $X_i$ is now interpreted as a model input instead of a player in a game. A coalition is now a subset of model inputs. \citet{O14} defines the function $\widetilde{val}$ as a function that assigns the explanatory power of this subset of inputs to this subset. That is, the function $\widetilde{val}$ assigns the conditional variance to a subset of inputs, $\widetilde{val}(J)=V[Y]^{-1}V[E[Y \mid X_J]]$ and $\widetilde{val}$ measures the reduction in $V[Y]$ due to the inputs in $J$ \citep{SNS16}. \citep{SNS16} show that the following alternative formulation of the value function results into the same Shapley effect.

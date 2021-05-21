@@ -155,7 +155,7 @@ To see for which subsets the algorithm performs evaluations of $val$, consider t
 
 Algorithm 1 implements three MC simulations. There are $N_V$ MC samples of model inputs which are evaluated to get an estimate of $V[Y]$. Since the algorithm needs to handle dependent inputs, \citet{SNS16} implement dependent sampling by an inner and an outer MC simulation. To see why both MC simulations are needed, fix a permutation $\pi$. Then, sample $N_O$ outer samples, that are unconditionally drawn. Given this set of unconditionally drawn outer samples, draw $N_I$ inner samples conditionally on the outer samples. That is, for each outer sample, one has $N_I$ inner samples. Thus, for algorithm 1, the computational cost in terms of number of model evaluations is given by $N_V+m \cdot N_I \cdot N_O \cdot (k-1)$, where $m$ is the number of permutations considered. In the exact setting of algorithm 1, $m=\vert \Pi(K) \vert=k!$. If only a random subset of permutations should be considered, one sets $m<k!$. This could be useful to reduce the computational burden if the number of inputs is large.
 
-\subsection{Shapley Effects for the Rust Model}
+\subsection{Shapley Effects for the Rust Model} \label{shapley_rust_model}
 
 \begin{figure}[t]
 	\caption{Shapley Effects for the Rust Model - $100$ Replicates}
@@ -166,15 +166,33 @@ Algorithm 1 implements three MC simulations. There are $N_V$ MC samples of model
 	\includegraphics[scale=0.9]{../figures/boxplot_shapley_effects_100.png}
 \end{figure}
 
-\citet{SNS16} recommend setting $m=\vert \Pi(K) \vert$, if computationally feasible. In order to reduce variance of the estimates of Shapley effects, \citet{SNS16} recommend choosing $N_I=3$, while setting $N_O$ as large as possible, given the constraints on the computational budget. Since the Rust model has two inputs only, the number of permutations to be consiedered is two and thus, very small. Hence, I set $m=2!=2$, $N_I=3$, $N_V=100$ and $N_O=10$. Thus, the computational cost of my choice of MC runs imply that 160 model evaluations are needed to estimate the Shapley effects. On my machine (Windows 10, i5 processor), one estimation run takes approximately 55 seconds. I run the estimation by using the implementation of the package \textit{econsa}, a Python package for sa \citep{OSE21}.
+I apply three different computational setups. It do so to: i. evaluate the performance of Shapley effects and ii. get the correct input ranking according to the sensitivity for the Rust model. When working with the algorithm presented by \citet{SNS16} in practice, it can be challenging to correctly specify the sample sizes $N_O$ and $N_V$.
 
-I estimate 200 Shapley effects for the inputs of the Rust model, $RC$ and $\theta$ by the setup as described in the preceding section. The distribution of the 200 replicates is visualised by the boxplots in figure xy. For further details on the estimated replicates, see table xy. The mean of $\phi_{RC}$ is 0.415624. For $\phi_{\theta_{11}}$ the mean value is 0.584376. The variance of the Shapley effects is 0.00135.
-Both, the boxplots, and the mean values show that $\theta_{11}$ is the more important input in terms of contributions to output variance. The confidence intervals at the 95-percent level, are quite large, but they do not overlap, indicating that the implied input importance ranking is robust. The lower value of $\phi_{RC}$ shows that $RC$ has less an impact on the output variance than $\theta_{11}$. Since both $\phi_i$ are far from zero, it is not recommended to fix any one of them, since both influence the output variance significantly.
+The general computational setup applies to all three simulation studies. \citet{SNS16} recommend setting $m=\vert \Pi(K) \vert$, if computationally feasible. In order to reduce variance of the estimates of Shapley effects, \citet{SNS16} recommend choosing $N_I=3$, while setting $N_O$ as large as possible, given the constraints on the computational budget. Since the Rust model has two inputs only, the number of permutations to be consiedered is two and thus, very small. Hence, I set $m=2!=2$ and $N_I=3$. I run the estimation by using the implementation of algorithm 1 by the package \textit{econsa}, a Python package for sa \citep{OSE21}.
+
+% Shapley replicates.
+
+Firstly, I estimate 200 Shapley effects for the inputs of the Rust model, $RC$ and $\theta$ using the same general setup as described in the preceding paragraph. I further set $N_V=100$ and $N_O=10$. Thus, the computational cost of my choice of MC runs imply that 160 model evaluations are needed to estimate the Shapley effects. On my machine (Windows 10, i5 processor), one estimation run takes approximately 40 seconds.
+
+The distribution of the 200 replicates is visualised by the boxplots in \cref{boxplot_shapley}. For further details on the estimated replicates, see \cref{shapley_descriptives}. The mean of $\phi_{RC}$ is 0.416256. For $\phi_{\theta_{11}}$ the mean value is 0.583744. Shapley effects are estimated with a standard error of 0.004317.
+Both, the boxplots, and the mean values show that $\theta_{11}$ is the more important input in terms of contributions to output variance. The confidence intervals at the 95-percent level, are quite large, but they do not overlap, indicating that the implied input importance ranking is robust. The lower value of $\phi_{RC}$ shows that $RC$ has less an impact on the output variance than $\theta_{11}$.
+
+% True Shapley
+
+Secondly, I estimate one set of Shapley effects for a large sample size. I chose to consider $N_V=100,000$ and $N_O=10,000$, which amount to a computational cost of $160,000$ model evaluations. The resulting sensitivity measures are $\phi_{RC} = 0.417641$ and $\phi_{\theta_{11}} = 0.582359$. I refer to this set of sensitivity measures as the \textit{true} Shapley effects.
+
+% Shapley Convergence
+
+Thirdly, I estimate eight Shapley effects for different sample sizes to illustrate their behaviour if $N_O$ is different from $100$. For all the estimations I fix $N_V$ at $12,500$, varying $N_O$ only. I consider $N_O \in \{200,\ 500,\ 800,\ 1000,\ 2000,\ 3000,\ 4000,\ 6000 \}$. The total computational cost for one estimation is thus given by $10,000 + 6 \cdot N_O$, e.g. for $N_O=200$, the total computational cost amounts to 11,200 and for $N_O=6,000$, the total computational cost amounts to 46,000 model evaluations. Results are visualised in \cref{shapley_convergence}. For each chosen value of $N_O$ there is a clear input ranking, indicating that $\theta_{11}$ is the more important input. Shapley effects are still relatively volatile. Even for larger sample sizes, [expand on this; consider value of "true" Shapley.]. Details on the relative difference between estimates are shown in \cref{rel_diff_shapley}. \Cref{rel_diff_shapley} shows the percent change in estimates given by $\frac{\sigma_i^{n_o-1} - \sigma_i^{n_o}}{\sigma_i^{n_o}}$, for $i \in \{RC,\ \theta_{11}\}$ and $n_o$ denoting the different values of $N_O$ considered. Relative differences do not steadily decline.
+
+% Interpretation
+
+To sum up, the input rankings are always the same: $\theta_{11}$ is the more important input for the Rust model. This holds true for all the estimations of Shapley effects presented above. Since both $\phi_i$ are far from zero, it is not recommended to fix any one of them, since both influence the output variance significantly.
 
 \begin{table}[t]
 	\centering
 	\caption{Descriptive Statistics Shapley Effects - $100$ Replicates}
-	\label{descriptives}
+	\label{shapley_descriptives}
 	\begin{threeparttable}
 	\centering
 	\input{../figures/descriptives_shapley_replicates_100.tex}

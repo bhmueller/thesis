@@ -43,6 +43,24 @@ Considering the interpretation of Morris indices, $\mu_i^\ast$ and $\sigma_i$, i
 
 \subsection{Algorithm for Extended Morris Method}
 
+\begin{figure}[t]
+	\caption{Convergence of Morris Indices}
+    % \floatfoot{A note}
+    \label{morris_convergence}
+	\vspace*{-4mm}
+	\centering
+	\includegraphics[scale=0.9]{../figures/morris_convergence.png}
+\end{figure}
+
+\begin{figure}[t]
+	\caption{Uncertainty in Morris Indices - 100 Replicates}
+    % \floatfoot{A note}
+    \label{morris_replicates}
+	\vspace*{-4mm}
+	\centering
+	\includegraphics[scale=0.9]{../figures/boxplot_morris_replicates_100.png}
+\end{figure}
+
 In this section I introduce the extended Morris method for dependent samples as proposed by \citet{GM17}.
 
 To grasp the computation procedure of the extended elementary effects, some more notation is needed. Following \citet{GM17}, let $X' = \{X_1',\ X_2',\ \dots,\ X_k'\}$ be $k$ dependent random inputs, following the joint pdf $g(X)$. Thus, $X'$ is just a set of inputs independently drawn from the set $X$. Input subsets denoted by $\bar{X}$ are conditionally drawn inputs. Hence, let $\bar{X_{-i}'}$ follow the conditional pdf $g(\bar{X_{-i}'} \mid X_{-i})$. That is $\bar{X_{-i}'}$ is drawn conditionally on the inputs in the first set $X_{-i}$. The input denoted by $\bar{X_{-i}}$ is conditionally drawn following the pdf $g(\bar{X_{-i}} \mid X_i')$. % Hence, $\bar{X_{-i}'}$ and $\bar{X_{-i}}$ differ by [].
@@ -76,21 +94,48 @@ In what follows I stick to the version of the algorithm as implemented in the \t
 
 \subsection{Morris Indices for the Rust Model}
 
-\begin{figure}[t]
-	\caption{Convergence of Morris Indices}
-    % \floatfoot{A note}
-    \label{morris_convergence}
-	\vspace*{-4mm}
-	\centering
-	\includegraphics[scale=0.9]{../figures/morris_convergence.png}
-\end{figure}
+I estimate Morris indices in two different ways, similar to the procedure described in \cref{comp_shap}: i. I estimate 100 replicates for a relatively low sample size to get a sense of the variability in estimates and ii. I consecutively increase the sample size to investigate
+the estimation procedure further. Uniformly distributed samples are drawn from a Sobol'
+sequence \citep{S76}.
 
-\begin{figure}[t]
-	\caption{Uncertainty in Morris Indices - 100 Replicates}
-    % \floatfoot{A note}
-    \label{morris_replicates}
-	\vspace*{-4mm}
-	\centering
-	\includegraphics[scale=0.9]{../figures/boxplot_morris_replicates_100.png}
-\end{figure}
+Firstly, I estimate 100 sets of Morris indices. In order to ensure comparability, I use the same total computational cost as for the data used for \cref{}. I set N = 27, which amounts
+to a total cost of 162 model evaluations, which differs slightly from the computational
+cost for the Shapley effects because of rounding. As stated above, there are four different
+sensitivity indices estimated: $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$. The distribution of the
+estimated Morris indices is given in \cref{morris_replicates}.
 
+Inspecting \cref{morris_replicates}, we can get a sense of the uncertainty in the estimation procedure,
+given the admittedly small sample size. For the independent Morris indices, there exists a
+very clear ranking: both values indicate that $RC$ is uninfluential. For $\theta_{11}$ the situation is
+different: both independent indices are nonzero. Surprisingly, for the full Morris indices,
+we fail to observe a clear input ranking. Estimates of $(\mu^{\ast full}_i,\ \sigma_i^{full})$ are very volatile, but
+clearly different from zero. Interpretation-wise, this may seem as a challenge, since no
+clear input ranking is achieved. But in fact, it is not. Morris indices were perceived to
+identify non-influential inputs. Both inputs are important if the full Morris indices are
+considered.
+
+To investigate whether the individual pairs of full Morris indices, $(\mu^{\ast full}_i,\ \sigma_i^{full})$, for the
+two inputs $i \in \{RC,\ \theta_{11}\}$ yield the correct input ranking, I simply compare their values
+per estimate. Surprisingly, xy of the 100 replicates yield the correct importance ranking
+for $\mu^{\ast full}_i$. Regarding $\sigma_i^{full}$, xy out of 100 replicates successfully identify $\theta_{11}$ as the more
+important input.
+
+\begin{table}
+    \caption{Relative Difference in Morris Indices}
+    \label{rel_diff_morris}
+\end{table}
+
+\begin{table}
+    \caption{Morris Indices for $N=3,000$}
+    \label{morris_3000}
+\end{table}
+
+Secondly, I estimate Morris indices for a set of number of draws. I consider $N \in \{100,\ 500,\ 1000,\ 1500,\ 2000,\ 2500,\ 3000\}$. Results are shown in \cref{morris_convergence}. Morris indices in
+\cref{morris_convergence} clearly confirm the input ranking of the replicates as presented above. Morris indices
+converge as $N$ increases. \Cref{rel_diff_morris} confirms this. Although Morris indices are volatile, \citet{GM17} point out that a high estimation precision is not necessarily needed
+as long as the input ranking is clearly achieved.
+Let us inspect the Morris indices for $N = 3,000$ in more detail. Consult \cref{morris_3000} for the
+resulting Morris indices. The computational cost for this value of $N$ amounts to $18,000$
+model evaluations. If only the independent Morris indices are considered, we erroneously
+conclude that input $RC$ is a non-influential input. [More interpretation. As in GM17.
+What ca we learn about the structure of the model!?]

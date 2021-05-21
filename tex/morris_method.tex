@@ -10,7 +10,7 @@ In this section the applications of input screening is investigated.
 
 \subsection{Morris Method for Independent Inputs} \label{classic_morris}
 
-The Morris method was introduced by \citet{M91} to identify the "important" input variables of a model, especially in cases where there are many inputs and/or the evaluation of a model is time-consuming.
+The Morris method was introduced by \citet{M91} to identify the ``important" input variables of a model, especially in cases where there are many inputs and/or the evaluation of a model is time-consuming.
 
 Consider the same setup as employed in the preceding sections. Let $x = \{x_1,\ \dots,\ x_k\}$ denote a sample of values assigned to the $X_i$'s. $f(x)$ is then the model output obtained for the values in $x$. Now consider a second sample $x_{\Delta_i} = \{x_1,\ \dots,\ x_{i-1},\ x_i + \Delta,\ x_{i+1},\ \dots,\ x_k\}$ that is identical to $x$ up to input $x_i$ which is varied by $\Delta$. Then, one elementary effect for input $i$ is derived by
 \begin{equation}
@@ -92,13 +92,13 @@ The computation of the extended Morris indices requires the generation of depend
 
 In what follows I stick to the version of the algorithm as implemented in the \textit{econsa} Python-package \citep{OSE21}. There, the radial design is used for obtaining independent samples. To derive dependent samples, the inverse Nataf transformation is applied. The total computational cost amounts to $3kN$ model runs.
 
-\subsection{Morris Indices for the Rust Model}
+\subsection{Morris Indices for the Rust Model} \label{morris_rust_model}
 
 I estimate Morris indices in two different ways, similar to the procedure described in \cref{comp_shap}: i. I estimate 100 replicates for a relatively low sample size to get a sense of the variability in estimates and ii. I consecutively increase the sample size to investigate
 the estimation procedure further. Uniformly distributed samples are drawn from a Sobol'
 sequence \citep{S76}.
 
-Firstly, I estimate 100 sets of Morris indices. In order to ensure comparability, I use the same total computational cost as for the data used for \cref{morris_rust_model}. I set $N = 27$, which amounts
+Firstly, I estimate 100 sets of Morris indices. In order to ensure comparability, I use the same total computational cost as for the data used for \cref{boxplot_shapley}. I set $N = 27$, which amounts
 to a total cost of 162 model evaluations, which differs slightly from the computational
 cost for the Shapley effects because of rounding. As stated above, there are four different
 sensitivity indices estimated: $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$. The distribution of the

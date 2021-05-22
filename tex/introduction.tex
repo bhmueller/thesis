@@ -4,8 +4,6 @@ Economics is thinking in models that abstract from the actually existing economi
 
 Due to the advancements in computational tractability we are less coerced to impose insufficiently realistic assumptions if numerical methods can be applied. That is, since even if the model at hand does not have an analytical solution, one can still obtain an approximate solution by applying numerical methods \citep{MF04}.
 
-[Example with Rust model and why no analytical solution exists.]
-
 \noindent Consider the following model
 \begin{equation*}
 Y = f(X),
@@ -27,12 +25,16 @@ Shapley effects serve as the benchmark to which I compare the input ranking indu
 
 % Variance-based sensitivity analysis, a method that evaluates the importance of an input by assigning to it the expected reduction in output variance if this input was known with certainty \citep{BP16}. Shapley values are a concept from game theory introduced by \citet{S53}. The main advantages of Shapley values for sensitivity analysis are that they are as easily applied to dependent inputs as they are interpreted. Furthermore, Shapley values satisfy a range of desirable properties, the most important being efficiency and the null-player property \citet{S53, O14}. In the context of sensitivity analysis, \citet{SNS16} use the term Shapley effects. Despite of these appealing features, estimation of Shapley effects can be computationally demanding \citep{SNS16}.
 
-This is where the Morris method comes into play, since it promises to serve similar purposes as the Shapley effects, but come at a lower computational cost.
+This is where the Morris method comes into play, since it promises to serve similar purposes as the Shapley effects, but come at a lower computational cost. I consider the \textit{extended} Morris method introduced by \citet{GM17} that handles correlated inputs.
 
 % Say something about the literature.
 
-
+Although the \textit{extended} Morris method has been applied in some cases (e.g. see \citet{MMA18} and \citet{RZY19}), to my knowledge their predictive validity has been assessed in the original paper by \citet{GM17} only. In economics, structured global sensitivity analysis is not a common practise: \citet{HMSW19} cite only few articles in economics that applied global sensitivity analysis. The contribution of this thesis is that it assesses the extended Morris method by applying it to an economic model.
 
 In this work I estimate Morris indices for a classical structural econometric model, the single-agent dynamic stochastic model of discrete choice introduced by \citet{R87} and compare these to Shapley effects. Interestingly, I find that the Morris method is a worthy substitute for Shapley effects since they perform very well in identifying uninfluential inputs and in ranking the inputs accordingly for the Rust model.
 
 % One set of common variance-based sensitivity measure are the total and first-order effects, or Sobol' indices, introduced by \citet{S93} for independently distributed input variables, which are based on an Analysis of Variances (henceforth ANOVA) decomposition. One obvious drawback of the Sobol' indices in the original definition is that they rely on the assumption of inputs independence. Even if the ANOVA decomposition is adapted to handle dependent inputs, they suffer from problems \citep{OP17} which are discussed in \cref{var_based_sa}. \citet{OP17} suggest using Shapley values instead, which were suggested in the context
+
+% Overview over thesis.
+
+The remainder of this thesis is organised as follows: \cref{rust_model} introduces the Rust model for which I conduct sensitivity analysis. In \cref{comp_shap} I estimate Shapley effects as a benchmark for the assessment. \Cref{comp_morris} gives details on how the extended Morris method is used for sensitivity analysis, while \cref{comparison} discusses the results. \Cref{conclusion} offers some concluding remarks.

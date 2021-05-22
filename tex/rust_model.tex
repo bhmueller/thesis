@@ -1,14 +1,14 @@
 \section{The Rust Model} \label{rust_model}
 
-This section sets up the model whose input-output relationship I want to shed light on. I consider the single-agent dynamic discrete choice model of \citet{R87}. Every period an agent needs to decide whether to replace the engine of a bus in the carpark or to conduct standard maintenance operations. The Rust model assumes optimal behaviour of the agent and asks what the implied deep economic parameters are, given this optimal behaviour.
-
-The model output I consider is implied annual demand for engine replacements. Model inputs are engine replacement costs and a cost parameter that is part of the agent’s utility function. In the Rust model these variables are estimated but I consider them to be inputs for the implied annual demand. Computing Shapley effects requires the simulation of the input variables. To that end, information about the distribution of the inputs are needed.
+This section sets up the model whose input-output relationship I want to shed light on. I consider the single-agent dynamic discrete choice model of \citet{R87}.
 
 \subsection{Bus-Engine Replacement Model}
 
-Information about the model is required for calculating the variance-covariance matrix and mean vector of the inputs.
+Every period an agent needs to decide whether to replace the engine of a bus in the carpark or to conduct standard maintenance operations. The Rust model assumes optimal behaviour of the agent and asks what the implied deep economic parameters are, given this optimal behaviour.
 
-In \citet{R87} an agent needs to manage a pool of buses for public transportation. Each period a bus exhibits an accumulated mileage state (odometer state) $x$ and other state variables $\varepsilon$, that are unobserved by the econometrician. The agent has to decide whether to perform standard maintenance or an expensive engine replacement. The agent’s decision in period $t$ is
+The model output I consider is implied annual demand for engine replacements. Model inputs are engine replacement costs and a cost parameter that is part of the agent’s utility function. In the Rust model these variables are estimated but I consider them to be inputs for the implied annual demand. Computing Shapley effects requires the simulation of the input variables. To that end, information about the distribution of the inputs are needed, especially for calculating the variance-covariance matrix and mean vector of the inputs.
+
+In \citet{R87} an agent needs to manage a pool of buses for public transportation. Each period a bus exhibits an observable accumulated mileage state (odometer state) $x$ and other state variables $\varepsilon$, that are unobserved by the econometrician. The agent has to decide whether to perform standard maintenance or an expensive engine replacement. The agent’s decision in period $t$ is
 \begin{equation}
 i_t\ =
 \begin{cases}
@@ -17,7 +17,7 @@ i_t\ =
 \end{cases}
 \end{equation}
 
-\noindent If replacement is chosen, the accumulated mileage state $x$ is set to zero. Otherwise, the bus is used for another period with standard maintenance and $x$ increases until the next period. Note that $x$ needs to me discretised for the estimation. I follow \citet{R87} and discretise the state space into 175 grids with a size of each bin of 2,571 miles.
+\noindent If replacement is chosen, the accumulated mileage state $x$ is set to zero. Otherwise, the bus is used for another period with standard maintenance and $x$ increases until the next period. Note that $x$ needs to be discretised for the estimation. I follow \citet{R87} and discretise the state space into 175 grids with a size of each bin of 2,571 miles.
 
 The agent’s utility function given state $(x, \varepsilon)$ is described by
 \begin{equation}
@@ -50,11 +50,25 @@ V(x,\ \varepsilon)=\max_i \{ v(x,\ i;\ \theta_1,\ RC)+\varepsilon(i) + \\
 \beta \int_{x'} \int_{\varepsilon'} V(x',\ \varepsilon')p(x',\ \varepsilon' \mid x,\ \varepsilon,\ i;\ \theta_2, \theta_3)dx' d \varepsilon' \}.
 \end{multline}
 
-The above problem is simplified by imposing some further assumptions to ease the estimation process. The model is solved by use of the so called NFXP \citep{R87}. The parameters to be estimated are combined in a vector $\theta=(\theta_3,\ RC,\ \theta_{11}) $. The estimation procedure via Maximum Likelihood is conducted by first estimating the transition probabilities $\theta_3$. In a second step, the parameters $RC$ and $\theta_{11}$ are estimated. I do not go into further details of how this model is solved. For details see \citet{R87}.
+\begin{table}
+	\centering
+	\caption{Variance-Covariance Matrix of the Input Variables}
+	\label{cov}
+	\begin{threeparttable}
+	\centering
+	\input{../figures/covariance_matrix.tex}
+	\begin{tablenotes}
+	\small
+	\item \textit{Notes:} Estimated variance-covariance matrix based on $10,000$ samples.
+	\end{tablenotes}
+	\end{threeparttable}
+	\end{table}
+
+The above problem is simplified by imposing some further assumptions to ease the estimation process. The model is solved by use of the so called Nested Fixed Point algorithm \citep{R87}. The parameters to be estimated are combined in a vector $\theta=(\theta_3,\ RC,\ \theta_{11}) $. The estimation procedure via Maximum Likelihood is conducted by first estimating the transition probabilities $\theta_3$. In a second step, the parameters $RC$ and $\theta_{11}$ are estimated. I do not go into further details of how this model is solved. For details see \citet{R87}.
 
 \subsection{Distribution of the Input Variables} \label{model_setup}
 
-The Maximum Likelihood estimator is asymptotically normally distributed \citep{R73}. Thus, I estimate the variance-covariance matrix and the mean vector of $\theta_{11}$ and $RC$ by an MC simulation. Note that this general setup is used in \cref{comp_shap} as well. For solving the model, I use the simulation and estimation capabilities of the Python \textit{ruspy} package \citep{OSE19}. I chose \textit{scipy\_L-BFGS-B} as the solver for the NFXP algorithm \citep{SP20}. I proceed as follows.
+The Maximum Likelihood estimator is asymptotically normally distributed \citep{R73}. Thus, I estimate the variance-covariance matrix and the mean vector of $\theta_{11}$ and $RC$ by an Monte Carlo simulation. Note that this general setup is used in \cref{comp_shap} as well. For solving the model, I use the simulation and estimation capabilities of the Python \textit{ruspy} package \citep{OSE19}. \footnote{I chose \textit{scipy\_L-BFGS-B} as the solver for the Nested Fixed Point algorithm \citep{SP20}.} I proceed as follows.
 
 First, I set the true parameters in $\theta$. I chose to consider three transition probabilities, i.e. the mileage state $x$ can increase from the current period to the next by two grids at most. I set
 \begin{align*}
@@ -65,27 +79,18 @@ RC &= 10.07780762,\\
 
 \noindent Note that $RC$ is scaled by $0.001$ for estimation purposes. I consider a total of 50 buses for 120 periods (months, i.e. in total ten years).
 
-\begin{table}
-\centering
-\caption{Variance-Covariance Matrix of the Input Variables}
-\label{cov}
-\begin{threeparttable}
-\centering
-\input{../figures/covariance_matrix.tex}
-\begin{tablenotes}
-\small
-\item \textit{Notes:} Estimated variance-covariance matrix based on $10,000$ samples.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
-
 \begin{figure}[t]
 	\caption{Correlation Between the Input Variables}
     % \floatfoot{A note}
     \label{correlation}
 	\vspace*{-4mm}
-	\centering
+	\begin{centering}
 	\includegraphics[scale=0.9]{../figures/correlation_rc_theta.png}
+	\end{centering}
+
+	\small
+	\textit{Notes:} 100,000 conditionally drawn samples of $RC$ and $\theta_{11}$.
+
 \end{figure}
 
 
@@ -100,8 +105,12 @@ Third, from the $10,000$ parameter estimates of $\widehat{RC}$ and ${\hat{\theta
     % \floatfoot{A note}
     \label{uncertainty}
 	\vspace*{-4mm}
-	\centering
-	\includegraphics[scale=0.9]{../figures/uncertainty_propagation_100000.png}
+	\begin{centering}
+		\includegraphics[scale=0.9]{../figures/uncertainty_propagation_100000.png}
+	\end{centering}
+
+	\small
+	\textit{Notes:} Estimated implied annual demand for $100,000$ samples of $(\widehat{RC},\ {\hat{\theta}}_{11})$. The horizontal line shows the implied annual demand at the \textit{true} parameter values $(RC,\ \theta_{11})$.
 \end{figure}
 
 \citet{R87} shows how one can derive further quantities from the parameter estimates. \citet{R87} derives the implied annual demand (henceforth, demand) for bus-engine replacements. \citet{R87} computes the demand for bus engines by

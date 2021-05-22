@@ -65,6 +65,18 @@ S_i^T &= V[Y]^{-1}(V[Y] - V[E[Y \mid {X_{- i}}]])
 
 \noindent where $X_{- i}$ is the subset of input variables without input $i$. What follows does apply to models with independent inputs only. The sensitivity measure $S_i$ is called the first-order sensitivity index. $S_i$ represents the share of output variance reduced by the isolated effect of input $i$, excluding contributions in variance reduction by interactions between input $i$ and the remaining $(K-1)$ inputs. The subtrahend in the nominator of \cref{total_sobol} can be seen as the expected variance reduction when $X_i$ is fixed at a certain value, i.e. if we know $X_i$ with certainty \citep{SNS16}. $S_i^T$ is called the total sensitivity index. $S_i^T$ complements $S_i$ in the sense that it measures the total effect of $X_i$ in the output variance, including interaction effects \citep{SNS16}. It can be considered the expected remaining output variance, when all values of the inputs are known, except for the value attached to $X_i$ \citep{SNS16}. By normalising both measures by $V[Y]$, it is clear that the value s of $S_i$ and $S_i^T$ are in the interval $[0, 1]$, since the numerators in equations xy and yz are always smaller than the total variance \citep{GM17}. For the relationship between $S_i$ and $S_i^T$ the weak inequality $S_i\ \le\ S_i^T$ holds true, while equality only holds when there are no interaction effects between $X_i$ and $X_{- i}$. Note that the terms indices and effects are used interchangeably.
 
+\begin{figure}[t]
+	\caption{Convergence of Shapley Effects for the Rust Model}
+    \label{shapley_convergence}
+	\vspace*{-4mm}
+	\begin{centering}
+	\includegraphics[scale=0.9]{../figures/convergence_shapley_effects_8.png}
+	\end{centering}
+
+	\small
+	\textit{Notes:} Shapley effects estimated for different values of $N_O$, while setting $N_V=10,000$ and $N_I=3$.
+\end{figure}
+
 Under input independence, the Sobol' indices have a clear interpretation. If $S_i$ is large, then the corresponding input $X_i$ is an influential input with respect to the output variance reduction \citep{GM17}. In contrast, a small first-order effect $S_i$ does not imply that $X_i$ is an uninfluential input, if strong interaction effects are present \citep{GM17}. As $S_i^T$ measures the total variance contribution by $X_i$, one can infer from a small $S_i^T$ that $X_i$ is indeed not uninfluential \citep{GM17}. If so, $X_i$ could be fixed at a certain value without causing changes in the model output variance \citep{GM17}.
 
 Evaluating $S_i$ and $S_i^T$ one can also learn something about the structure of the model one is analysing, always assuming that inputs are independent. The model structure can be determined by the sums $\sum_{i \in K} S_i$ and $\sum_{i \in K} S_i^T$ \citep{GM17}.If both sums are equal to one, interaction effects are negligible , since the model is additive in nature. The model is non-additive if $\sum_{i \in K} S_i < 1$ and $\sum_{i \in K} S_i^T > 1$ \citep{GM17}. Thus, it can be inferred that interaction effects cannot be ignored and play a role in the system under consideration.
@@ -73,14 +85,7 @@ Recall that the statements about the model structure and input importance do not
 
 \subsection{Shapley Effects for Sensitivity Analysis}
 
-\begin{figure}[t]
-	\caption{Convergence of Shapley Effects for the Rust Model}
-    % \floatfoot{A note}
-    \label{shapley_convergence}
-	\vspace*{-4mm}
-	\centering
-	\includegraphics[scale=0.9]{../figures/convergence_shapley_effects_8.png}
-\end{figure}
+In the context of sa, \citet{SNS16} named Shapley values Shapley effects, which were first suggested as a variance-based sensitivity measure by \citet{O14}. According to \citet{PRB20} the Shapley effect is becoming more and more popular in sa.
 
 \begin{table}[t]
 	\centering
@@ -96,8 +101,6 @@ Recall that the statements about the model structure and input importance do not
 	\end{tablenotes}
 	\end{threeparttable}
 \end{table}
-
-In the context of sa, \citet{SNS16} named Shapley values Shapley effects, which were first suggested as a variance-based sensitivity measure by \citet{O14}. According to \citet{PRB20} the Shapley effect is becoming more and more popular in sa.
 
 When applied as a sensitivity measure, the interpretation of the Shapley value changes. $X_i$ is now interpreted as a model input instead of a player in a game. A coalition is now a subset of model inputs. \citet{O14} defines the function $\widetilde{val}$ as a function that assigns the explanatory power of this subset of inputs to this subset. That is, the function $\widetilde{val}$ assigns the conditional variance to a subset of inputs, $\widetilde{val}(J)=V[Y]^{-1}V[E[Y \mid X_J]]$ and $\widetilde{val}$ measures the reduction in $V[Y]$ due to the inputs in $J$ \citep{SNS16}. \citep{SNS16} show that the following alternative formulation of the value function results into the same Shapley effect.
 \begin{equation}

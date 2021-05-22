@@ -45,6 +45,15 @@ uniquename=false]{biblatex}
 \setcounter{page}{1}
 \pagenumbering{Roman}
 
+\addcontentsline{toc}{section}{List of Tables}
+\listoftables
+\newpage
+
+\addcontentsline{toc}{section}{List of Figures}
+\listoffigures
+\newpage
+
+
 % Main body.
 
 \setcounter{page}{1}
@@ -66,5 +75,20 @@ uniquename=false]{biblatex}
 % \thispagestyle{plain} % suppress header.
 \addcontentsline{toc}{section}{References}
 \printbibliography[title={References}]
+
+% Affidavit
+
+\clearpage
+\thispagestyle{empty}
+
+\begin{center}
+	\bf \Large Schriftliche Versicherung
+\end{center}
+
+\bigskip
+\bigskip
+\noindent Ich   versichere hiermit,   dass   ich   die   vorstehende   Masterarbeit selbstständig verfasst und keine anderen als die angegebenen Quellen und Hilfsmittel benutzt habe, dass die vorgelegte Arbeit noch an keiner anderen  Hochschule  zur  Prüfung  vorgelegt  wurde  und  dass  sie  weder ganz  noch  in  Teilen  bereits  veröffentlicht  wurde. Wörtliche Zitate und Stellen, die anderen Werken dem Sinn nach entnommen sind, habe ich in jedem einzelnen Fall kenntlich gemacht.
+
+
 
 \end{document}

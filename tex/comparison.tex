@@ -13,7 +13,7 @@ ranking, even for a relatively small sample size.
 
 With respect to the estimation precision, Morris indices are subject to larger uncertainty
 than Shapley effects. As stated above, this estimation precision is not necessarily needed. If
-the identification of uninfluential inputs is the purpose of sa, estimates need to be precise
+the identification of uninfluential inputs is the purpose of sensitivity analysis, estimates need to be precise
 only in the sense that they yield nonzero indices if an input is important and zero if the
 are not. If input ranking is the goal, the situation is slightly different. The simulation
 study presented in this paper with two inputs only may not be the right trial to investigate
@@ -26,7 +26,6 @@ method for input importance ranking. Further, Morris indices are informative abo
 model structure. Hence, one can not only successfully rank the inputs but also learn more
 about the model itself.
 
-[Shapley effects are easy to interpret than Morris indices by default. A quantitative
-sm will ]
+Since Shapley effects yield only one sensitivity index per input, they are easier to interpret than the four indices in the case of the Morris method.
 
-My findings are in line with the ones found in \citet{GM17}. [More detail!]
+My findings are in line with the ones found in \citet{GM17}. The extension of the Morris method to dependent inputs is an important contribution.

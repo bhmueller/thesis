@@ -1,4 +1,4 @@
-\section{Qualitative Sensitivity Measures: the Morris Method} \label{comp_morris}
+\section{Qualitative Sensitivity Measures: The Morris Method} \label{comp_morris}
 
 This section introduces the Morris method for input screening.
 
@@ -29,7 +29,7 @@ $\mu_i^\ast$ and $\sigma_i$ can now be used to identify non-influential model in
 
 The Morris method exhibits some drawbacks. Firstly, as they stand, the sensitivity indices derived by the Morris method are not suited for screening inputs under dependence. To see why consider two inputs $X_i$ and $X_j$ which are dependent, i.e. $G(x_i,\ x_j) \neq G(x_i)G(x_j)$, where $G(\cdot)$ again denotes the cumulative distribution function. If $x_i$ changes, $x_j$ should change as well due to the dependence between the two inputs. The sensitivity indices presented above are derived using a One-At-a-Time approach that does not allow for the screening of dependent inputs \citep{GM17}.
 
-Secondly, similar to the Sobol' indices, the person conducting sa has to take two indices per input into account. Compare to the arguments made in \cref{var_based_sa}.
+Secondly, similar to the Sobol' indices, the researcher or practitioner conducting sensitivity analysis has to take two indices per input into account. Compare to the arguments made in \cref{var_based_sa}.
 
 Thirdly, there exists no clear interpretation of the absolute values of the sensitivity indices. They only provide a ranking of inputs and give a hint of which inputs are the least influential ones \citep{GM17}.
 
@@ -133,18 +133,47 @@ important input.
     \label{rel_diff_morris}
 \end{table}
 
-\begin{table}
+\begin{table}[t]
+    \centering
     \caption{Morris Indices for $N=3,000$}
     \label{morris_3000}
-    \input{table_morris_conv_3000}
+    \begin{threeparttable}
+    \begin{centering}
+        \input{../figures/table_morris_conv_3000}
+        \begin{tablenotes}
+            \small
+            \item \textit{Notes:} \textit{Independent} and \textit{full} Morris indices for $RC$ and $\theta_{11}$ using $N=3,000$.
+        \end{tablenotes}
+    \end{centering}
+
+    \end{threeparttable}
+
 \end{table}
+
+% \begin{table}[t]
+% 	\centering
+% 	\caption{Relative Difference Shapley Effects}
+% 	\label{rel_diff_shapley}
+% 	\begin{threeparttable}
+% 	\centering
+% 	% \hline
+% 	\input{../figures/shapley_convergence_relative_difference_8.tex}
+% 	\begin{tablenotes}
+% 	\small
+% 	\item \textit{Notes:} The percentage difference between Shapley effects for different values of $N_O$ while keeping $N_V$ fixed at $12,500$ and $N_I$ at $3$.
+% 	\end{tablenotes}
+% 	\end{threeparttable}
+% \end{table}
 
 Secondly, I estimate Morris indices for a set of number of draws. I consider $N \in \{100,\ 500,\ 1000,\ 1500,\ 2000,\ 2500,\ 3000\}$. Results are shown in \cref{morris_convergence}. Morris indices in
 \cref{morris_convergence} clearly confirm the input ranking of the replicates as presented above. Morris indices
 converge as $N$ increases. \Cref{rel_diff_morris} confirms this. Although Morris indices are volatile, \citet{GM17} point out that a high estimation precision is not necessarily needed
 as long as the input ranking is clearly achieved.
+
 Let us inspect the Morris indices for $N = 3,000$ in more detail. Consult \cref{morris_3000} for the
 resulting Morris indices. The computational cost for this value of $N$ amounts to $18,000$
-model evaluations. If only the independent Morris indices are considered, we erroneously
-conclude that input $RC$ is a non-influential input. [More interpretation. As in GM17.
-What ca we learn about the structure of the model!?]
+model evaluations. As in the other trials, \cref{morris_3000} shows $(\mu^{\ast ind}_{RC},\ \sigma_{RC}^{ind})$ equal to zero.
+If only the independent Morris indices are considered, we erroneously
+conclude that input $RC$ is a non-influential input by neglecting the dependent variance contribution. Since none of the inputs exhibits $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$ close to zero, both inputs have to be considered as influential ones and can thus not be fixed without influencing the output.
+Since both independent indices for $\theta_{11}$, $(\mu^{\ast ind}_{\theta_{11}},\ \sigma_{\theta_{11}}^{ind})$, are high, there are either strong interaction and/or non-linear effects present. Since independent sensitivity indices for $RC$ are both zero, the reason for the high $\sigma_{\theta_{11}}^{ind})$ must be driven by the presence of non-linear effects in $\theta_{11}$.
+Regarding the model structure we can conclude that there are no interaction effects between $RC$ and $\theta_{11}$.

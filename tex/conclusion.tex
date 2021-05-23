@@ -1,5 +1,15 @@
 \section{Conclusion} \label{conclusion}
 
-Interestingly, the Morris method yields the correct inputs ranking. This holds true even for small sample sizes. This is my main finding. It is therefore a valid substitute to Shapley effects if the purpose of sa is importance ranking or FF.
+% Was sind die Erkenntnisse, die Du gewonnen hast.
 
-If FF is the purpose, none of the inputs of the Rust model can be fixed. Both, Shapley effects and Morris indices indicate this. This is a secondary finding of my analysis. The inherent uncertainty in the model inputs should not be ignored if one is to use the Rust model for policy making. We cannot assume that we knew neither of the two inputs with certainty.
+% Wie knüpfen die an vorherige Literatur an?
+
+The extended Morris method proposed by \citet{GM17} yields the correct inputs ranking. This holds true even for small sample sizes. This is my main finding. It is therefore a valid substitute to Shapley effects if the purpose of sensitivity analysis is importance ranking or FF in the case of the Rust model. My findings stress the importance of considering both, independent and full Morris indices, to identify an input as uninfluential. A conclusion based solely on the independent Morris indices can lead to Type-II error. My results are generally in line with the ones found in \citet{GM17}: this thesis adds one more piece of evidence in favour of the extended Morris method. This evidence hopefully encourages and facilitates the widespread application of sensitivity analysis in Economics. With the Morris method we have a easy to grasp and easy to implement sensitivity method, while performing well at low computational cost.
+
+If FF is the purpose, none of the inputs of the Rust model can be fixed. Both, Shapley effects and Morris indices indicate this. This is a secondary finding of my analysis. The inherent uncertainty in the model inputs should not be ignored if one is to use the Rust model for policy making. We cannot assume that we knew neither of the two inputs with certainty. If uncertainty in implied annual demand is to be reduced, my investigation suggests that particular attention should be allocated to the slope parameter of the cost function $\theta_{11}$.
+
+% Lassen sich die Erkenntnisse verallgemeinern oder was sind Spezifika, die zu beachten sind?
+
+Since no formal arguments can be made about the properties of Morris indices, it is not clear whether these findings generalise. Further research on whether the results suggested by \citet{GM17} and this thesis generally hold, is needed.
+
+% Was sind offene Fragen für zukünftige Forschung.

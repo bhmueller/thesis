@@ -48,8 +48,12 @@ Considering the interpretation of Morris indices, $\mu_i^\ast$ and $\sigma_i$, i
     % \floatfoot{A note}
     \label{morris_convergence}
 	\vspace*{-4mm}
-	\centering
+	\begin{centering}
 	\includegraphics[scale=0.9]{../figures/morris_convergence.png}
+    \end{centering}
+
+    \small
+    \textit{Notes:} Estimated Morris indices for different samples sizes $N$. The left panel shows \textit{independent} Morris indices, the right one \textit{full} Morris indices.
 \end{figure}
 
 \begin{figure}[t]
@@ -57,8 +61,12 @@ Considering the interpretation of Morris indices, $\mu_i^\ast$ and $\sigma_i$, i
     % \floatfoot{A note}
     \label{morris_replicates}
 	\vspace*{-4mm}
-	\centering
+	\begin{centering}
 	\includegraphics[scale=0.9]{../figures/boxplot_morris_replicates_100.png}
+    \end{centering}
+
+    \small
+    \textit{Notes:} Boxplots of the four Morris indices for the model inputs $RC$ and $\theta_{11}$. 100 Morris indices were estimated with $N=27$. The left panel shows \textit{independent} Morris indices, the right one \textit{full} Morris indices.
 \end{figure}
 
 In this section I introduce the extended Morris method for dependent samples as proposed by \citet{GM17}.
@@ -128,6 +136,7 @@ important input.
 \begin{table}
     \caption{Morris Indices for $N=3,000$}
     \label{morris_3000}
+    \input{table_morris_conv_3000}
 \end{table}
 
 Secondly, I estimate Morris indices for a set of number of draws. I consider $N \in \{100,\ 500,\ 1000,\ 1500,\ 2000,\ 2500,\ 3000\}$. Results are shown in \cref{morris_convergence}. Morris indices in

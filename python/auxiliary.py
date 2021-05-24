@@ -415,6 +415,8 @@ def descriptives_and_data_shapley_effects(shapley_effects, n_replicates):
     )
     descriptives_shapley_effects.index.name = "Shapley Effect"
 
+    descriptives_shapley_effects.round(4)
+
     return descriptives_shapley_effects, data, shapley_indices_all_replicates
 
 

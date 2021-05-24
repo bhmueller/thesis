@@ -11,6 +11,20 @@ set more than one sample size as in the case of the Morris method.
 Both, Shapley effects and Morris indices, succeed in identifying the correct input
 ranking, even for a relatively small sample size.
 
+\begin{table}
+	\centering
+	\caption{Accuracy of Morris Indices}
+	\label{cov}
+	\begin{threeparttable}
+	\centering
+	\input{../figures/correct_rankings.tex}
+	\begin{tablenotes}
+	\small
+	\item \textit{Notes:} Share of the correct inputs rankings for $100$ Morris indices based on $\mu^{\ast,\ full}$ and $\mu^{\ast,\ ind}$. As a benchmark, the accuracy of Shapley effects is presented. For Morris indices the accuracy for different sample sizes is reported.
+	\end{tablenotes}
+	\end{threeparttable}
+\end{table}
+
 With respect to the estimation precision, Morris indices are subject to larger uncertainty
 than Shapley effects. As stated above, this estimation precision is not necessarily needed. If
 the identification of uninfluential inputs is the purpose of sensitivity analysis, estimates need to be precise

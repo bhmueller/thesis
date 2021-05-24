@@ -65,18 +65,6 @@ S_i^T &= V[Y]^{-1}(V[Y] - V[E[Y \mid {X_{- i}}]])
 
 \noindent where $X_{- i}$ is the subset of input variables without input $i$. What follows does apply to models with independent inputs only. The sensitivity measure $S_i$ is called the first-order sensitivity index. $S_i$ represents the share of output variance reduced by the isolated effect of input $i$, excluding contributions in variance reduction by interactions between input $i$ and the remaining $(K-1)$ inputs. The subtrahend in the nominator of \cref{total_sobol} can be seen as the expected variance reduction when $X_i$ is fixed at a certain value, i.e. if we know $X_i$ with certainty \citep{SNS16}. $S_i^T$ is called the total sensitivity index. $S_i^T$ complements $S_i$ in the sense that it measures the total effect of $X_i$ in the output variance, including interaction effects \citep{SNS16}. It can be considered the expected remaining output variance, when all values of the inputs are known, except for the value attached to $X_i$ \citep{SNS16}. By normalising both measures by $V[Y]$, it is clear that the value s of $S_i$ and $S_i^T$ are in the interval $[0, 1]$, since the numerators in equations xy and yz are always smaller than the total variance \citep{GM17}. For the relationship between $S_i$ and $S_i^T$ the weak inequality $S_i\ \le\ S_i^T$ holds true, while equality only holds when there are no interaction effects between $X_i$ and $X_{- i}$. Note that the terms indices and effects are used interchangeably.
 
-\begin{figure}[t]
-	\caption{Convergence of Shapley Effects for the Rust Model}
-    \label{shapley_convergence}
-	\vspace*{-4mm}
-	\begin{centering}
-	\includegraphics[scale=0.9]{../figures/convergence_shapley_effects_8.png}
-	\end{centering}
-
-	\small
-	\textit{Notes:} Shapley effects estimated for different values of $N_O$, while setting $N_V=10,000$ and $N_I=3$.
-\end{figure}
-
 Under input independence, the Sobol' indices have a clear interpretation. If $S_i$ is large, then the corresponding input $X_i$ is an influential input with respect to the output variance reduction \citep{GM17}. In contrast, a small first-order effect $S_i$ does not imply that $X_i$ is an uninfluential input, if strong interaction effects are present \citep{GM17}. As $S_i^T$ measures the total variance contribution by $X_i$, one can infer from a small $S_i^T$ that $X_i$ is indeed uninfluential \citep{GM17}. If so, $X_i$ could be fixed at a certain value without causing changes in the model output variance \citep{GM17}.
 
 Evaluating $S_i$ and $S_i^T$ one can also learn something about the structure of the model one is analysing, always assuming that inputs are independent. The model structure can be determined by the sums $\sum_{i \in K} S_i$ and $\sum_{i \in K} S_i^T$ \citep{GM17}. If both sums are equal to one, interaction effects are negligible , since the model is additive in nature. The model is non-additive if $\sum_{i \in K} S_i < 1$ and $\sum_{i \in K} S_i^T > 1$ \citep{GM17}. Thus, it can be inferred that interaction effects cannot be ignored and play a role in the system under consideration.
@@ -118,9 +106,24 @@ Sobol' indices for dependent inputs have been proposed \citep{MTA15}. This strat
 
 \subsection{Algorithm} \label{comp_alg}
 
-The algorithm for the computation of Shapley effects needs to allow for conditional sampling of dependent inputs. Otherwise, some of the advantages of Shapley effects cannot be exploited. I use algorithm 1 from \citet{SNS16}. \footnote{An alternative algorithm has been recently proposed by \citet{PRB20} which uses mathematically more advanced concepts.}
+\begin{figure}[t]
+	\caption{Shapley Effects for the Rust Model - $100$ Replicates}
+    \label{boxplot_shapley}
+	\begin{centering}
+	\vspace*{-4mm}
+	\begin{centering}
+	\includegraphics[scale=0.9]{../figures/boxplot_shapley_effects_100.png}
 
-Shapley effects consider all input subsets. To iterate over all subsets, \citet{SNS16} restate the equation for Shapley effects to iterate over all permutations of model inputs. For instance, let $k=5$. Then, $K=\{1,\ 2,\ 3,\ 4,\ 5\}$. There exist $5!$ permutations, where one is $\pi'=(2,\ 4,\ 3,\ 5,\ 1)$. Let the set of all permutations of $K$ be denoted by $\Pi(K)$. Further, let $P_i(\pi)$ denote all inputs in permutation $\pi$, that come before input $i$. In the above example, if $i=3$, then $P_3(\pi')=\{2,\ 4\}$. Using the permutation representation, \citet{SNS16} state the marginal contribution due to input $i$ as $val(P_i(\pi) \cup\{i\}) - val(P_i(\pi))$. By considering all permutations of $K$, we can restate the equation for the Shapley effects for input $i$ as
+	\end{centering}
+	\end{centering}
+
+	\small
+	\textit{Notes:} Boxplots for 100 estimated Shapley effects for the inputs $RC$ and $\theta_{11}$ using the same number of Monte Carlo samples: $N_V=100$, $N_O=10$, and $N_I=3$.
+\end{figure}
+
+The algorithm for the computation of Shapley effects needs to allow for conditional sampling of dependent inputs. Otherwise, some of the advantages of Shapley effects cannot be exploited. I use algorithm 1 from \citet{SNS16}.\footnote{An alternative algorithm has been recently proposed by \citet{PRB20} which uses mathematically more advanced concepts.}
+
+Shapley effects consider all input subsets. To iterate over all subsets, \citet{SNS16} restate the equation for Shapley effects to iterate over all permutations of model inputs. For instance, let $k=5$. Then, $K=\{1,\ 2,\ 3,\ 4,\ 5\}$. There exist $5!$ permutations, where one example is $\pi'=(2,\ 4,\ 3,\ 5,\ 1)$. Let the set of all permutations of $K$ be denoted by $\Pi(K)$. Further, let $P_i(\pi)$ denote all inputs in permutation $\pi$, that come before input $i$. In the above example, if $i=3$, then $P_3(\pi')=\{2,\ 4\}$. Using the permutation representation, \citet{SNS16} state the marginal contribution due to input $i$ as $val(P_i(\pi) \cup\{i\}) - val(P_i(\pi))$. By considering all permutations of $K$, we can restate the equation for the Shapley effects for input $i$ as
 \begin{equation}
 \phi_i=\sum_{\pi \in \Pi(K)} (k!)^{-1} (val(P_i(\pi) \cup\{i\}) - val(P_i(\pi))).
 \end{equation}
@@ -129,38 +132,6 @@ The algorithm of \citet{SNS16} exploits the fact that their permutation-based al
 \begin{equation}
 val(P_{\pi(j)}(\pi) \cup \{\pi(j)\}) - val(P_{\pi(j)}(\pi)),
 \end{equation}
-
-\noindent where $\pi(j)$ denotes the input at position $j$ in permutation $\pi$. In the above permutation $\pi'$, at position 2 we have input 4, i.e. $\pi'(2)=4$.
-
-To see for which subsets the algorithm performs evaluations of $val$, consider the below example. For instance, following \citet{SNS16}, if $k=3$ and $\pi=(1, 3, 2)$, the algorithm computes
-\begin{align*}
-\Delta_1 &=val(\{1\})-val(\emptyset),\ set\ prevC=0, \\
-\Delta_2 &=val(\{1,\ 3\})-prevC,\ set\ prevC=val(\{1,\ 3\}), \\
-\Delta_3 &=val(\{1,\ 3,\ 2\})-prevC,\ set\ prevC=val(\{1,\ 3,\ 2\}).
-\end{align*}
-
-Algorithm 1 implements three Monte Carlo simulations. There are $N_V$ Monte Carlo samples of model inputs which are evaluated to get an estimate of $V[Y]$. Since the algorithm needs to handle dependent inputs, \citet{SNS16} implement dependent sampling by an inner and an outer Monte Carlo simulation. To see why both Monte Carlo simulations are needed, fix a permutation $\pi$. Then, sample $N_O$ outer samples, that are unconditionally drawn. Given this set of unconditionally drawn outer samples, draw $N_I$ inner samples conditionally on the outer samples. That is, for each outer sample, one has $N_I$ inner samples. Thus, for algorithm 1, the computational cost in terms of number of model evaluations is given by $N_V+m \cdot N_I \cdot N_O \cdot (k-1)$, where $m$ is the number of permutations considered. In the exact setting of algorithm 1, $m=\vert \Pi(K) \vert=k!$. If only a random subset of permutations should be considered, one sets $m<k!$. This could be useful to reduce the computational burden if the number of inputs is large.
-
-\subsection{Shapley Effects for the Rust Model} \label{shapley_rust_model}
-
-\begin{figure}[t]
-	\caption{Shapley Effects for the Rust Model - $100$ Replicates}
-    % \floatfoot{A note}
-    \label{boxplot_shapley}
-	\vspace*{-4mm}
-	\begin{centering}
-	\includegraphics[scale=0.9]{../figures/boxplot_shapley_effects_100.png}
-	\end{centering}
-
-	\small
-	\textit{Notes:} Boxplots for 100 estimated Shapley effects for the inputs $RC$ and $\theta_{11}$ using the same number of Monte Carlo samples: $N_V=100$, $N_O=10$, and $N_I=3$.
-\end{figure}
-
-I apply three different computational setups. It do so to: i. evaluate the performance of Shapley effects and ii. get the correct input ranking according to the sensitivity for the Rust model. When working with the algorithm presented by \citet{SNS16} in practice, it can be challenging to specify the sample sizes $N_O$ and $N_V$.
-
-The general computational setup applies to all three simulation studies. \citet{SNS16} recommend setting $m=\vert \Pi(K) \vert$, if computationally feasible. In order to reduce variance of the estimates of Shapley effects, \citet{SNS16} recommend choosing $N_I=3$, while setting $N_O$ as large as possible, given the constraints on the computational budget. Since the Rust model has two inputs only, the number of permutations to be consiedered is two and thus, very small. Hence, I set $m=2!=2$ and $N_I=3$. I run the estimation by using the implementation of algorithm 1 by the package \textit{econsa}, a Python package for sensitivity analysis \citep{OSE21}.
-
-% Shapley replicates.
 
 \begin{table}[t]
 	\centering
@@ -176,14 +147,47 @@ The general computational setup applies to all three simulation studies. \citet{
 	\end{threeparttable}
 \end{table}
 
+\noindent where $\pi(j)$ denotes the input at position $j$ in permutation $\pi$. In the above permutation $\pi'$, at position 2 we have input 4, i.e. $\pi'(2)=4$.
+
+To see for which subsets the algorithm performs evaluations of $val$, consider the below example. For instance, following \citet{SNS16}, if $k=3$ and $\pi=(1, 3, 2)$, the algorithm computes
+\begin{align*}
+\Delta_1 &=val(\{1\})-val(\emptyset),\ set\ prevC=0, \\
+\Delta_2 &=val(\{1,\ 3\})-prevC,\ set\ prevC=val(\{1,\ 3\}), \\
+\Delta_3 &=val(\{1,\ 3,\ 2\})-prevC,\ set\ prevC=val(\{1,\ 3,\ 2\}).
+\end{align*}
+
+Algorithm 1 implements three Monte Carlo simulations. There are $N_V$ Monte Carlo samples of model inputs which are evaluated to get an estimate of $V[Y]$. Since the algorithm needs to handle dependent inputs, \citet{SNS16} implement dependent sampling by an inner and an outer Monte Carlo simulation. To see why both Monte Carlo simulations are needed, fix a permutation $\pi$. Then, sample $N_O$ outer samples, that are unconditionally drawn. Given this set of unconditionally drawn outer samples, draw $N_I$ inner samples conditionally on the outer samples. That is, for each outer sample, one has $N_I$ inner samples. Thus, for algorithm 1, the computational cost in terms of number of model evaluations is given by $N_V+m \cdot N_I \cdot N_O \cdot (k-1)$, where $m$ is the number of permutations considered. In the exact setting of algorithm 1, $m=\vert \Pi(K) \vert=k!$. If only a random subset of permutations should be considered, one sets $m<k!$. This could be useful to reduce the computational burden if the number of inputs is large.
+
+\subsection{Shapley Effects for the Rust Model} \label{shapley_rust_model}
+
+I apply three different computational setups. It do so to: i. evaluate the performance of Shapley effects and ii. get the correct input ranking according to the sensitivity for the Rust model. When working with the algorithm presented by \citet{SNS16} in practice, it can be challenging to specify the sample sizes $N_O$ and $N_V$.
+
+The general computational setup applies to all three simulation studies. \citet{SNS16} recommend setting $m=\vert \Pi(K) \vert$, if computationally feasible. In order to reduce variance of the estimates of Shapley effects, \citet{SNS16} recommend choosing $N_I=3$, while setting $N_O$ as large as possible, given the constraints on the computational budget. Since the Rust model has two inputs only, the number of permutations to be consiedered is two and thus, very small. Hence, I set $m=2!=2$ and $N_I=3$. I run the estimation by using the implementation of algorithm 1 by the package \textit{econsa}, a Python package for sensitivity analysis \citep{OSE21}.
+
+% Shapley replicates.
+
+\begin{figure}[t]
+	\caption{Convergence of Shapley Effects for the Rust Model}
+    \label{shapley_convergence}
+	\begin{centering}
+	\vspace*{-4mm}
+	\begin{centering}
+	\includegraphics[scale=0.9]{../figures/convergence_shapley_effects_8.png}
+	\end{centering}
+	\end{centering}
+
+	\small
+	\textit{Notes:} Shapley effects estimated for different values of $N_O$, while setting $N_V=10,000$ and $N_I=3$.
+\end{figure}
+
 Firstly, I estimate 100 Shapley effects for the inputs of the Rust model, $RC$ and $\theta_{11}$ using the same general setup as described in the preceding paragraph. I further set $N_V=100$ and $N_O=10$. Thus, the computational cost of my choice of Monte Carlo runs imply that 160 model evaluations are needed to estimate the Shapley effects. On my machine (Windows 10, i5 processor), one estimation run takes approximately 40 seconds.
 
-The distribution of the 100 replicates is visualised by the boxplots in \cref{boxplot_shapley}. For further details on the estimated replicates, see \cref{shapley_descriptives}. The mean of $\phi_{RC}$ is 0.416256. For $\phi_{\theta_{11}}$ the mean value is 0.583744. Shapley effects are estimated with a standard error of 0.004317.
+The distribution of the 100 replicates is visualised by the boxplots in \cref{boxplot_shapley}. For further details on the estimated replicates, see \cref{shapley_descriptives}. The mean of $\phi_{RC}$ is $0.4163$. For $\phi_{\theta_{11}}$ the mean value is $0.5837$. Shapley effects are estimated with a standard error of 0.0043.
 Both, the boxplots, and the mean values show that $\theta_{11}$ is the more important input in terms of contributions to output variance. The confidence intervals at the 95-percent level, are quite large, but they do not overlap, indicating that the implied input importance ranking is robust. The lower value of $\phi_{RC}$ shows that $RC$ has less an impact on the output variance than $\theta_{11}$.
 
 % True Shapley
 
-Secondly, I estimate one set of Shapley effects for a large sample size. I chose to consider $N_V=100,000$ and $N_O=10,000$, which amount to a computational cost of $160,000$ model evaluations. The resulting sensitivity measures are $\phi_{RC} = 0.417641$ and $\phi_{\theta_{11}} = 0.582359$. I refer to this set of sensitivity measures as the \textit{true} Shapley effects.
+Secondly, I estimate one set of Shapley effects for a large sample size. I chose to consider $N_V=100,000$ and $N_O=10,000$, which amount to a computational cost of $160,000$ model evaluations. The resulting sensitivity measures are $\phi_{RC} = 0.4176$ and $\phi_{\theta_{11}} = 0.5823$. I refer to this set of sensitivity measures as the \textit{true} Shapley effects.
 
 % Shapley Convergence
 

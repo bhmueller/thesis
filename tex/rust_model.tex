@@ -62,13 +62,13 @@ V(x,\ \varepsilon)=\max_i \{ v(x,\ i;\ \theta_1,\ RC)+\varepsilon(i) + \\
 	\item \textit{Notes:} Estimated variance-covariance matrix based on $10,000$ samples.
 	\end{tablenotes}
 	\end{threeparttable}
-	\end{table}
+\end{table}
 
-The above problem is simplified by imposing some further assumptions to ease the estimation process. The model is solved by use of the so called Nested Fixed Point algorithm \citep{R87}. The parameters to be estimated are combined in a vector $\theta=(\theta_3,\ RC,\ \theta_{11}) $. The estimation procedure via Maximum Likelihood is conducted by first estimating the transition probabilities $\theta_3$. In a second step, the parameters $RC$ and $\theta_{11}$ are estimated. \footnote{I do not go into further details of how this model is solved. For details see \citet{R87}.}
+The above problem is simplified by imposing some further assumptions to ease the estimation process. The model is solved by use of the so called Nested Fixed Point algorithm \citep{R87}. The parameters to be estimated are combined in a vector $\theta=(\theta_3,\ RC,\ \theta_{11}) $. The estimation procedure via Maximum Likelihood is conducted by first estimating the transition probabilities $\theta_3$. In a second step, the parameters $RC$ and $\theta_{11}$ are estimated.\footnote{I do not go into further details of how this model is solved. For details see \citet{R87}.}
 
 \subsection{Distribution of the Input Variables} \label{model_setup}
 
-The Maximum Likelihood estimator is asymptotically normally distributed \citep{R73}. Thus, I estimate the variance-covariance matrix and the mean vector of $\theta_{11}$ and $RC$ by a Monte Carlo simulation. Note that this general setup is used in \cref{comp_shap} and \cref{comp_morris}as well. For solving the model, I use the simulation and estimation capabilities of the Python \textit{ruspy} package \citep{OSE19}. \footnote{I chose \textit{scipy\_L-BFGS-B} as the solver for the Nested Fixed Point algorithm \citep{SP20}.} The estimation of the variance-covariance matrix is conducted in three steps.
+The Maximum Likelihood estimator is asymptotically normally distributed \citep{R73}. Thus, I estimate the variance-covariance matrix and the mean vector of $\theta_{11}$ and $RC$ by a Monte Carlo simulation. Note that this general setup is used in \cref{comp_shap} and \cref{comp_morris}as well. For solving the model, I use the simulation and estimation capabilities of the Python \textit{ruspy} package \citep{OSE19}.\footnote{I chose \textit{scipy\_L-BFGS-B} as the solver for the Nested Fixed Point algorithm \citep{SP20}.} The estimation of the variance-covariance matrix is conducted in three steps.
 
 First, I set the true parameters in $\theta$. I chose to consider three transition probabilities, i.e. the mileage state $x$ can increase from the current period to the next by two grids at most. I set
 \begin{align*}
@@ -81,15 +81,15 @@ RC &= 10.07780762,\\
 
 \begin{figure}[t]
 	\caption{Correlation Between the Input Variables}
-    % \floatfoot{A note}
     \label{correlation}
+	\centering
 	\vspace*{-4mm}
 	\begin{centering}
 	\includegraphics[scale=0.9]{../figures/correlation_rc_theta.png}
 	\end{centering}
 
 	\small
-	\textit{Notes:} 100,000 conditionally drawn samples of $RC$ and $\theta_{11}$.
+	\textit{Notes:} 100,000 estimated values of $RC$ and $\theta_{11}$.
 
 \end{figure}
 
@@ -104,13 +104,15 @@ Third, from the $10,000$ parameter estimates of the replacement costs $\widehat{
 	\caption{Uncertainty Propagation}
     % \floatfoot{A note}
     \label{uncertainty}
+	\begin{centering}
 	\vspace*{-4mm}
 	\begin{centering}
 		\includegraphics[scale=0.9]{../figures/uncertainty_propagation_100000.png}
 	\end{centering}
+	\end{centering}
 
 	\small
-	\textit{Notes:} Estimated implied annual demand for $100,000$ simulated data sets. The horizontal line shows the implied annual demand at the \textit{true} parameter values $(RC,\ \theta_{11})$. This \textit{true} demand amounts to $59.088760$.
+	\textit{Notes:} Estimated implied annual demand for $100,000$ simulated data sets. The horizontal line shows the implied annual demand at the \textit{true} parameter values $(RC,\ \theta_{11})$. This \textit{true} demand amounts to $59.09$.
 \end{figure}
 
 \citet{R87} shows how we can derive further quantities from the parameter estimates. \citet{R87} derives the implied annual demand (henceforth, demand) for bus-engine replacements. \citet{R87} computes the demand for bus engines by
@@ -128,6 +130,6 @@ Note, that $\pi$ is a function of $\theta$. Assuming further that the processes 
 d(RC)=12 \cdot M \cdot \int_0^{\infty} \pi(dx,\ 1).
 \end{equation}
 
-To see how the uncertainty in the inputs $(RC, \theta_{11})$ propagate to the output, demand, see \cref{uncertainty}. I again use \textit{ruspy} for the computation of the demand at $RC^{demand}$. I compute demand for $100,000$ simulated data sets. The output is normally distributed as can be seen in \cref{uncertainty} with mean 58.666233 and variance 41.829977.
+To see how the uncertainty in the inputs $(RC, \theta_{11})$ propagate to the output, demand, see \cref{uncertainty}. I again use \textit{ruspy} for the computation of the demand at $RC^{demand}$. I compute demand for $100,000$ simulated data sets. The output is normally distributed as can be seen in \cref{uncertainty} with mean 58.67 and variance 41.83.
 
 Now, that the model, i.e. how the output depends on the inputs, has been clarified, we are ready to consider the computation of Shapley effects.

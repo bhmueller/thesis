@@ -6,8 +6,6 @@ This section introduces the Morris method for input screening.
 
 In this section the applications of input screening is investigated.
 
-% \input{../figures/covariance_matrix.tex}
-
 \subsection{Morris Method for Independent Inputs} \label{classic_morris}
 
 The Morris method was introduced by \citet{M91} to identify the ``important" input variables of a model, especially in cases where there are many inputs and/or the evaluation of a model is time-consuming.
@@ -17,13 +15,13 @@ Consider the same setup as employed in the preceding sections. Let $x = \{x_1,\ 
 EE_i = \frac{f(x_{\Delta_i}) - f(x)}{\Delta}.
 \end{equation}
 
-The above elementary effect is computed $N$ times, each for a varying $\Delta$ \citep{GM17}. The actual sm resulting from the Morris method are the mean, denoted by $\mu_i$, and the standard deviation, denoted by $\sigma_i$, taken from all $N$ different elementary effects per input $i$.
+The above elementary effect is computed $N$ times, each for a varying $\Delta$ \citep{GM17}. The actual sensitivity measures resulting from the Morris method are the mean, denoted by $\mu_i$, and the standard deviation, denoted by $\sigma_i$, taken from all $N$ different elementary effects per input $i$.
 \begin{align}
 \mu_i^\ast& = \frac{1}{N} \sum_{r=1}^N \vert EE_{i,\ r} \vert, \label{mu}\\
 \sigma_i& = \sqrt{\frac{1}{N-1} \sum_{r=1}^N (EE_{i,\ r} - \mu_i)^2}, \label{sigma}
 \end{align}
 
-\noindent with $EE_{i,\ r}$ denoting the $r$-th elementary effect of input $i$, $r = 1,\ \dots, N$, and $\vert \cdot \vert$ the absolute value. Note that in \citet{M91} the absolute value was absent and elementary effects could potentially cancel each other out \citep{CCS07}. Therefore, \citet{CCS07} proposed the version presented above, thus making the screening method more robust. A total of $2 \cdot k \cdot N$ model evaluations is needed to compute the full set of sm using the Morris method.
+\noindent with $EE_{i,\ r}$ denoting the $r$-th elementary effect of input $i$, $r = 1,\ \dots, N$, and $\vert \cdot \vert$ the absolute value. Note that in \citet{M91} the absolute value was absent and elementary effects could potentially cancel each other out \citep{CCS07}. Therefore, \citet{CCS07} proposed the version presented above, thus making the screening method more robust. A total of $2 \cdot k \cdot N$ model evaluations is needed to compute the full set of sensitivity measures using the Morris method.
 
 $\mu_i^\ast$ and $\sigma_i$ can now be used to identify non-influential model inputs. Uninfluential inputs exhibit a $\mu_i^\ast$ close to zero. If $\mu_i^\ast$ is large, it depends on $\sigma_i$ whether there exist substantial non-linear or interaction effects. A low $\sigma_i$ indicates that non-linear effects are non-existent, whereas a high $\sigma_i$ suggests large interaction or non-linear effects \citep{GM17}.
 
@@ -39,34 +37,36 @@ Considering the interpretation of Morris indices, $\mu_i^\ast$ and $\sigma_i$, i
 
 \citet{M91} points out that his method does not rely on simplifying assumptions, e.g. monotonicity of the model or input sparsity. He argues that if those assumptions hold, one could apply other, more effective and economical procedures, e.g. based on Latin hypercube designs. However, the Morris method does not rely on such assumptions and will work well if these assumptions are justifiable or not \citep{M91}.
 
-\citet{BP16} group the Morris method to the family of local sm. However, while the elementary effects themselves consider only local changes, the actual measures for input importance, $\mu_i^\ast$ and $\sigma_i$, average over these $N$ elementary effects. Thus, they take $N$ local changes per input $i$ into account \citep{M91}. Indeed, \citet{CCS11} make a case for the Morris method to be seen a global sm. \citet{BP16} acknowledge that screening methods like the Morris sm stand apart from other local sm.
+\citet{BP16} group the Morris method to the family of local sensitivity measures. However, while the elementary effects themselves consider only local changes, the actual measures for input importance, $\mu_i^\ast$ and $\sigma_i$, average over these $N$ elementary effects. Thus, they take $N$ local changes per input $i$ into account \citep{M91}. Indeed, \citet{CCS11} make a case for the Morris method to be seen a global sensitivity method. \citet{BP16} acknowledge that screening methods like the Morris sensitivity measures stand apart from other local sensitivity measures.
 
 \subsection{Algorithm for Extended Morris Method}
 
 \begin{figure}[t]
-	\caption{Convergence of Morris Indices}
-    % \floatfoot{A note}
-    \label{morris_convergence}
-	\vspace*{-4mm}
-	\begin{centering}
-	\includegraphics[scale=0.9]{../figures/morris_convergence.png}
-    \end{centering}
-
-    \small
-    \textit{Notes:} Estimated Morris indices for different samples sizes $N$. The left panel shows \textit{independent} Morris indices, the right one \textit{full} Morris indices.
-\end{figure}
-
-\begin{figure}[t]
 	\caption{Uncertainty in Morris Indices - 100 Replicates}
-    % \floatfoot{A note}
     \label{morris_replicates}
+    \begin{centering}
 	\vspace*{-4mm}
 	\begin{centering}
-	\includegraphics[scale=0.9]{../figures/boxplot_morris_replicates_100.png}
+	\includegraphics[scale=0.9]{../figures/boxplot_morris_replicates_100_replicates_27_draws.png}
+    \end{centering}
     \end{centering}
 
     \small
     \textit{Notes:} Boxplots of the four Morris indices for the model inputs $RC$ and $\theta_{11}$. 100 Morris indices were estimated with $N=27$. The left panel shows \textit{independent} Morris indices, the right one \textit{full} Morris indices.
+\end{figure}
+
+\begin{figure}[t]
+	\caption{Convergence of Morris Indices}
+    \label{morris_convergence}
+    \begin{centering}
+	\vspace*{-4mm}
+	\begin{centering}
+	\includegraphics[scale=0.9]{../figures/morris_convergence.png}
+    \end{centering}
+    \end{centering}
+
+    \small
+    \textit{Notes:} Estimated Morris indices for different sample sizes $N$. The left panel shows \textit{independent} Morris indices, the right one \textit{full} Morris indices.
 \end{figure}
 
 In this section I introduce the extended Morris method for dependent samples as proposed by \citet{GM17}.
@@ -85,9 +85,9 @@ EE_i^{full} = \frac{f(x_i',\ \bar{x_{-i}}) - f(x_i,\ x_{-i})}{\Delta},
 \item $EE_i^{full}$ denotes \textit{full} elementary effects for input $i$, that include the effects due to correlation with other inputs.
 \end{itemize}
 
-As in the case of the classic Morris method, the sm for input $i$ is derived by considering $N$ random samples yielding $2 \cdot N$ elementary effects, once for the independent and once for the full elementary effects. \citet{GM17} compute the corresponding sm as shown in \cref{mu} and \cref{sigma}. Since two sets of elementary effects are computed, they end up with a set of four sm, $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$.
+As in the case of the classic Morris method, the sensitivity measures for input $i$ is derived by considering $N$ random samples yielding $2 \cdot N$ elementary effects, once for the independent and once for the full elementary effects. \citet{GM17} compute the corresponding sensitivity measures as shown in \cref{mu} and \cref{sigma}. Since two sets of elementary effects are computed, they end up with a set of four sensitivity measures, $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$.
 
-Interpretation-wise, $X_i$ is an unimportant input if all sm are essentially zero. A $\mu^{\ast ind}_i$ strongly larger than zero and $\sigma_i^{ind}$ is close to zero, input $X_i$ is an important input by itself. When all sm except $\mu^{\ast full}_i$ are close to zero, $X_i$'s contribution is due to the dependence with other important inputs. Strong interaction effects are present if either or both of the two $\sigma$'s is larger than zero \citep{GM17}.
+Interpretation-wise, $X_i$ is an unimportant input if all sensitivity measures are essentially zero. A $\mu^{\ast ind}_i$ strongly larger than zero and $\sigma_i^{ind}$ is close to zero, input $X_i$ is an important input by itself. When all sensitivity measures except $\mu^{\ast full}_i$ are close to zero, $X_i$'s contribution is due to the dependence with other important inputs. Strong interaction effects are present if either or both of the two $\sigma$'s is larger than zero \citep{GM17}.
 
 The computation of the extended Morris indices requires the generation of dependent samples. According to \citet{GM17}, the computation involves the following steps:
 
@@ -101,6 +101,23 @@ The computation of the extended Morris indices requires the generation of depend
 In what follows I stick to the version of the algorithm as implemented in the \textit{econsa} Python-package \citep{OSE21}. There, the radial design is used for obtaining independent samples. To derive dependent samples, the inverse Nataf transformation is applied. The total computational cost amounts to $3kN$ model runs.
 
 \subsection{Morris Indices for the Rust Model} \label{morris_rust_model}
+
+\begin{table}[t]
+    \caption{Relative Difference Morris Indices}
+    \label{rel_diff_morris}
+    \centering
+
+    \begin{threeparttable}
+        \begin{centering}
+            \input{../figures/morris_convergence_relative_difference.tex}
+            \begin{tablenotes}
+                \small
+                \item \textit{Notes:} The percentage difference between Morris indices for different values of $N$.
+            \end{tablenotes}
+        \end{centering}
+
+        \end{threeparttable}
+\end{table}
 
 I estimate Morris indices in two different ways, similar to the procedure described in \cref{comp_shap}: i. I estimate 100 replicates for a relatively low sample size to get a sense of the variability in estimates and ii. I consecutively increase the sample size to investigate
 the estimation procedure further. Uniformly distributed samples are drawn from a Sobol'
@@ -127,11 +144,6 @@ two inputs $i \in \{RC,\ \theta_{11}\}$ yield the correct input ranking, I simpl
 per estimate. Surprisingly, xy of the 100 replicates yield the correct importance ranking
 for $\mu^{\ast full}_i$. Regarding $\sigma_i^{full}$, xy out of 100 replicates successfully identify $\theta_{11}$ as the more
 important input.
-
-\begin{table}
-    \caption{Relative Difference in Morris Indices}
-    \label{rel_diff_morris}
-\end{table}
 
 \begin{table}[t]
     \centering

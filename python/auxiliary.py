@@ -354,6 +354,13 @@ def descriptives_and_data_shapley_effects(shapley_effects, n_replicates):
     theta_shapley_effects_df = pd.DataFrame(data=theta_shapley_effects)
     theta_shapley_effects_df["input_variable"] = r"$\theta_{11}$"
 
+    # 1. DataFrame for accuracy of ranking.
+    shapley_indices_all_replicates = pd.DataFrame()
+
+    shapley_indices_all_replicates["shapley_rc"] = rc_shapley_effects
+    shapley_indices_all_replicates["shapley_theta"] = theta_shapley_effects
+
+    # 2. DataFrame for boxplots.
     data = pd.concat(
         [rc_shapley_effects_df, theta_shapley_effects_df], ignore_index=True
     )
@@ -408,7 +415,7 @@ def descriptives_and_data_shapley_effects(shapley_effects, n_replicates):
     )
     descriptives_shapley_effects.index.name = "Shapley Effect"
 
-    return descriptives_shapley_effects, data
+    return descriptives_shapley_effects, data, shapley_indices_all_replicates
 
 
 def shapley_convergence_n_outer(
@@ -562,7 +569,22 @@ def get_dataframes_morris_boxplots(morris_indices_replicates):
         for i in np.arange(len(morris_indices_replicates))
     ]
 
-    # Create dataframes.
+    # 1.
+    # Dataframe with indices for all replicates.
+    morris_indices_all_replicates = pd.DataFrame()
+    # ind.
+    morris_indices_all_replicates["mu_ind_rc"] = mu_ind_rc
+    morris_indices_all_replicates["mu_ind_theta"] = mu_ind_theta
+    morris_indices_all_replicates["sigma_ind_rc"] = sigma_ind_rc
+    morris_indices_all_replicates["sigma_ind_theta"] = sigma_ind_theta
+    # full.
+    morris_indices_all_replicates["mu_full_rc"] = mu_full_rc
+    morris_indices_all_replicates["mu_full_theta"] = mu_full_theta
+    morris_indices_all_replicates["sigma_full_rc"] = sigma_full_rc
+    morris_indices_all_replicates["sigma_full_theta"] = sigma_full_theta
+
+    # 2.
+    # Create dataframes for boxplot.
 
     names = [r"$RC$", r"$\theta_{11}$"]
 
@@ -614,4 +636,5 @@ def get_dataframes_morris_boxplots(morris_indices_replicates):
         data_boxplots_morris_independent_sigma,
         data_boxplots_morris_full_mu,
         data_boxplots_morris_full_sigma,
+        morris_indices_all_replicates,
     )

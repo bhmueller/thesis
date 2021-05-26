@@ -61,10 +61,23 @@ def elementary_effects(
 
     Returns
     -------
-    mu_ind : float
-        Absolute mean of independent part of elementary effects
-    sigma_ind : float
-        Standard deviation of independent part of elementary effects
+    Results : dict
+        "mu_ind": pd.Series
+            Absolute mean of independent part of elementary effects.
+        "mu_corr": pd.Series
+            Absolute mean of full part of elementary effects.
+        "sigma_ind": pd.Series
+            Standard deviation of independent part of elementary effects.
+        "sigma_corr": pd.Series
+            Standard deviation of full part of elementary effects.
+        "mu_ind_cum": pd.DataFrame
+
+        "mu_corr_cum": pd.DataFrame
+
+        "sigma_ind_cum": pd.DataFrame
+
+        "sigma_corr_cum": pd.DataFrame
+
 
     """
     u_a, u_b = _get_uniform_base_draws(n_draws, len(params), sampling_scheme, seed)

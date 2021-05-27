@@ -14,13 +14,13 @@ ranking, even for a relatively small sample size.
 \begin{table}
 	\centering
 	\caption{Accuracy of Morris Indices}
-	\label{cov}
+	\label{accuracy}
 	\begin{threeparttable}
 	\centering
 	\input{../figures/correct_rankings.tex}
 	\begin{tablenotes}
 	\small
-	\item \textit{Notes:} Share of the correct inputs rankings for $100$ Morris indices based on $\mu^{\ast,\ full}$ and $\mu^{\ast,\ ind}$. As a benchmark, the accuracy of Shapley effects is presented. For Morris indices the accuracy for different sample sizes is reported.
+	\item \textit{Notes:} Share of the correct input rankings for $100$ Morris indices based on $\mu^{\ast,\ full}$ and $\mu^{\ast,\ ind}$. As a benchmark, the accuracy of Shapley effects is presented. For Morris indices the accuracy for different sample sizes is reported.
 	\end{tablenotes}
 	\end{threeparttable}
 \end{table}
@@ -29,7 +29,7 @@ With respect to the estimation precision, Morris indices are subject to larger u
 than Shapley effects. As stated above, this estimation precision is not necessarily needed. If
 the identification of uninfluential inputs is the purpose of sensitivity analysis, estimates need to be precise
 only in the sense that they yield nonzero indices if an input is important and zero if they
-are not. If inputs ranking is the goal, the situation is slightly different. The simulation
+are not. If input ranking is the goal, the situation is slightly different. The simulation
 study presented in this paper with two inputs only may not be the right trial to investigate
 this. In the case of the Rust model, I conclude that input ranking is achieved, even in the
 light of volatile Morris indices.

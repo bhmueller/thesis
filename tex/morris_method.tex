@@ -112,7 +112,7 @@ In what follows I stick to the version of the algorithm as implemented in the \t
             \input{../figures/morris_convergence_relative_difference.tex}
             \begin{tablenotes}
                 \small
-                \item \textit{Notes:} The percentage difference between Morris indices for different values of $N$.
+                \item \textit{Notes:} The percentage difference between Morris indices for different values of $N$. For example, for $\mu^{\ast,\ full}$ Percentage changes are calculated by $\frac{\mu^{\ast,\ full,\ n-1}_i - \mu^{\ast,\ full,\ n}_i}{\mu^{\ast,\ full,\ n}_i}$, for $i \in \{RC,\ \theta_{11}\}$ and $n$ denoting the different values of $N$.
             \end{tablenotes}
         \end{centering}
 
@@ -121,40 +121,40 @@ In what follows I stick to the version of the algorithm as implemented in the \t
 
 I estimate Morris indices in two different ways, similar to the procedure described in \cref{comp_shap}: i. I estimate 100 replicates for a relatively low sample size to get a sense of the variability in estimates and ii. I consecutively increase the sample size to investigate
 the estimation procedure further. Uniformly distributed samples are drawn from a Sobol'
-sequence \citep{S76}.
+sequence \citep{S76}.\footnote{The Sobol' sequence is a quasi-random sequence used for Quasi-Monte Carlo methods. \citet{KTA12} argue that Quasi-Monte Carlo estimators converge faster than estimators based on pseudo-random numbers.}
 
 Firstly, I estimate 100 sets of Morris indices. In order to ensure comparability, I use the same total computational cost as for the data used for \cref{boxplot_shapley}. I set $N = 27$, which amounts
 to a total cost of 162 model evaluations, which differs slightly from the computational
-cost for the Shapley effects because of rounding. As stated above, there are four different
+cost for the Shapley effects (160) because of rounding.\footnote{The same computational cost as for Shapley effects is achieved by solving $6 \cdot N = 160 \Leftrightarrow N = \frac{160}{6} \approx 26,67$} As stated above, there are four different
 sensitivity indices estimated: $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$. The distribution of the
 estimated Morris indices is given in \cref{morris_replicates}.
 
 Inspecting \cref{morris_replicates}, we can get a sense of the uncertainty in the estimation procedure,
 given the admittedly small sample size. For the independent Morris indices, there exists a
 very clear ranking: both values indicate that $RC$ is uninfluential. For $\theta_{11}$ the situation is
-different: both independent indices are nonzero. Surprisingly, for the full Morris indices,
+different: both independent indices, $(\mu^{\ast ind}_{\theta_{11}},\ \sigma_{\theta_{11}}^{ind})$, are nonzero. Surprisingly, for the full Morris indices,
 we fail to observe a clear input ranking. Estimates of $(\mu^{\ast full}_i,\ \sigma_i^{full})$ are very volatile, but
 clearly different from zero. Interpretation-wise, this may seem as a challenge, since no
-clear input ranking is achieved. But in fact, it is not. Morris indices were perceived to
+clear input ranking is achieved. Morris indices were primarily developed to
 identify non-influential inputs. Both inputs are important if the full Morris indices are
 considered.
 
 To investigate whether the individual pairs of full Morris indices, $(\mu^{\ast full}_i,\ \sigma_i^{full})$, for the
 two inputs $i \in \{RC,\ \theta_{11}\}$ yield the correct input ranking, I simply compare their values
-per estimate. Surprisingly, xy of the 100 replicates yield the correct importance ranking
-for $\mu^{\ast full}_i$. Regarding $\sigma_i^{full}$, xy out of 100 replicates successfully identify $\theta_{11}$ as the more
-important input.
+per estimate. Details are given in \cref{accuracy}. Surprisingly, only about 60 of the 100 replicates yield the correct importance ranking
+for $\mu^{\ast full}_i$. I conclude that ranking based on full Morris indices in the case of the Rust model can be misleading given this small sample size.
+The influence of dependence seems to be so large that indices cannot be ranked according to their full variance contribution.
 
 \begin{table}[t]
     \centering
-    \caption{Morris Indices for $N=3,000$}
+    \caption{Morris Indices for $N=3\,000$}
     \label{morris_3000}
     \begin{threeparttable}
     \begin{centering}
         \input{../figures/table_morris_conv_3000}
         \begin{tablenotes}
             \small
-            \item \textit{Notes:} \textit{Independent} and \textit{full} Morris indices for $RC$ and $\theta_{11}$ using $N=3,000$.
+            \item \textit{Notes:} \textit{Independent} and \textit{full} Morris indices for $RC$ and $\theta_{11}$ using $N=3\,000$.
         \end{tablenotes}
     \end{centering}
 
@@ -178,14 +178,14 @@ important input.
 % \end{table}
 
 Secondly, I estimate Morris indices for a set of number of draws. I consider $N \in \{100,\ 500,\ 1000,\ 1500,\ 2000,\ 2500,\ 3000\}$. Results are shown in \cref{morris_convergence}. Morris indices in
-\cref{morris_convergence} clearly confirm the input ranking of the replicates as presented above. Morris indices
-converge as $N$ increases. \Cref{rel_diff_morris} confirms this. Although Morris indices are volatile, \citet{GM17} point out that a high estimation precision is not necessarily needed
-as long as the input ranking is clearly achieved.
+\cref{morris_convergence} clearly confirm the input ranking implied by the Shapley effects for both, $\mu^{\ast ind}$ and $\mu^{\ast full}$. Morris indices
+converge as $N$ increases. \Cref{rel_diff_morris} gives details on the convergence. Although Morris indices are volatile, \citet{GM17} point out that a high estimation precision is not necessarily needed
+as long as the identification of uninfluential inputs is achieved.
 
 Let us inspect the Morris indices for $N = 3,000$ in more detail. Consult \cref{morris_3000} for the
 resulting Morris indices. The computational cost for this value of $N$ amounts to $18,000$
 model evaluations. As in the other trials, \cref{morris_3000} shows $(\mu^{\ast ind}_{RC},\ \sigma_{RC}^{ind})$ equal to zero.
 If only the independent Morris indices are considered, we erroneously
 conclude that input $RC$ is a non-influential input by neglecting the dependent variance contribution. Since none of the inputs exhibits $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$ close to zero, both inputs have to be considered as influential ones and can thus not be fixed without influencing the output.
-Since both independent indices for $\theta_{11}$, $(\mu^{\ast ind}_{\theta_{11}},\ \sigma_{\theta_{11}}^{ind})$, are high, there are either strong interaction and/or non-linear effects present. Since independent sensitivity indices for $RC$ are both zero, the reason for the high $\sigma_{\theta_{11}}^{ind})$ must be driven by the presence of non-linear effects in $\theta_{11}$.
-Regarding the model structure we can conclude that there are no interaction effects between $RC$ and $\theta_{11}$.
+Since both independent indices for $\theta_{11}$, $(\mu^{\ast ind}_{\theta_{11}},\ \sigma_{\theta_{11}}^{ind})$, are high, there are either strong interaction and/or non-linear effects present.
+% Since independent sensitivity indices for $RC$ are both zero, the reason for the high $\sigma_{\theta_{11}}^{ind}$ must be driven by the presence of non-linear effects in $\theta_{11}$. Regarding the model structure we can conclude that there are no interaction effects between $RC$ and $\theta_{11}$.

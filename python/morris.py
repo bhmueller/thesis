@@ -71,13 +71,17 @@ def elementary_effects(
         "sigma_corr": pd.Series
             Standard deviation of full part of elementary effects.
         "mu_ind_cum": pd.DataFrame
-
+            Cumulative absolute mean of elementary effect of each parameter.
+            there is one column per parameter.
         "mu_corr_cum": pd.DataFrame
-
+            Cumulative absolute mean of elementary effect of each parameter.
+            there is one column per parameter.
         "sigma_ind_cum": pd.DataFrame
-
+            Cumulative standard deviation of elementary effect of each parameter.
+            there is one column per parameter.
         "sigma_corr_cum": pd.DataFrame
-
+            Cumulative standard deviation of elementary effect of each parameter.
+            there is one column per parameter.
 
     """
     u_a, u_b = _get_uniform_base_draws(n_draws, len(params), sampling_scheme, seed)

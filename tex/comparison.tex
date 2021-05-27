@@ -7,9 +7,9 @@ Interestingly, in the case of two inputs and when setting $N_I = 3$ as recommend
 by \citet{SNS16}, the computational burden of both algorithms are parallel, when
 considering $N$ and $N_O$. Then they differ by $N_V$ only, given that $N = N_O$. One drawback
 of the Shapley effects as in the implementation of \citet{SNS16} is that one needs to
-set more than one sample size as in the case of the Morris method.
-Both, Shapley effects and Morris indices, succeed in identifying the correct input
-ranking, even for a relatively small sample size.
+set more than one sample size. For applying the Morris method we need to specify only one sample size.
+Both, Shapley effects and independent Morris indices, succeed in identifying the correct input
+ranking, even for a relatively small sample size. The
 
 \begin{table}
 	\centering
@@ -26,20 +26,19 @@ ranking, even for a relatively small sample size.
 \end{table}
 
 With respect to the estimation precision, Morris indices are subject to larger uncertainty
-than Shapley effects. As stated above, this estimation precision is not necessarily needed. If
+than Shapley effects. As argued above, this estimation precision is not necessarily needed. If
 the identification of uninfluential inputs is the purpose of sensitivity analysis, estimates need to be precise
 only in the sense that they yield nonzero indices if an input is important and zero if they
-are not. If input ranking is the goal, the situation is slightly different. The simulation
+are not influential. If input ranking is the goal, the situation is slightly different. The simulation
 study presented in this paper with two inputs only may not be the right trial to investigate
-this. In the case of the Rust model, I conclude that input ranking is achieved, even in the
-light of volatile Morris indices.
+this. In the case of the Rust model, a ranking based on the full Morris indices can be misleading, if the sample size is not large enough, since estimates are very volatile.
 
 Since the estimation of Shapley effects is more costly and acknowledging that Morris
 indices yield correct input rankings for the Rust model, one can resort to using the Morris
-method for input importance ranking. Further, Morris indices are informative about the
-model structure. Hence, one can not only successfully rank the inputs but also learn more
-about the model itself.
+method for input importance ranking when interpreting the results with caution. For the Rust model, we can conclude that the influence of $RC$ is due to its dependence on $\theta_{11}$. Both, Shapley effects and Morris indices imply that more effort should be exerted into reducing uncertainty in $\theta_{11}$ if the derivation of more stable model output is the goal.
+
+Further, Morris indices are informative about the model structure. Hence, one can not only successfully rank the inputs but also learn more about the model itself.
 
 Since Shapley effects yield only one sensitivity index per input, they are easier to interpret than the four indices in the case of the Morris method.
 
-My findings are in line with the ones found in \citet{GM17}. The extension of the Morris method to dependent inputs is an important contribution.
+My findings are broadly in line with the ones found in \citet{GM17} with the restriction that under small sample sizes full indices should not be used alone to derive the input ranking. The extension of the Morris method to dependent inputs is an important contribution.

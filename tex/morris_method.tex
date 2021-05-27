@@ -125,7 +125,7 @@ sequence \citep{S76}.\footnote{The Sobol' sequence is a quasi-random sequence us
 
 Firstly, I estimate 100 sets of Morris indices. In order to ensure comparability, I use the same total computational cost as for the data used for \cref{boxplot_shapley}. I set $N = 27$, which amounts
 to a total cost of 162 model evaluations, which differs slightly from the computational
-cost for the Shapley effects (160) because of rounding.\footnote{The same computational cost as for Shapley effects is achieved by solving $6 \cdot N = 160 \Leftrightarrow N = \frac{160}{6} \approx 26,67$} As stated above, there are four different
+cost for the Shapley effects (160) because of rounding.\footnote{The same computational cost as for Shapley effects is achieved by solving $6 \cdot N = 160 \Leftrightarrow N = \frac{160}{6} \approx 26,67$.} As stated above, there are four different
 sensitivity indices estimated: $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$. The distribution of the
 estimated Morris indices is given in \cref{morris_replicates}.
 
@@ -182,8 +182,8 @@ Secondly, I estimate Morris indices for a set of number of draws. I consider $N 
 converge as $N$ increases. \Cref{rel_diff_morris} gives details on the convergence. Although Morris indices are volatile, \citet{GM17} point out that a high estimation precision is not necessarily needed
 as long as the identification of uninfluential inputs is achieved.
 
-Let us inspect the Morris indices for $N = 3,000$ in more detail. Consult \cref{morris_3000} for the
-resulting Morris indices. The computational cost for this value of $N$ amounts to $18,000$
+Let us inspect the Morris indices for $N = 3\,000$ in more detail. Consult \cref{morris_3000} for the
+resulting Morris indices. The computational cost for this value of $N$ amounts to $18\,000$
 model evaluations. As in the other trials, \cref{morris_3000} shows $(\mu^{\ast ind}_{RC},\ \sigma_{RC}^{ind})$ equal to zero.
 If only the independent Morris indices are considered, we erroneously
 conclude that input $RC$ is a non-influential input by neglecting the dependent variance contribution. Since none of the inputs exhibits $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$ close to zero, both inputs have to be considered as influential ones and can thus not be fixed without influencing the output.

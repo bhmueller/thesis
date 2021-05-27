@@ -12,12 +12,12 @@ In \citet{R87} an agent needs to manage a pool of buses for public transportatio
 \begin{equation}
 i_t\ =
 \begin{cases}
-0,\ standard\ maintenance \\
-1,\ replace\ engine.
+0,\ \text{standard maintenance} \\
+1,\ \text{replace engine}.
 \end{cases}
 \end{equation}
 
-\noindent If replacement is chosen, the accumulated mileage state $x$ is set to zero. Otherwise, the bus is used for another period with standard maintenance and $x$ increases until the next period. Note that $x$ needs to be discretised for the estimation. I follow \citet{R87} and discretise the state space into 175 grids with a size of each bin of 2,571 miles.
+\noindent If replacement is chosen, the accumulated mileage state $x$ is set to zero. Otherwise, the bus is used for another period with standard maintenance and $x$ increases until the next period. Note that $x$ needs to be discretised for the estimation. I follow \citet{R87} and discretise the state space into 175 grids with a size of each bin of $2\,571$ miles.
 
 The agent’s utility function given state $(x, \varepsilon)$ is described by
 \begin{equation}
@@ -28,8 +28,8 @@ where
 \begin{equation*}
 v(x,\ i;\ \theta_1,\ RC)=
 \begin{cases}
--c(x; \theta_1),\ if\ d=0,\\
--RC-c(0;\theta_1),\ if\ d=1,
+-c(x; \theta_1),\ \text{if} d=0,\\
+-RC-c(0;\theta_1),\ \text{if} d=1,
 \end{cases}
 \end{equation*}
 
@@ -41,7 +41,7 @@ How the state $(x, \varepsilon)$ changes over time, depends on the choice $i_t$ 
 
 The discount factor is denoted $\beta \in (0,1) $. Given state $ (x_t,\ \varepsilon_t) $, the agent maximises, choosing a sequence of decisions
 \begin{equation}
-\max_{\{i_t,\ i_{t+1},\ i_{t+2},\ ...\}} E \left[\sum_{\tau=1}^\infty\ \beta^{\tau-t}\ u(x_{\tau},\ i_{\tau},\ \varepsilon_{\tau};\ \theta_1,\ RC) \right].
+\max_{\{i_t,\ i_{t+1},\ i_{t+2},\ ...\}}  \mathrm{E} \left[\sum_{\tau=1}^\infty\ \beta^{\tau-t}\ u(x_{\tau},\ i_{\tau},\ \varepsilon_{\tau};\ \theta_1,\ RC) \right].
 \end{equation}
 
 By $p$ being Markovian, the optimal decision is time-invariant. Thus, drop time indices. The decision problem is now defined by the solution to the Bellman equation
@@ -59,7 +59,7 @@ V(x,\ \varepsilon)=\max_i \{ v(x,\ i;\ \theta_1,\ RC)+\varepsilon(i) + \\
 	\input{../figures/covariance_matrix.tex}
 	\begin{tablenotes}
 	\small
-	\item \textit{Notes:} Estimated variance-covariance matrix based on $10,000$ samples.
+	\item \textit{Notes:} Estimated variance-covariance matrix based on $10\,000$ samples.
 	\end{tablenotes}
 	\end{threeparttable}
 \end{table}
@@ -68,9 +68,9 @@ The above problem is simplified by imposing some further assumptions to ease the
 
 \subsection{Distribution of the Input Variables} \label{model_setup}
 
-The Maximum Likelihood estimator is asymptotically normally distributed \citep{R73}. Thus, I estimate the variance-covariance matrix and the mean vector of $\theta_{11}$ and $RC$ by a Monte Carlo simulation. Note that this general setup is used in \cref{comp_shap} and \cref{comp_morris}as well. For solving the model, I use the simulation and estimation capabilities of the Python \textit{ruspy} package \citep{OSE19}.\footnote{I chose \textit{scipy\_L-BFGS-B} as the solver for the Nested Fixed Point algorithm \citep{SP20}.} The estimation of the variance-covariance matrix is conducted in three steps.
+The Maximum Likelihood estimator is asymptotically normally distributed \citep{R73}. Thus, I estimate the variance-covariance matrix and the mean vector of $\theta_{11}$ and $RC$ by a Monte Carlo simulation. Note that this general setup is used in \cref{comp_shap} and \cref{comp_morris} as well. For solving the model, I use the simulation and estimation capabilities of the Python \textit{ruspy} package \citep{OSE19}.\footnote{I chose \textit{scipy\_L-BFGS-B} as the solver for the Nested Fixed Point algorithm \citep{SP20}.} The estimation of the variance-covariance matrix is conducted in three steps.
 
-First, I set the true parameters in $\theta$. I chose to consider three transition probabilities, i.e. the mileage state $x$ can increase from the current period to the next by two grids at most. I set
+Firstly, I set the true parameters in $\theta$. I chose to consider three transition probabilities, i.e. the mileage state $x$ can increase from the current period to the next by two grids at most. I set
 \begin{align*}
 \theta_3 &= (\theta_{30},\ \theta_{31},\ \theta_{32})=(0.39189182,\ 0.59529371,\ 0.01281447),\\
 RC &= 10.07780762,\\
@@ -89,14 +89,14 @@ RC &= 10.07780762,\\
 	\end{centering}
 
 	\small
-	\textit{Notes:} 100,000 estimated values of $RC$ and $\theta_{11}$.
+	\textit{Notes:} $10\,000$ estimated values of $RC$ and $\theta_{11}$.
 
 \end{figure}
 
 
-Second, I simulate $10,000$ data sets from the above true parameters and estimate $\hat{\theta}, \hat{\theta}$ being the vector of estimated structural parameters.
+Secondly, I simulate $10\,000$ data sets from the above true parameters and estimate $\hat{\theta}, \hat{\theta}$ being the vector of estimated structural parameters.
 
-Third, from the $10,000$ parameter estimates of the replacement costs $\widehat{RC}$ and the slope parameter of the cost function ${\hat{\theta}}_{11}$, I calculate the sample variance-covariance matrix. \Cref{cov} shows the estimated variance-covariance matrix for $\widehat{RC}$ and ${\hat{\theta}}_{11}$. \Cref{cov} and \cref{correlation} show that $\widehat{RC}$ and ${\hat{\theta}}_{11}$ correlate, hinting that inputs in the Rust model are indeed dependent.
+Thirdly, from the $10\,000$ parameter estimates of the replacement costs $\widehat{RC}$ and the slope parameter of the cost function ${\hat{\theta}}_{11}$, I calculate the sample variance-covariance matrix. \Cref{cov} shows the estimated variance-covariance matrix for $\widehat{RC}$ and ${\hat{\theta}}_{11}$. \Cref{cov} and \cref{correlation} show that $\widehat{RC}$ and ${\hat{\theta}}_{11}$ correlate, hinting that inputs in the Rust model are indeed dependent.
 
 \subsection{Derivation of Implied Annual Demand}
 
@@ -115,7 +115,7 @@ Third, from the $10,000$ parameter estimates of the replacement costs $\widehat{
 	\textit{Notes:} Estimated implied annual demand for $100,000$ simulated data sets. The horizontal line shows the implied annual demand at the \textit{true} parameter values $(RC,\ \theta_{11})$. This \textit{true} demand amounts to $59.09$.
 \end{figure}
 
-\citet{R87} shows how we can derive further quantities from the parameter estimates. \citet{R87} derives the implied annual demand (henceforth, demand) for bus-engine replacements. \citet{R87} computes the demand for bus engines by
+\citet{R87} shows how we can derive further quantities from the parameter estimates. He derives the implied annual demand (henceforth, demand) for bus-engine replacements, which is computed by
 \begin{equation}
 \tilde{d}(RC)=\sum_{t=1}^{12}\ \sum_{i=1}^{M}\ {\tilde{i}}_t^m,
 \end{equation}

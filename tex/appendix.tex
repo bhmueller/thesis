@@ -4,5 +4,22 @@
 
 % \thispagestyle{plain} % surpress header on first page
 
-\subsection{Appendix A: Tables} \label{appendixA}
+\subsection*{Appendix A: Tables} \label{appendix_a}
 % \thispagestyle{plain} % surpress header on first page
+
+\begin{table}[H]
+    \centering
+    \caption{Full Morris Indices for $N \in \{3\,000,\ 4\,000,\ 6\,000,\ 8\,000\}$ and $seed=67$}
+    \label{appendix_morris_seed_67}
+    \begin{threeparttable}
+    \begin{centering}
+        \input{../figures/appendix_morris_indices_seed_67}
+        \begin{tablenotes}
+            \small
+            \item \textit{Notes:} \textit{Full} Morris indices for $RC$ and $\theta_{11}$ using $seed=67$ (seed attached to full Morris indices that deviate most from my expectation) in the function for estimating Morris indices from the \textit{econsa} package \citep{OSE21}.
+        \end{tablenotes}
+    \end{centering}
+
+    \end{threeparttable}
+
+\end{table}

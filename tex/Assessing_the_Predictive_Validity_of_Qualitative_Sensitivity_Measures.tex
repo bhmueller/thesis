@@ -42,7 +42,14 @@ uniquename=false]{biblatex}
 % \clearpage
 \thispagestyle{empty}
 \begin{abstract}
-	lalalalalll.
+	% Why did I carry out this project? Why am I writing this paper?
+	Sensitivity analysis is a tool for learning about the input-output relationship of a mathematical model. If numerical methods need to be applied and/or models are very complex, the input-output relationship is unclear at best. Especially in Economics thorough modelling is crucial if models are used for policy making. Unfortunately, sensitivity analysis is not widely adopted in Economics \citep{HMSW19}. Screening and ranking model inputs according to their influence on the model output is one important use case of sensitivity analysis, but the computational burden of thorough screening methods can hinder the widespread application of such methods.
+	% What did I do, and how?
+	This paper assesses the predictive validity of Morris indices, a screening method first introduced by \citep{M91} by applying it to a classical structural econometric model, the single-agent dynamic stochastic model of discrete choice introduced by \citet{R87}. I assess the predictive validity of extended Morris indices by comparing the implied screening and ranking to the ones induced by Shapley effects, a now popular sensitivity method. I also compare them according to the uncertainty inherent in their estimation process. Morris indices promise to serve similar purposes as Shapley effects but to come at a lower computational burden, thus encouraging their application in modelling.
+	% What were my results? What was new compared to previous research?
+	I find that full Morris indices (indices accounting for the dependence among inputs) have to be interpreted with caution if we want to rank inputs according their importance and that they can be very volatile. In line with the findings by \citet{GM17} I find that the extension to full Morris indices was a crucial contribution if we want to detect uninfluential inputs, since independent indices can be subject to Type II error.
+	% What are the implications of my findings? What are my conclusions and/or recommendations?
+	If Morris indices are cautiously interpreted, they can be a valid substitute for Shapley effects. Researchers and practitioners applying the Morris method for input ranking should not base their decision on full Morris indices alone.
 \end{abstract}
 \newpage
 
@@ -85,6 +92,10 @@ uniquename=false]{biblatex}
 % \thispagestyle{plain} % suppress header.
 \addcontentsline{toc}{section}{References}
 \printbibliography[title={References}]
+
+\newpage
+% \thispagestyle{plain} % no header on first page
+\include{appendix}
 
 % Affidavit
 

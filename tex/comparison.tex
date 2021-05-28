@@ -33,6 +33,8 @@ are not influential. If input ranking is the goal, the situation is slightly dif
 study presented in this paper with two inputs only may not be the right trial to investigate
 this. In the case of the Rust model, a ranking based on the full Morris indices can be misleading, if the sample size is not large enough, since estimates are very volatile.
 
+With respect to convergence, I find that Shapley effects converge even for small sample sizes. The same is true for independent Morris indices. The convergence of full Morris indices is different, though. Here I cannot come to a definitive conclusion.
+
 Since the estimation of Shapley effects is more costly and acknowledging that Morris
 indices yield correct input rankings for the Rust model, one can resort to using the Morris
 method for input importance ranking when interpreting the results with caution. For the Rust model, we can conclude that the influence of $RC$ is due to its dependence on $\theta_{11}$. Both, Shapley effects and Morris indices imply that more effort should be exerted into reducing uncertainty in $\theta_{11}$ if the derivation of more stable model output is the goal.

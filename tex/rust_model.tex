@@ -25,7 +25,7 @@ u(x,\ i,\ \varepsilon;\ \theta_1,\ RC)=v(x,\ i;\ \theta_1,\ RC)+\varepsilon(i),
 \end{equation}
 
 where
-\begin{equation*}
+\begin{equation*} \label{utility}
 v(x,\ i;\ \theta_1,\ RC)=
 \begin{cases}
 -c(x; \theta_1),\ \text{if} d=0,\\
@@ -34,8 +34,7 @@ v(x,\ i;\ \theta_1,\ RC)=
 \end{equation*}
 
 \noindent and $\varepsilon(i)$ denotes utility shocks. In the above expression, $RC$ represents the expected replacement costs of an engine replacement, that is, net the possible payoff of selling the old engine. $c(x; \theta_1)$ is a cost function of operating a bus at state $x$. $\theta_1$ is a vector of structural parameters. I consider the linear cost function $c(x; \theta_{11}) = 0.001 \theta_{11} x$.
-
-[Give intuition for what that means: utility depends on what? Give examples.]
+\cref{utility} reflects the trade-off between minimising maintenance costs and minimising unexpected, costly engine failures, e.g. loss of customer's goodwill.
 
 How the state $(x, \varepsilon)$ changes over time, depends on the choice $i_t$ and is described by the Markovian transition density $p(x_{t+1}, \varepsilon_{t+1} \mid x_t, \varepsilon_t, i_t; \theta_2, \theta_3)$, where $\theta_2$ is assumed to be Euler’s constant and $\theta_3$ is a vector of transition probabilities. Markovian means that $p$ depends on $ (x_t, \varepsilon_t) $ only and not on other past states.
 

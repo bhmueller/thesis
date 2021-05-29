@@ -20,8 +20,11 @@ natbib=true, % command \citep originates from natbib.
 style=authoryear, % reference style.
 giveninits=true,
 maxcitenames=2,
+maxbibnames=10,
 bibencoding=utf8,
-uniquename=false]{biblatex}
+uniquename=false,
+uniquelist=false
+]{biblatex}
 \setlength\bibitemsep{\baselineskip} % increase space between entries in bibliography.
 \addbibresource{bibliography.bib}
 \usepackage[hidelinks]{hyperref} % hidelinks removes coloured boxes.
@@ -41,16 +44,21 @@ uniquename=false]{biblatex}
 
 % \clearpage
 \thispagestyle{empty}
+
+\title{Assessing the Predictive Validity of Qualitative Sensitivity Measures}
+\author{Benedikt Heinrich Müller}
+\date{}
+\maketitle \thispagestyle{empty}
 \begin{abstract}
 	% Why did I carry out this project? Why am I writing this paper?
 	% Sensitivity analysis is a tool for learning about the input-output relationship of a mathematical model. If numerical methods need to be applied and/or models are very complex, the input-output relationship is unclear at best. Especially in Economics thorough modelling is crucial if models are used for policy making. Unfortunately, sensitivity analysis is not widely adopted in Economics \citep{HMSW19}.
 	Screening and ranking model inputs according to their influence on the model output is one important use case of sensitivity analysis, but the computational burden of thorough screening methods can hinder the widespread application of such methods.
 	% What did I do, and how?
-	This paper assesses the predictive validity of the extended Morris method introduced by \citet{GM17} by applying it to a classical structural econometric model, the single-agent dynamic stochastic model of discrete choice introduced by \citet{R87}. I assess the predictive validity of extended Morris indices by comparing the implied screening and ranking of the inputs to the ones induced by Shapley effects, a now popular sensitivity method. I also compare them according to the uncertainty inherent in their estimation process. Morris indices promise to serve similar purposes as Shapley effects but to come at a lower computational cost, thus encouraging their application in modelling.
+	This paper assesses the predictive validity of the extended Morris method introduced by \citet{GM17} by comparing the implied ranking of the inputs of a classical structural econometric model to the ranking induced by Shapley effects, a popular sensitivity method. I also compare them according to the uncertainty inherent in their estimation process, i.e. whether the resulting sensitivity indices are very volatile. Morris indices promise to serve similar purposes as Shapley effects but to come at a lower computational cost, thus encouraging their application in modelling.
 	% What were my results? What was new compared to previous research?
 	I find that full Morris indices (indices accounting for the dependence among inputs) have to be interpreted with caution if inputs are ranked according to their importance since full indices can be very volatile. In line with the findings by \citet{GM17} I find that the extension to full Morris indices was a crucial contribution if we want to detect uninfluential inputs, since independent indices can be subject to Type II error.
 	% What are the implications of my findings? What are my conclusions and/or recommendations?
-	Cautiously interpreted Morris indices can however be a valid substitute for Shapley effects. According to the herein presented results, researchers and practitioners applying the Morris method for input ranking should not base their decision on full Morris indices alone.
+	Cautiously interpreted Morris indices can, however, be a valid substitute for Shapley effects. % According to the herein presented results, researchers and practitioners applying the Morris method for input ranking should not base their decision on full Morris indices alone.
 \end{abstract}
 \newpage
 

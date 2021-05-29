@@ -1,6 +1,6 @@
 \section{Comparing Shapley Effects and Morris Indices} \label{comparison}
 
-In this section I want to connect and further discuss the results presented in \cref{shapley_rust_model morris_rust_model}. Both, Shapley effects and independent Morris indices, succeed in identifying the correct input ranking, even for a relatively small sample size.
+In this section, I want to connect and further discuss the results presented in \cref{shapley_rust_model, morris_rust_model}. Both, Shapley effects and independent Morris indices, succeed in identifying the correct input ranking, even for a relatively small sample size.
 
 Interestingly, in the case of two inputs and when setting $N_I = 3$ as recommended
 by \citet{SNS16}, the computational burden of both algorithms are parallel, given that $N = N_O$. Then they differ by $N_V$, the number of Monte Carlo simulations used to estimate the total output variance, only. One practical drawback
@@ -28,15 +28,15 @@ are not influential. If input ranking is the goal, the situation is slightly dif
 % The simulation study presented in this paper with two inputs only may not be the right trial to investigate this.
 In the case of the Rust model, a ranking based on the full Morris indices can be misleading, since estimates are very volatile.
 
-With respect to convergence, I find that Shapley effects converge even for small sample sizes. While the same is true for independent Morris indices, the convergence of full Morris indices is different. The convergence behaviour is unclear which is why definite conclusions cannot be drawn here.
+With respect to convergence, I find that Shapley effects converge even for small sample sizes. While the same is true for independent Morris indices, the convergence of full Morris indices is ambiguous. For the sample sizes I applied, convergence was not achieved. Since the convergence behaviour is unclear definite conclusions cannot be drawn here.
 
 Since the estimation of Shapley effects is more costly and acknowledging that Morris
 indices can yield correct input rankings for the Rust model when interpreted cautiously, we can resort to using the Morris
 method for input importance ranking. Morris indices for the Rust model imply that the influence of $RC$ is due to its dependence on $\theta_{11}$ only. Both Shapley effects and Morris indices imply that more effort should be exerted into reducing uncertainty in $\theta_{11}$ if the derivation of a more stable model output is the goal.
 
-Further, Morris indices are informative about the model structure. Hence, we cannot only successfully rank the inputs but also learn more about the model itself.
+Further, Morris indices are informative about the model structure, i.e. whether there exist large interaction effects among inputs. Hence, we cannot only successfully rank the inputs but also learn more about the model itself.
 
 Since Shapley effects yield only one sensitivity index per input, they are easier to interpret than the four indices in the case of the Morris method.
 
-My findings are broadly in line with the ones found in \citet{GM17} with the restriction that under small sample sizes full indices should not be used alone to derive the input ranking. % The extension of the Morris method to dependent inputs is an important contribution.
-Since full Morris indices alone do not suffice to provide a ranking of each input variable, the extension to dependent inputs allows to extract this information easily. Depending on the objective of sensitivity analysis the additional information can be of great importance in assessing the validity of assumptions.
+My findings are broadly in line with the ones found in \citet{GM17} with the restriction that under small sample sizes full indices should not be used in isolation to derive the input ranking. % The extension of the Morris method to dependent inputs is an important contribution.
+Since full Morris indices in isolation do not suffice to provide a ranking of each input variable, the extension to dependent inputs allows to extract this information easily. Depending on the objective of sensitivity analysis, the additional information can be of great importance in assessing the validity of assumptions.

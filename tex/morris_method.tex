@@ -79,7 +79,7 @@ Considering the interpretation of Morris indices, $\mu_i^\ast$ and $\sigma_i$, i
 
 In this section I introduce the extended Morris method for dependent samples as proposed by \citet{GM17}.
 
-To grasp the computation procedure of the extended elementary effects, some more notation is needed. Following \citet{GM17}, let $X' = \{X_1',\ X_2',\ \dots,\ X_k'\}$ be $k$ dependent random inputs, following the joint pdf $g(X)$. Thus, $X'$ is just a set of inputs independently drawn from the set $X$. Input subsets denoted by $\bar{X}$ are conditionally drawn inputs. Hence, let $\bar{X_{-i}'}$ follow the conditional pdf $g(\bar{X_{-i}'} \mid X_{-i})$. That is $\bar{X_{-i}'}$ is drawn conditionally on the inputs in the first set $X_{-i}$. The input denoted by $\bar{X_{-i}}$ is conditionally drawn following the pdf $g(\bar{X_{-i}} \mid X_i')$. % Hence, $\bar{X_{-i}'}$ and $\bar{X_{-i}}$ differ by [].
+To grasp the computation procedure of the extended elementary effects, some more notation is needed. Following \citet{GM17}, let $X' = \{X_1',\ X_2',\ \dots,\ X_k'\}$ be $k$ dependent random inputs, following the joint probability density function $g(X)$. Thus, $X'$ is just a set of inputs independently drawn from the set $X$. Input subsets denoted by $\bar{X}$ are conditionally drawn inputs. Hence, let $\bar{X_{-i}'}$ follow the conditional probability density function $g(\bar{X_{-i}'} \mid X_{-i})$. That is $\bar{X_{-i}'}$ is drawn conditionally on the inputs in the first set $X_{-i}$. The input denoted by $\bar{X_{-i}}$ is conditionally drawn following the probability density function $g(\bar{X_{-i}} \mid X_i')$. % Hence, $\bar{X_{-i}'}$ and $\bar{X_{-i}}$ differ by [].
 
 Analogously to the independent and full Sobol' indices \citep{MTA15}, \citet{GM17} developed the following elementary effects for dependent inputs.
 \begin{align}
@@ -131,7 +131,7 @@ Similar to the procedure described in \cref{comp_shap}, I estimate Morris indice
 the estimation procedure further. Uniformly distributed samples are drawn from a Sobol'
 sequence \citep{S76}.\footnote{The Sobol' sequence is a quasi-random sequence used for Quasi-Monte Carlo methods. \citet{KTA12} argue that Quasi-Monte Carlo estimators converge faster than estimators based on pseudo-random numbers.}
 
-Firstly, I estimate 100 sets of Morris indices. In order to ensure comparability to the Shapley effects , I use the same total computational cost as for the data used for \cref{boxplot_shapley}. I set $N = 27$, which amounts
+Firstly, I estimate 100 sets of Morris indices. In order to ensure comparability to the Shapley effects, I use the same total computational cost as for the data used for \cref{boxplot_shapley}. I set $N = 27$, which amounts
 to a total cost of 162 model evaluations, which differs slightly from the computational
 cost of the Shapley effects (160) because of rounding.\footnote{The same computational cost as for Shapley effects is achieved by solving $6 \cdot N = 160 \Leftrightarrow N = \frac{160}{6} \approx 26.67$.} As stated above, there are four different
 sensitivity indices estimated: $(\mu^{\ast ind}_i,\ \sigma_i^{ind})$ and $(\mu^{\ast full}_i,\ \sigma_i^{full})$. The distribution of the

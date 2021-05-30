@@ -6,20 +6,6 @@ Interestingly, in the case of two inputs and when setting $N_I = 3$ as recommend
 by \citet{SNS16}, the computational burden of both algorithms are parallel, given that $N = N_O$. Then they differ by $N_V$, the number of Monte Carlo simulations used to estimate the total output variance, only. One practical drawback
 of the Shapley effects as in the implementation of \citet{SNS16} is that more than one sample size needs to be set. For applying the Morris method we need to specify only one sample size.
 
-\begin{table}
-	\centering
-	\caption{Accuracy of Morris Indices}
-	\label{accuracy}
-	\begin{threeparttable}
-	\centering
-	\input{../figures/correct_rankings.tex}
-	\begin{tablenotes}
-	\small
-	\item \textit{Notes:} Share of the correct input rankings for $100$ Morris indices based on $\mu^{\ast,\ full}$ and $\mu^{\ast,\ ind}$. As a benchmark, the accuracy of Shapley effects is presented. For Morris indices the accuracy for different sample sizes is reported.
-	\end{tablenotes}
-	\end{threeparttable}
-\end{table}
-
 With respect to the estimation precision, Morris indices are subject to larger uncertainty
 than Shapley effects. As argued above, this estimation precision is not necessarily needed: If
 the identification of uninfluential inputs is the objective of sensitivity analysis, estimates need to be precise

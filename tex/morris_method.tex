@@ -2,9 +2,17 @@
 
 This section introduces the Morris method for input screening.
 
-% \subsection{Input Screening}
+\subsection{Input Screening}
 
-% In this section the applications of input screening is investigated.
+Screening methods aim at identifying uninfluential inputs and ranking them according to their importance. These qualitative sensitivity methods, as opposed to quantitative ones, do not allow us to exactly quantify each input's effect on the model outcome. Nevertheless, there are several settings in which screening methods can be successfully applied.
+
+Since screening methods come at a lower computational cost than other sensitivity measures, they are well adapted to models with a large number of inputs. In such settings, other sensitivity methods may not be tractable anymore. Input screening can then guide research by identifying uninfluential inputs that can be left out of subsequent analyses. Such a subsequent analysis can be a more thorough, expensive sensitivity method which has then come into reach by having to consider only a subset of inputs. Screening can also foster scientific discovery by telling us which inputs are most important for the model output. Future models can then build on these results by particularly focusing on these important inputs \citep{R21}.
+
+To illustrate the usefulness of input screening, consider the following examples of their application found in \citet{GPWMS17} and \citet{MMA18}. \citet{GPWMS17} conduct input screening in hydrology. They apply seven different screening methods to a lake model and learn that a certain input has major influence on their model's output. By identifying the main driver of uncertainty in the model, they are able to make an informed recommendation about which inputs should be estimated more accurately. \citet{MMA18} use input screening to identify uninfluential inputs that could then be ignored in the subsequent development of a meta-model, thus facilitating and guiding modelling.
+
+While applying quantitative sensitivity methods, \citet{HMSW19} use their sensitivity indices for input ranking as well to ease the interpretation of model mechanics.
+
+With these examples of the usefulness of input screening in mind, the following section discusses the Morris method which is then applied to the Rust model.
 
 \subsection{Morris Method for Independent Inputs} \label{classic_morris}
 

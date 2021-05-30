@@ -49,20 +49,6 @@ V(x, \varepsilon)=\max_i \{ v(x, i; \theta_1, RC)+\varepsilon(i) + \\
 \beta \int_{x'} \int_{\varepsilon'} V(x', \varepsilon')p(x', \varepsilon' \mid x, \varepsilon, i; \theta_2, \theta_3)dx' d \varepsilon' \}.
 \end{multline*}
 
-\begin{table}
-	\centering
-	\caption{Variance-Covariance Matrix of the Input Variables}
-	\label{cov}
-	\begin{threeparttable}
-	\centering
-	\input{../figures/covariance_matrix.tex}
-	\begin{tablenotes}
-	\small
-	\item \textit{Notes:} Estimation based on $10\,000$ data sets.
-	\end{tablenotes}
-	\end{threeparttable}
-\end{table}
-
 The above problem is simplified by imposing some further assumptions to ease the estimation process. The model is solved by using the so called Nested Fixed Point algorithm \citep{R87}. The parameters to be estimated are combined in a vector $\theta=(\theta_3, RC, \theta_{11}) $. The estimation procedure via Maximum Likelihood is conducted by first estimating the transition probabilities $\theta_3$. In a second step, the parameters $RC$ and $\theta_{11}$ are estimated.\footnote{I do not go into further details of how this model is solved. For details see \citet{R87}.}
 
 \subsection{Distribution of the Input Variables} \label{model_setup}
@@ -78,6 +64,26 @@ RC &= 10.07780762,\\
 
 \noindent Note that $RC$ is scaled by $0.001$ for estimation purposes. I consider a total of 50 buses for 120 periods (months, i.e. in total ten years).
 
+\begin{table}
+	\centering
+	\caption{Variance-Covariance Matrix of the Input Variables}
+	\label{cov}
+	\begin{threeparttable}
+	\centering
+	\input{../figures/covariance_matrix.tex}
+	\begin{tablenotes}
+	\small
+	\item \textit{Notes:} Estimation based on $10\,000$ data sets.
+	\end{tablenotes}
+	\end{threeparttable}
+\end{table}
+
+Secondly, I simulate $10\,000$ data sets from the above true parameters and estimate $\hat{\theta}, \hat{\theta}$ being the vector of estimated structural parameters.
+
+Thirdly, from the $10\,000$ parameter estimates of the replacement costs $\widehat{RC}$ and the slope parameter of the cost function ${\hat{\theta}}_{11}$, I calculate the sample variance-covariance matrix which is shown in \Cref{cov}. \Cref{cov} and \cref{correlation} show that $\widehat{RC}$ and ${\hat{\theta}}_{11}$ correlate, hinting that inputs in the Rust model are indeed dependent.
+
+\subsection{Derivation of Implied Annual Demand}
+
 \begin{figure}[t]
 	\caption{Correlation Between the Input Variables}
     \label{correlation}
@@ -90,28 +96,6 @@ RC &= 10.07780762,\\
 	\small
 	\textit{Notes:} $10\,000$ estimated values of $RC$ and $\theta_{11}$.
 
-\end{figure}
-
-
-Secondly, I simulate $10\,000$ data sets from the above true parameters and estimate $\hat{\theta}, \hat{\theta}$ being the vector of estimated structural parameters.
-
-Thirdly, from the $10\,000$ parameter estimates of the replacement costs $\widehat{RC}$ and the slope parameter of the cost function ${\hat{\theta}}_{11}$, I calculate the sample variance-covariance matrix which is shown in \Cref{cov}. \Cref{cov} and \cref{correlation} show that $\widehat{RC}$ and ${\hat{\theta}}_{11}$ correlate, hinting that inputs in the Rust model are indeed dependent.
-
-\subsection{Derivation of Implied Annual Demand}
-
-\begin{figure}[t]
-	\caption{Uncertainty Propagation}
-    % \floatfoot{A note}
-    \label{uncertainty}
-	\begin{centering}
-	\vspace*{-4mm}
-	\begin{centering}
-		\includegraphics[scale=0.9]{../figures/uncertainty_propagation_100000.png}
-	\end{centering}
-	\end{centering}
-
-	\small
-	\textit{Notes:} Estimated implied annual demand for $100\,000$ simulated data sets. The horizontal line shows the implied annual demand at the \textit{true} parameter values $(RC, \theta_{11})$. This \textit{true} demand amounts to $59.09$.
 \end{figure}
 
 \citet{R87} shows how we can derive further quantities from the parameter estimates. He derives the implied annual demand (henceforth, demand) for bus-engine replacements, which is computed by
@@ -132,3 +116,18 @@ d(RC)=12 \cdot M \cdot \int_0^{\infty} \pi(dx, 1).
 To see how the uncertainty in the inputs $(RC, \theta_{11})$ propagate to the output, demand, see \cref{uncertainty}. I again use \textit{ruspy} for the computation of the demand at $RC^{demand}$. I compute demand for $100\,000$ simulated data sets. The output is normally distributed as can be seen in \cref{uncertainty} with mean 58.67 and variance 41.83. Sensitivity analysis can identify the inputs that are responsible for this large variability in the model output.
 
 Now, that the model, i.e. how the output depends on the inputs, has been clarified, we are ready to consider the sensitivity methods applied in this thesis.
+
+\begin{figure}[t]
+	\caption{Uncertainty Propagation}
+    % \floatfoot{A note}
+    \label{uncertainty}
+	\begin{centering}
+	\vspace*{-4mm}
+	\begin{centering}
+		\includegraphics[scale=0.9]{../figures/uncertainty_propagation_100000.png}
+	\end{centering}
+	\end{centering}
+
+	\small
+	\textit{Notes:} Estimated implied annual demand for $100\,000$ simulated data sets. The horizontal line shows the implied annual demand at the \textit{true} parameter values $(RC, \theta_{11})$. This \textit{true} demand amounts to $59.09$.
+\end{figure}

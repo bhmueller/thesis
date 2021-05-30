@@ -2,7 +2,7 @@
 
 % Big picture.
 
-Economics is thinking in models that abstract from the world by imposing assumptions on economic relations. Those assumptions are defendable as long as they are sufficiently realistic for the research question at hand \citep{F53}, prompting the question what this means. Often, assumptions are decided upon by mathematical convenience: do the assumptions grant that the model is solvable, i.e. whether a solution exists in closed form and whether this solution is unique.
+Economics is thinking in models that abstract from the world by imposing assumptions on economic relations. These assumptions are defendable as long as they are sufficiently realistic for the research question at hand \citep{F53}, prompting the question what this means. Often, assumptions are decided upon by mathematical convenience: do the assumptions grant that the model is solvable, i.e. whether a solution exists in closed form and whether this solution is unique.
 
 % Economics is thinking in models that abstract from the actually existing economic systems by imposing assumptions on economic relations. Those assumptions are defendable as long as they are sufficiently realistic for the research question at hand \citep{F66}, what prompts the question, what sufficiently realistic means. Often, assumptions are decided upon by mathematical convenience: do the assumptions grant that the model is solvable, i.e. whether a solution exists in closed form and whether this solution is unique.
 
@@ -16,7 +16,7 @@ Yet, if predictions shall be derived from a model in which the outcome is modell
 
 % Now explain sensitivity analysis?
 
-\noindent Consider the following model
+Consider the following model
 \begin{equation*}
 Y = f(X),
 \end{equation*}
@@ -25,11 +25,13 @@ Y = f(X),
 
 In the remainder of this work, I name $Y$ the (model) output and the vector $X$ the (model) inputs. In this thesis, I will consider $X$ as being stochastic, that is, the $X_i$, $i = 1,\dots, k$, follow a joint cumulative distribution function $G(X)$. Thus, although $f$ is assumed to be a deterministic function of $X$, the output $Y$ is also stochastic due to the uncertainty in $X$ \citep{SNS16}. Sensitivity analysis sheds light on this input-output relationship \citep{BP16}.
 
-Any assumption we impose can be such an input. For example, if we assume an estimated parameter to be deterministic by assigning a value to it, we implicitly neglect that this estimate is subject to uncertainty \citep{R21}. One common objective of sensitivity analysis is Factor Fixing (FF), where we want to know whether an input can be fixed without influencing the output. This assumption is troubling if the model output is very sensitive to the value assigned to this input. Such an input we call \textit{important}. Sensitivity analysis can guide research by identifying these important inputs \citep{R21}. For example, we could focus on estimating important inputs more precisely, thus reducing output uncertainty.
+Any assumption we impose can be such an input. One common objective of sensitivity analysis is Factor Fixing (FF), where we want to know whether an input can be fixed without influencing the output. For example, if we assume an estimated parameter to be deterministic by assigning a value to it, we implicitly neglect that this estimate is subject to uncertainty \citep{R21}. This assumption is troubling if the model output is very sensitive to the value assigned to this input. Such an input we call \textit{important}. Sensitivity analysis can guide research by identifying these important inputs \citep{R21}. For example, we could focus on estimating important inputs more precisely, thus reducing output uncertainty.
+
+Generally, sensitivity analysis can be structured into local and global methods. Local methods conduct sensitivity analysis around a certain point, or base case, $x_0$, in a deterministic framework, i.e. no probability distribution is assigned to $X$ \citep{BP16}. In contrast, when performing global sensitivity analysis, we find ourselves in a stochastic context, which requires knowledge of the distribution of $X$, be it joint or marginal, with or without dependence between the inputs \citep{ST02}. The result of performing sensitivity analysis is some sensitivity measure, that depends on the sensitivity method we apply to the context we find ourselves in. The methods applied in this thesis yield global sensitivity measures.
 
 % Research Gap.
 
-One popular method to conduct sensitivity analysis are Shapley effects. They are a well-suited sensitivity method that is easily interpreted and can be applied to both independently and dependently distributed inputs. Despite these and other appealing features, estimation of Shapley effects can be computationally demanding. This is where the Morris method, a qualitative sensitivity method first introduced by \citep{M91}, comes into play since it promises to serve similar purposes as the Shapley effects, but come at a lower computational cost.
+One popular method to conduct global sensitivity analysis are Shapley effects. They are a well-suited sensitivity method that is easily interpreted and can be applied to both independently and dependently distributed inputs. Despite these and other appealing features, estimation of Shapley effects can be computationally demanding. This is where the Morris method, a qualitative sensitivity method first introduced by \citep{M91}, comes into play since it promises to serve similar purposes as the Shapley effects, but to come at a lower computational cost.
 
 % Short summary of your paper and main results.
 
@@ -37,8 +39,6 @@ This paper assesses the predictive validity of the Morris method by applying it 
 
 I find that the Morris method is a substitute for Shapley effects only if the resulting indices are interpreted with caution. Morris indices are very volatile. % since they perform very well in identifying uninfluential inputs and in ranking the inputs accordingly for the Rust model.
 My results suggest further that the extension of Morris indices for dependent inputs by \citet{GM17} is an important contribution since their proposed measure reduces the Type II error in identifying uninfluential inputs.
-
-Generally, sensitivity analysis can be structured into local and global methods. Local methods conduct sensitivity analysis around a certain point, or base case, $x_0$, in a deterministic framework, i.e. no probability distribution is assigned to $X$ \citep{BP16}. In contrast, when performing global sensitivity analysis, we find ourselves in a stochastic context, which requires knowledge of the distribution of $X$, be it joint or marginal, with or without dependence between the inputs \citep{ST02}. The result of performing sensitivity analysis is some sensitivity measure, that depends on the sensitivity method we apply to the context we find ourselves in. The methods applied in this thesis yield global sensitivity measures.
 
 Although the \textit{extended} Morris method has been applied in some cases \citep[e.g.][]{MMA18, RZY19}, to my knowledge their predictive validity has been assessed in the original paper by \citet{GM17} only. In economics, structured global sensitivity analysis is not a common practice: \citet{HMSW19} cite only few articles in economics that applied global sensitivity analysis. The contribution of this thesis is that it assesses the extended Morris method by applying it to an economic model.
 

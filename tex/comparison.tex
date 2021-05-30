@@ -1,6 +1,6 @@
 \section{Comparing Shapley Effects and Morris Indices} \label{comparison}
 
-In this section, I want to connect and further discuss the results presented in \cref{shapley_rust_model, morris_rust_model}. Both, Shapley effects and independent Morris indices, succeed in identifying the correct input ranking, even for a relatively small sample size.
+In this section, I want to connect and further discuss the results presented in \cref{shapley_rust_model,morris_rust_model}. Both, Shapley effects and independent Morris indices, succeed in identifying the correct input ranking, even for a relatively small sample size.
 
 Interestingly, in the case of two inputs and when setting $N_I = 3$ as recommended
 by \citet{SNS16}, the computational burden of both algorithms are parallel, given that $N = N_O$. Then they differ by $N_V$, the number of Monte Carlo simulations used to estimate the total output variance, only. One practical drawback

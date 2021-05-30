@@ -16,7 +16,7 @@ With these examples of the usefulness of input screening in mind, the following 
 
 \subsection{Morris Method for Independent Inputs} \label{classic_morris}
 
-The Morris method was introduced by \citet{M91} to identify the uninfluential input variables of a model, especially in cases where there are many inputs and/or the evaluation of a model is time-consuming.
+The Morris method was introduced to identify the uninfluential input variables of a model, especially in cases where there are many inputs and/or the evaluation of a model is time-consuming \citep{M91}.
 
 Consider the same setup as employed in the preceding sections. Let $x = \{x_1, \dots, x_k\}$ denote a sample of values assigned to the $X_i$'s. $f(x)$ is then the model output obtained for the values in $x$. Now consider a second sample $x_{\Delta_i} = \{x_1, \dots, x_{i-1}, x_i + \Delta, x_{i+1}, \dots, x_k\}$ that is identical to $x$ up to input $x_i$ which is varied by $\Delta$. Then, one elementary effect for input $i$ is derived by
 \begin{equation*}
